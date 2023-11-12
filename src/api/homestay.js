@@ -1,12 +1,13 @@
-import axios from "axios";
+import api from "./token";
 
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/homestay",
-});
+if (cookie.get("access_token")) {
+  api.defaults.headers.common["Authorization"] =
+    "Bearer " + cookie.get("access_token");
+}
 
 export async function getHomestays() {
   try {
-    const response = await api.get("/query");
+    const response = await api.get("homestay/query");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +16,7 @@ export async function getHomestays() {
 
 export async function getHomestayByCode(code) {
   try {
-    const response = await api.get(`/${code}`);
+    const response = await api.get(`homestay/${code}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -24,7 +25,7 @@ export async function getHomestayByCode(code) {
 
 export async function createHomestay(product) {
   try {
-    const response = await api.post("/create", product);
+    const response = await api.post("homestay/create", product);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -33,7 +34,10 @@ export async function createHomestay(product) {
 
 export async function updateHomestay(product) {
   try {
-    const response = await api.put(`/update/${product.purrPetCode}`, product);
+    const response = await api.put(
+      `homestay/update/${product.purrPetCode}`,
+      product,
+    );
     return response.data;
   } catch (error) {
     console.error(error);

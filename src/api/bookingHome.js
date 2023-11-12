@@ -1,12 +1,8 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/bookingHome",
-});
+import api from "./token";
 
 export async function getBookingHomes() {
   try {
-    const response = await api.get("/query");
+    const response = await api.get("bookingHome/query");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +11,7 @@ export async function getBookingHomes() {
 
 export async function getBookingHomeByCode(code) {
   try {
-    const response = await api.get(`/${code}`);
+    const response = await api.get(`bookingHome/${code}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -24,7 +20,7 @@ export async function getBookingHomeByCode(code) {
 
 export async function createBookingHome(bookingHome) {
   try {
-    const response = await api.post("/create", bookingHome);
+    const response = await api.post("bookingHome/create", bookingHome);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -34,7 +30,7 @@ export async function createBookingHome(bookingHome) {
 export async function updateBookingHome(bookingHome) {
   try {
     const response = await api.put(
-      `/update/${bookingHome.purrPetCode}`,
+      `bookingHome/update/${bookingHome.purrPetCode}`,
       bookingHome,
     );
     return response.data;

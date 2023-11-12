@@ -1,12 +1,8 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/product",
-});
+import api from "./token";
 
 export async function getProducts() {
   try {
-    const response = await api.get("/query");
+    const response = await api.get("product/query");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +11,7 @@ export async function getProducts() {
 
 export async function getProductByCode(code) {
   try {
-    const response = await api.get(`/${code}`);
+    const response = await api.get(`product/${code}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -24,7 +20,7 @@ export async function getProductByCode(code) {
 
 export async function createProduct(product) {
   try {
-    const response = await api.post("/create", product);
+    const response = await api.post("product/create", product);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -33,7 +29,10 @@ export async function createProduct(product) {
 
 export async function updateProduct(product) {
   try {
-    const response = await api.put(`/update/${product.purrPetCode}`, product);
+    const response = await api.put(
+      `product/update/${product.purrPetCode}`,
+      product,
+    );
     return response.data;
   } catch (error) {
     console.error(error);

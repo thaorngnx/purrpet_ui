@@ -1,12 +1,8 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "http://localhost:3000/api/bookingSpa",
-});
+import api from "./token";
 
 export async function getBookingSpas() {
   try {
-    const response = await api.get("/query");
+    const response = await api.get("bookingSpa/query");
     return response.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +11,7 @@ export async function getBookingSpas() {
 
 export async function getBookingSpaByCode(code) {
   try {
-    const response = await api.get(`/${code}`);
+    const response = await api.get(`bookingSpa/${code}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -24,7 +20,7 @@ export async function getBookingSpaByCode(code) {
 
 export async function createBookingSpa(bookingSpa) {
   try {
-    const response = await api.post("/create", bookingSpa);
+    const response = await api.post("bookingSpa/create", bookingSpa);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -34,7 +30,7 @@ export async function createBookingSpa(bookingSpa) {
 export async function updateBookingSpa(bookingSpa) {
   try {
     const response = await api.put(
-      `/update/${bookingSpa.purrPetCode}`,
+      `bookingSpa/update/${bookingSpa.purrPetCode}`,
       bookingSpa,
     );
     return response.data;

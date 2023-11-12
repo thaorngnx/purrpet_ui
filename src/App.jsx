@@ -4,6 +4,7 @@ import { ListProduct } from "./components/Product/ListProduct";
 import { CarouselImage } from "./components/Image/CarouselImage";
 import { UploadImage } from "./components/Image/UploadImage";
 import { ListSpa } from "./components/Spa/ListSpa";
+import { Login } from "./components/Account/Login";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         </Route>
         <Route path="/admin">
           <Route index element={<ListCategory />} />
+          <Route path="login" element={<Login />} />
           <Route path="category" element={<ListCategory />} />
           <Route path="product" element={<ListProduct />} />
           <Route path="spa" element={<ListSpa />} />

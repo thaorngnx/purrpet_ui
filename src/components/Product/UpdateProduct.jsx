@@ -111,8 +111,8 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           fullWidth
           value={description}
           onChange={handleChangeDescription}
-          error={error.producDescription}
-          helperText={error.productName && "Mô tả sản phẩm không được để trống"}
+          error={error.description}
+          helperText={error.description && "Mô tả sản phẩm không được để trống"}
           className="mb-3"
         />
         <TextField
