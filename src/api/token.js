@@ -10,7 +10,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,OPTIONS",
+    "Access-Control-Allow-Methods": "GET,PUT,PATCH,POST,OPTIONS",
     "Access-Control-Allow-Headers":
       "Content-Type, Authorization, Content-Length, X-Requested-With",
   },
@@ -21,7 +21,6 @@ api.interceptors.request.use(
     if (cookie.get("access_token")) {
       config.headers["Authorization"] = `Bearer ${cookie.get("access_token")}`;
     }
-    console.log(config);
     return config;
   },
   (error) => {

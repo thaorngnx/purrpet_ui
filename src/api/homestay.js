@@ -23,21 +23,30 @@ export async function getHomestayByCode(code) {
   }
 }
 
-export async function createHomestay(product) {
+export async function createHomestay(homestay) {
   try {
-    const response = await api.post("homestay/create", product);
+    const response = await api.post("homestay/create", homestay);
     return response.data;
   } catch (error) {
     console.error(error);
   }
 }
 
-export async function updateHomestay(product) {
+export async function updateHomestay(homestay) {
   try {
     const response = await api.put(
-      `homestay/update/${product.purrPetCode}`,
-      product,
+      `homestay/update/${homestay.purrPetCode}`,
+      homestay,
     );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateStatusHomestay(purrPetCode) {
+  try {
+    const response = await api.put(`homestay/update-status/${purrPetCode}`);
     return response.data;
   } catch (error) {
     console.error(error);

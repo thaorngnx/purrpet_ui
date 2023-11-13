@@ -17,7 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import "../../api/spa";
-import { createSpa, getSpas, updateSpa } from "../../api/spa";
+import { createSpa, getSpas, updateSpa, updateStatusSpa } from "../../api/spa";
 import { getCategories } from "../../api/category";
 import { UpdateSpa } from "./UpdateSpa";
 import * as CONST from "../../constants";
@@ -188,16 +188,7 @@ export const ListSpa = () => {
   };
 
   const handleChangeStatusSpa = (row) => {
-    if (row.status === CONST.STATUS_PRODUCT.ACTIVE) {
-      row.status = CONST.STATUS_PRODUCT.INACTIVE;
-    } else {
-      row.status = CONST.STATUS_PRODUCT.ACTIVE;
-    }
-    updateSpa({
-      purrPetCode: row.purrPetCode,
-      status: row.status,
-      // updateBy: "admin"
-    }).then((res) => {
+    updateStatusSpa(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {

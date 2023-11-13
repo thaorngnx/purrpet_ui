@@ -21,6 +21,7 @@ import {
   createCategory,
   getCategories,
   updateCategory,
+  updateStatusCategory,
 } from "../../api/category";
 import { UpdateCategory } from "./UpdateCategory";
 import * as CONST from "../../constants";
@@ -136,11 +137,7 @@ export const ListCategory = () => {
     } else {
       row.status = CONST.STATUS_CATEGORY.ACTIVE;
     }
-    updateCategory({
-      purrPetCode: row.purrPetCode,
-      status: row.status,
-      // updateBy: "admin"
-    }).then((res) => {
+    updateStatusCategory(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {

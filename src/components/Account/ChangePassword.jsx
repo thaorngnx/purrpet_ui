@@ -1,11 +1,10 @@
 import { Box, TextField, MenuItem, InputAdornment } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import * as CONST from "../../constants";
 import { useState } from "react";
 import "../../api/account";
-export const CreateAccount = ({ account, createAccount }) => {
-  const [accountCreate, setAccountCreate] = useState(account);
+export const ChangePassword = ({ account, updateAccount }) => {
+  const [accountUpdate, setAccountUpdate] = useState(account);
   const [error, setError] = useState({});
   const [togglePassword, setTogglePassword] = useState({
     password: false,
@@ -18,16 +17,16 @@ export const CreateAccount = ({ account, createAccount }) => {
       setError({ ...error, [event.target.name]: true });
     }
     if (event.target.name === "passwordConfirm") {
-      if (event.target.value !== accountCreate.password) {
+      if (event.target.value !== accountUpdate.password) {
         setError({ ...error, [event.target.name]: true });
       }
     }
-    setAccountCreate({
-      ...accountCreate,
+    setAccountUpdate({
+      ...accountUpdate,
       [event.target.name]: event.target.value,
     });
-    createAccount({
-      ...accountCreate,
+    updateAccount({
+      ...accountUpdate,
       [event.target.name]: event.target.value,
     });
   };
@@ -43,37 +42,28 @@ export const CreateAccount = ({ account, createAccount }) => {
     >
       <div className="mt-5">
         <TextField
-          required
           label="Tên đăng nhập"
           fullWidth
           name="username"
-          value={accountCreate.username}
-          onChange={handleChangeAccount}
-          error={error.username}
-          helperText={error.username && "Tên đăng nhập không được để trống"}
+          value={accountUpdate.username}
           className="mb-3"
+          disabled
         />
         <TextField
           label="Quyền"
-          select
           fullWidth
-          required
           name="role"
-          value={accountCreate.role}
-          onChange={handleChangeAccount}
-          error={error.role}
-          helperText={error.role && "Quyền không được để trống"}
-        >
-          <MenuItem value={CONST.ROLE.ADMIN}>{CONST.ROLE.ADMIN}</MenuItem>
-          <MenuItem value={CONST.ROLE.STAFF}>{CONST.ROLE.STAFF}</MenuItem>
-        </TextField>
+          value={accountUpdate.role}
+          className="mb-3"
+          disabled
+        />
         <TextField
           required
           label="Mật khẩu"
           fullWidth
           name="password"
           type={togglePassword.password ? "text" : "password"}
-          value={accountCreate.password}
+          value={accountUpdate.password}
           onChange={handleChangeAccount}
           error={error.password}
           helperText={error.password && "Mật khẩu không được để trống"}
@@ -102,7 +92,7 @@ export const CreateAccount = ({ account, createAccount }) => {
           fullWidth
           name="passwordConfirm"
           type={togglePassword.passwordConfirm ? "text" : "password"}
-          value={accountCreate.passwordConfirm}
+          value={accountUpdate.passwordConfirm}
           onChange={handleChangeAccount}
           error={error.passwordConfirm}
           helperText={error.passwordConfirm && "Mật khẩu không khớp"}

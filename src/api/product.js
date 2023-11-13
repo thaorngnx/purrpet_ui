@@ -38,3 +38,12 @@ export async function updateProduct(product) {
     console.error(error);
   }
 }
+
+export async function updateStatusProduct(purrPetCode) {
+  try {
+    const response = await api.put(`product/update-status/${purrPetCode}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

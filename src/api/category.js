@@ -38,3 +38,12 @@ export async function updateCategory(category) {
     console.error(error);
   }
 }
+
+export async function updateStatusCategory(purrPetCode) {
+  try {
+    const response = await api.put(`category/update-status/${purrPetCode}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

@@ -40,3 +40,14 @@ export async function updateOrder(order) {
     console.error(error);
   }
 }
+
+export async function updateStatusOrder(order) {
+  try {
+    const response = await api.put(`order/update-status/${order.purrPetCode}`, {
+      status: order.status,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

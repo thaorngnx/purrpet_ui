@@ -38,3 +38,15 @@ export async function updateBookingSpa(bookingSpa) {
     console.error(error);
   }
 }
+
+export async function updateStatusBookingSpa(bookingSpa) {
+  try {
+    const response = await api.put(
+      `bookingSpa/update-status/${bookingSpa.purrPetCode}`,
+      { status: bookingSpa.status },
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

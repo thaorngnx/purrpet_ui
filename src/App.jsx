@@ -5,13 +5,15 @@ import { CarouselImage } from "./components/Image/CarouselImage";
 import { UploadImage } from "./components/Image/UploadImage";
 import { ListSpa } from "./components/Spa/ListSpa";
 import { Login } from "./components/Account/Login";
+import { ListAccount } from "./components/Account/ListAccount";
+import { Header } from "./components/Header/Header";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<UploadImage />} />
+          <Route index element={<Header />} />
         </Route>
         <Route path="/admin">
           <Route index element={<ListCategory />} />
@@ -19,6 +21,7 @@ function App() {
           <Route path="category" element={<ListCategory />} />
           <Route path="product" element={<ListProduct />} />
           <Route path="spa" element={<ListSpa />} />
+          <Route path="account" element={<ListAccount />} />
         </Route>
       </Routes>
     </BrowserRouter>

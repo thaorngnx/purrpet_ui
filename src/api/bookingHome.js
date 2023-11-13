@@ -38,3 +38,15 @@ export async function updateBookingHome(bookingHome) {
     console.error(error);
   }
 }
+
+export async function updateStatusBookingHome(bookingHome) {
+  try {
+    const response = await api.put(
+      `bookingHome/update-status/${bookingHome.purrPetCode}`,
+      { status: bookingHome.status },
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

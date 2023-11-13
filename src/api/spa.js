@@ -35,3 +35,12 @@ export async function updateSpa(spa) {
     console.error(error);
   }
 }
+
+export async function updateStatusSpa(purrPetCode) {
+  try {
+    const response = await api.put(`spa/update-status/${purrPetCode}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

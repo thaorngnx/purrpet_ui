@@ -17,7 +17,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import "../../api/product";
-import { createProduct, getProducts, updateProduct } from "../../api/product";
+import {
+  createProduct,
+  getProducts,
+  updateProduct,
+  updateStatusProduct,
+} from "../../api/product";
 import { getCategories } from "../../api/category";
 import { UpdateProduct } from "./UpdateProduct";
 import * as CONST from "../../constants";
@@ -188,16 +193,7 @@ export const ListProduct = () => {
   };
 
   const handleChangeStatusProduct = (row) => {
-    if (row.status === CONST.STATUS_PRODUCT.ACTIVE) {
-      row.status = CONST.STATUS_PRODUCT.INACTIVE;
-    } else {
-      row.status = CONST.STATUS_PRODUCT.ACTIVE;
-    }
-    updateProduct({
-      purrPetCode: row.purrPetCode,
-      status: row.status,
-      // updateBy: "admin"
-    }).then((res) => {
+    updateStatusProduct(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {
