@@ -6,8 +6,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  FormControlLabel,
-  Switch,
   Alert,
   Snackbar,
   Tooltip,
@@ -16,33 +14,45 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import "../../api/spa";
-import { createSpa, getSpas, updateSpa, updateStatusSpa } from "../../api/spa";
+import "../../api/masterData";
+import {
+  createMasterData,
+  getMasterDatas,
+  updateMasterData,
+} from "../../api/masterData";
 import { getCategories } from "../../api/category";
-import { UpdateSpa } from "./UpdateSpa";
+import { UpdateMasterData } from "./UpdateMasterData";
 import * as CONST from "../../constants";
 
-export const ListSpa = () => {
+export const ListMasterData = () => {
   const columns = [
     {
       field: "purrPetCode",
-      headerName: "Mã spa",
+      headerName: "Mã masterData",
       flex: 1,
       align: "left",
       headerAlign: "center",
       minWidth: 100,
     },
     {
-      field: "spaName",
-      headerName: "Tên spa",
+      field: "groupCode",
+      headerName: "Nhóm",
       flex: 3,
       headerAlign: "center",
       align: "left",
       minWidth: 150,
     },
     {
-      field: "spaType",
-      headerName: "Loại spa",
+      field: "name",
+      headerName: "Tên",
+      flex: 1,
+      headerAlign: "center",
+      align: "left",
+      minWidth: 100,
+    },
+    {
+      field: "value",
+      headerName: "Giá trị",
       flex: 1,
       headerAlign: "center",
       align: "left",
@@ -57,64 +67,6 @@ export const ListSpa = () => {
       minWidth: 100,
     },
     {
-      field: "price",
-      headerName: "Giá",
-      flex: 1,
-      headerAlign: "center",
-      align: "right",
-      minWidth: 120,
-      type: "number",
-    },
-    {
-      field: "categoryName",
-      headerName: "Danh mục",
-      flex: 3,
-      headerAlign: "center",
-      align: "left",
-      minWidth: 150,
-      valueGetter: (params) => getCategoryName(params.row.categoryCode),
-    },
-    {
-      field: "image",
-      headerName: "Hình ảnh",
-      flex: 3,
-      headerAlign: "center",
-      align: "left",
-      minWidth: 150,
-      renderCell: (params) => (
-        <img
-          src={params.value}
-          alt={`Image ${params.row.purrPetCode}`}
-          width="100%"
-          height="100%"
-        />
-      ),
-    },
-    {
-      field: "status",
-      headerName: "Trạng thái",
-      headerAlign: "center",
-      align: "center",
-      flex: 2,
-      minWidth: 100,
-      renderCell: (params) => (
-        <Tooltip title="Đổi trạng thái">
-          <FormControlLabel
-            control={
-              <Switch
-                checked={params.value === CONST.STATUS_PRODUCT.ACTIVE}
-                inputProps={{
-                  "aria-label": "controlled",
-                }}
-                onChange={() => handleChangeStatusSpa(params.row)}
-              />
-            }
-            label={params.value === CONST.STATUS_PRODUCT.ACTIVE ? "Hiện" : "Ẩn"}
-          />
-        </Tooltip>
-      ),
-    },
-    {
       field: "action",
       headerName: "Thao tác",
       headerAlign: "center",
@@ -127,7 +79,9 @@ export const ListSpa = () => {
       renderCell: (params) => (
         <>
           <Tooltip title="Sửa">
-            <EditIcon onClick={() => handleEditSpa(params.row)}></EditIcon>
+            <EditIcon
+              onClick={() => handleEditMasterData(params.row)}
+            ></EditIcon>
           </Tooltip>
         </>
       ),
@@ -138,26 +92,24 @@ export const ListSpa = () => {
     return row.purrPetCode;
   };
 
-  const handleEditSpa = (row) => {
+  const handleEditMasterData = (row) => {
     setOpenEdit(true);
-    setSelectedSpa(row);
+    setSelectedMasterData(row);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
   };
 
-  const handleUpdateSpa = () => {
+  const handleUpdateMasterData = () => {
     setOpenEdit(false);
-    console.log(selectedSpa);
-    updateSpa({
-      purrPetCode: selectedSpa.purrPetCode,
-      spaName: selectedSpa.spaName,
-      spaType: selectedSpa.spaType,
-      description: selectedSpa.description,
-      price: selectedSpa.price,
-      categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+    console.log(selectedMasterData);
+    updateMasterData({
+      purrPetCode: selectedMasterData.purrPetCode,
+      groupCode: selectedMasterData.groupCode,
+      name: selectedMasterData.name,
+      value: selectedMasterData.value,
+      description: selectedMasterData.description,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -165,40 +117,24 @@ export const ListSpa = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getSpas().then((res) => {
+      getMasterDatas().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleChangeStatusSpa = (row) => {
-    updateStatusSpa(row.purrPetCode).then((res) => {
-      setAlert(true);
-      setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
-      if (res.err === -1) {
-        setSeverity(CONST.ALERT_SEVERITY.WARNING);
-      }
-      setMessage(res.message);
-      getSpas().then((res) => {
-        setRows(res.data);
-      });
-    });
+  const handleDataUpdateMasterData = (updateMasterData) => {
+    console.log(updateMasterData);
+    setSelectedMasterData(updateMasterData);
   };
 
-  const handleDataUpdateSpa = (updateSpa) => {
-    console.log(updateSpa);
-    setSelectedSpa(updateSpa);
-  };
-
-  const handleAddSpa = () => {
+  const handleAddMasterData = () => {
     setOpenAdd(true);
-    setSelectedSpa({
-      spaName: "",
-      spaType: "",
+    setSelectedMasterData({
+      groupCode: "",
+      name: "",
+      value: "",
       description: "",
-      price: 0,
-      categoryCode: "",
-      images: [],
     });
   };
 
@@ -206,16 +142,14 @@ export const ListSpa = () => {
     setOpenAdd(false);
   };
 
-  const handleCreateSpa = () => {
+  const handleCreateMasterData = () => {
     setOpenAdd(false);
-    createSpa({
-      purrPetCode: selectedSpa.purrPetCode,
-      spaName: selectedSpa.spaName,
-      spaType: selectedSpa.spaType,
-      description: selectedSpa.description,
-      price: selectedSpa.price,
-      categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+    createMasterData({
+      purrPetCode: selectedMasterData.purrPetCode,
+      groupCode: selectedMasterData.groupCode,
+      name: selectedMasterData.name,
+      value: selectedMasterData.value,
+      description: selectedMasterData.description,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -223,52 +157,26 @@ export const ListSpa = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getSpas().then((res) => {
+      getMasterDatas().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const getCategoryName = (categoryCode) => {
-    const category = categories.find(
-      (category) => category.purrPetCode === categoryCode,
-    );
-    return category ? category.categoryName : "";
-  };
-
-  const getActiveCategory = (categories) => {
-    return categories.filter(
-      (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
-    );
-  };
-
   const [rows, setRows] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const [selectedSpa, setSelectedSpa] = useState(null);
+  const [selectedMasterData, setSelectedMasterData] = useState(null);
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    getSpas().then((res) => {
+    getMasterDatas().then((res) => {
       console.log(res.data);
       setRows(res.data);
     });
-    const params = { categoryType: CONST.CATEGORY_TYPE.SPA };
-    getCategories(params).then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
-    });
   }, []);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setActiveCategory(getActiveCategory(categories));
-    }
-  }, [categories]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -284,7 +192,7 @@ export const ListSpa = () => {
         component="h5"
         className="m-5 text-center font-bold"
       >
-        DANH SÁCH SPA
+        DANH SÁCH MATER DATA
       </Typography>
       <Paper
         sx={{
@@ -299,9 +207,9 @@ export const ListSpa = () => {
           variant="outlined"
           startIcon={<AddIcon />}
           className="relative m-5"
-          onClick={handleAddSpa}
+          onClick={handleAddMasterData}
         >
-          Thêm spa
+          Thêm Master Data
         </Button>
         <DataGrid
           rows={rows}
@@ -331,34 +239,32 @@ export const ListSpa = () => {
         />
         <Dialog open={openEdit} onClose={handleCloseEditDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            SỬA SPA
+            SỬA MATER DATA
           </DialogTitle>
           <DialogContent>
-            <UpdateSpa
-              categories={activeCategory}
-              spa={selectedSpa}
-              updateSpa={handleDataUpdateSpa}
+            <UpdateMasterData
+              masterData={selectedMasterData}
+              updateMasterData={handleDataUpdateMasterData}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDialog}>Hủy</Button>
-            <Button onClick={handleUpdateSpa}>Cập nhật</Button>
+            <Button onClick={handleUpdateMasterData}>Cập nhật</Button>
           </DialogActions>
         </Dialog>
         <Dialog open={openAdd} onClose={handleCloseAddDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            THÊM SPA
+            THÊM MATER DATA
           </DialogTitle>
           <DialogContent>
-            <UpdateSpa
-              categories={activeCategory}
-              spa={selectedSpa}
-              updateSpa={handleDataUpdateSpa}
+            <UpdateMasterData
+              masterData={selectedMasterData}
+              updateMasterData={handleDataUpdateMasterData}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAddDialog}>Hủy</Button>
-            <Button onClick={handleCreateSpa}>Tạo</Button>
+            <Button onClick={handleCreateMasterData}>Tạo</Button>
           </DialogActions>
         </Dialog>
       </Paper>

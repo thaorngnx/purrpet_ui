@@ -1,73 +1,34 @@
 import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
-import * as CONST from "../../constants";
 import { useState } from "react";
 import "../../api/product";
 export const UpdateProduct = ({ categories, product, updateProduct }) => {
-  const handleChangeProductName = (e) => {
-    setProductName(e.target.value);
-    setError({ ...error, productName: false });
-    if (!e.target.value) {
-      setError({ ...error, productName: true });
+  const handleChangeProduct = (event) => {
+    setError({ ...error, [event.target.name]: false });
+    if (!event.target.value) {
+      setError({ ...error, [event.target.name]: true });
     }
-    updateProduct({ ...product, productName: e.target.value });
-  };
-
-  const handleChangeDescription = (e) => {
-    setDescription(e.target.value);
-    setError({ ...error, description: false });
-    if (!e.target.value) {
-      setError({ ...error, description: true });
+    if (event.target.name === "category") {
+      const category = categories.find(
+        (category) => category.categoryName === event.target.value,
+      );
+      setCategoryName(category.categoryName);
+      setCategoryCode(category.purrPetCode);
+      setProductUpdate({
+        ...productUpdate,
+        categoryName: category.categoryName,
+        categoryCode: category.purrPetCode,
+      });
+      updateProduct({ ...productUpdate, categoryCode: category.purrPetCode });
+    } else {
+      setProductUpdate({
+        ...productUpdate,
+        [event.target.name]: event.target.value,
+      });
+      updateProduct({
+        ...productUpdate,
+        [event.target.name]: event.target.value,
+      });
     }
-    updateProduct({ ...product, description: e.target.value });
-  };
-
-  const handleChangePrice = (e) => {
-    setPrice(e.target.value);
-    setError({ ...error, price: false });
-    if (!e.target.value) {
-      setError({ ...error, price: true });
-    }
-    updateProduct({ ...product, price: e.target.value });
-  };
-
-  const handleChangeCategory = (e) => {
-    const category = categories.find(
-      (category) => category.categoryName === e.target.value,
-    );
-    setCategoryName(category.categoryName);
-    setCategoryCode(category.purrPetCode);
-    setError({ ...error, categoryCode: false });
-    if (!e.target.value) {
-      setError({ ...error, categoryCode: true });
-    }
-    updateProduct({ ...product, categoryCode: category.purrPetCode });
-  };
-
-  const handleChangeProductType = (e) => {
-    setProductType(e.target.value);
-    setError({ ...error, productType: false });
-    if (!e.target.value) {
-      setError({ ...error, productType: true });
-    }
-    updateProduct({ ...product, productType: e.target.value });
-  };
-
-  const handleChangeImages = (e) => {
-    setImages(e.target.value);
-    setError({ ...error, images: false });
-    if (!e.target.value) {
-      setError({ ...error, images: true });
-    }
-    updateProduct({ ...product, images: e.target.value });
-  };
-
-  const handleChangeInventory = (e) => {
-    setInventory(e.target.value);
-    setError({ ...error, inventory: false });
-    if (!e.target.value) {
-      setError({ ...error, inventory: true });
-    }
-    updateProduct({ ...product, inventory: e.target.value });
   };
 
   const getCategoryName = (categoryCode) => {
@@ -77,17 +38,12 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
     return category ? category.categoryName : "";
   };
 
-  const [productName, setProductName] = useState(product?.productName);
-  const [productType, setProductType] = useState(product?.productType);
+  const [productUpdate, setProductUpdate] = useState(product);
   const [error, setError] = useState({});
-  const [description, setDescription] = useState(product?.description);
-  const [price, setPrice] = useState(product?.price);
   const [categoryCode, setCategoryCode] = useState(product?.categoryCode);
   const [categoryName, setCategoryName] = useState(
     getCategoryName(categoryCode),
   );
-  const [images, setImages] = useState(product?.images);
-  const [inventory, setInventory] = useState(product?.inventory);
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>
@@ -97,8 +53,9 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           id="outlined-required"
           label="Tên sản phẩm"
           fullWidth
-          value={productName}
-          onChange={handleChangeProductName}
+          name="productName"
+          value={product.productName}
+          onChange={handleChangeProduct}
           error={error.productName}
           helperText={error.productName && "Tên sản phẩm không được để trống"}
           className="mb-3"
@@ -109,8 +66,9 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           label="Mô tả"
           multiline
           fullWidth
-          value={description}
-          onChange={handleChangeDescription}
+          name="description"
+          value={product.description}
+          onChange={handleChangeProduct}
           error={error.description}
           helperText={error.description && "Mô tả sản phẩm không được để trống"}
           className="mb-3"
@@ -120,9 +78,10 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           id="outlined-required"
           label="Giá"
           fullWidth
-          value={price}
+          name="price"
+          value={product.price}
           type="number"
-          onChange={handleChangePrice}
+          onChange={handleChangeProduct}
           error={error.price}
           helperText={error.price && "Giá sản phẩm không được để trống"}
           className="mb-3"
@@ -131,13 +90,14 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           label="Danh mục sản phẩm"
           select
           required
-          key={categoryCode}
+          name="category"
+          key={categoryName}
           value={categoryName}
           sx={{ width: "50%" }}
-          onChange={handleChangeCategory}
-          error={error.productType}
+          onChange={handleChangeProduct}
+          error={error.categoryCode}
           helperText={
-            error.productType && "Danh mục sản phẩm không được để trống"
+            error.categoryCode && "Danh mục sản phẩm không được để trống"
           }
         >
           {categories.map((category) => (
@@ -147,31 +107,15 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           ))}
         </TextField>
         <TextField
-          label="Loại sản phẩm"
-          select
-          required
-          value={productType}
-          sx={{ width: "50%" }}
-          onChange={handleChangeProductType}
-          error={error.productType}
-          helperText={error.productType && "Loại sản phẩm không được để trống"}
-        >
-          <MenuItem value={CONST.PRODUCT_TYPE.DOG}>
-            {CONST.PRODUCT_TYPE.DOG}
-          </MenuItem>
-          <MenuItem value={CONST.PRODUCT_TYPE.CAT}>
-            {CONST.PRODUCT_TYPE.CAT}
-          </MenuItem>
-        </TextField>
-        <TextField
           required
           id="outlined-required"
           label="Số lượng hàng tồn kho"
           type="number"
           InputProps={{ inputProps: { min: 0 } }}
           fullWidth
-          value={inventory}
-          onChange={handleChangeInventory}
+          name="inventory"
+          value={product.inventory}
+          onChange={handleChangeProduct}
           error={error.inventory}
           helperText={
             error.inventory && "Số lượng sản phẩm không được để trống"

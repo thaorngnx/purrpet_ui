@@ -1,9 +1,9 @@
 import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
-import * as CONST from "../../constants";
 import { useState } from "react";
-import "../../api/spa";
-export const UpdateSpa = ({ categories, spa, updateSpa }) => {
-  const handleChangeSpa = (event) => {
+import "../../api/homestay";
+export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
+  const handleChangeHomestay = (event) => {
+    console.log(event.target);
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
@@ -14,19 +14,19 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
       );
       setCategoryName(category.categoryName);
       setCategoryCode(category.purrPetCode);
-      setSpaUpdate({
-        ...spaUpdate,
+      setHomestayUpdate({
+        ...homestayUpdate,
         categoryName: category.categoryName,
         categoryCode: category.purrPetCode,
       });
-      updateSpa({ ...spaUpdate, categoryCode: category.purrPetCode });
+      updateHomestay({ ...homestayUpdate, categoryCode: category.purrPetCode });
     } else {
-      setSpaUpdate({
-        ...spaUpdate,
+      setHomestayUpdate({
+        ...homestayUpdate,
         [event.target.name]: event.target.value,
       });
-      updateSpa({
-        ...spaUpdate,
+      updateHomestay({
+        ...homestayUpdate,
         [event.target.name]: event.target.value,
       });
     }
@@ -39,9 +39,9 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
     return category ? category.categoryName : "";
   };
 
-  const [spaUpdate, setSpaUpdate] = useState(spa);
+  const [homestayUpdate, setHomestayUpdate] = useState(homestay);
   const [error, setError] = useState({});
-  const [categoryCode, setCategoryCode] = useState(spa?.categoryCode);
+  const [categoryCode, setCategoryCode] = useState(homestay?.categoryCode);
   const [categoryName, setCategoryName] = useState(
     getCategoryName(categoryCode),
   );
@@ -52,13 +52,13 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
         <TextField
           required
           id="outlined-required"
-          label="Tên spa"
+          label="Tên homestay"
           fullWidth
-          name="spaName"
-          value={spaUpdate.spaName}
-          onChange={handleChangeSpa}
-          error={error.spaName}
-          helperText={error.spaName && "Tên spa không được để trống"}
+          name="homeName"
+          value={homestayUpdate.homeName}
+          onChange={handleChangeHomestay}
+          error={error.homeName}
+          helperText={error.homeName && "Tên homestay không được để trống"}
           className="mb-3"
         />
         <TextField
@@ -68,10 +68,10 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
           multiline
           fullWidth
           name="description"
-          value={spaUpdate.description}
-          onChange={handleChangeSpa}
+          value={homestayUpdate.description}
+          onChange={handleChangeHomestay}
           error={error.description}
-          helperText={error.description && "Mô tả spa không được để trống"}
+          helperText={error.description && "Mô tả homestay không được để trống"}
           className="mb-3"
         />
         <TextField
@@ -80,23 +80,26 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
           label="Giá"
           fullWidth
           name="price"
-          value={spaUpdate.price}
+          value={homestayUpdate.price}
           type="number"
-          onChange={handleChangeSpa}
+          onChange={handleChangeHomestay}
           error={error.price}
-          helperText={error.price && "Giá spa không được để trống"}
+          helperText={error.price && "Giá homestay không được để trống"}
           className="mb-3"
         />
         <TextField
-          label="Danh mục spa"
+          label="Danh mục homestay"
           select
           required
           name="category"
+          key={categoryCode}
           value={categoryName}
           sx={{ width: "50%" }}
-          onChange={handleChangeSpa}
-          error={error.spaType}
-          helperText={error.spaType && "Danh mục spa không được để trống"}
+          onChange={handleChangeHomestay}
+          error={error.homestayType}
+          helperText={
+            error.homestayType && "Danh mục homestay không được để trống"
+          }
         >
           {categories.map((category) => (
             <MenuItem key={category.categoryName} value={category.categoryName}>
@@ -105,23 +108,21 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
           ))}
         </TextField>
         <TextField
-          label="Loại spa"
-          select
           required
-          name="spaType"
-          value={spaUpdate.spaType}
-          sx={{ width: "50%" }}
-          onChange={handleChangeSpa}
-          error={error.spaType}
-          helperText={error.spaType && "Loại spa không được để trống"}
-        >
-          <MenuItem value={CONST.PRODUCT_TYPE.DOG}>
-            {CONST.PRODUCT_TYPE.DOG}
-          </MenuItem>
-          <MenuItem value={CONST.PRODUCT_TYPE.CAT}>
-            {CONST.PRODUCT_TYPE.CAT}
-          </MenuItem>
-        </TextField>
+          id="outlined-required"
+          label="Số lượng hàng tồn kho"
+          type="number"
+          InputProps={{ inputProps: { min: 0 } }}
+          fullWidth
+          name="inventory"
+          value={homestayUpdate.inventory}
+          onChange={handleChangeHomestay}
+          error={error.inventory}
+          helperText={
+            error.inventory && "Số lượng homestay không được để trống"
+          }
+          className="mb-3"
+        />
         <Typography variant="h6" gutterBottom component="div">
           Hình ảnh
           <Button variant="outlined" component="label">
@@ -132,7 +133,7 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <img
             src="https://picsum.photos/200/300"
-            alt="spa"
+            alt="homestay"
             style={{ width: "200px", height: "300px" }}
           />
         </Box>
