@@ -21,7 +21,7 @@ export const Login = () => {
 
   useEffect(() => {
     if (cookies.get("access_token")) {
-      navigate("/admin/category");
+      navigate("/admin");
     }
   }, []);
 
@@ -35,7 +35,7 @@ export const Login = () => {
       if (res.err === 0) {
         setAccount({ username: "", password: "" });
         setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
-        navigate("/admin/product");
+        navigate("/admin");
       } else {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }

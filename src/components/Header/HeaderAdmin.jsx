@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 
-export const Header = () => {
+export const HeaderAdmin = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {

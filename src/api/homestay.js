@@ -1,10 +1,5 @@
 import api from "./token";
 
-if (cookie.get("access_token")) {
-  api.defaults.headers.common["Authorization"] =
-    "Bearer " + cookie.get("access_token");
-}
-
 export async function getHomestays() {
   try {
     const response = await api.get("homestay/query");
