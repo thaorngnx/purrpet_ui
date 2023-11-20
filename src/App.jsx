@@ -7,6 +7,7 @@ import { ListSpa } from "./components/Spa/ListSpa";
 import { Login } from "./components/Account/Login";
 import { ListAccount } from "./components/Account/ListAccount";
 import { HeaderAdmin } from "./components/Header/HeaderAdmin";
+import { HeaderCustomer } from "./components/Header/HeaderCustomer";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { Category } from "./pages/Admin/Category";
 import { Product } from "./pages/Admin/Product";
@@ -20,7 +21,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<HeaderAdmin />} />
+          {/* <Route index element={<HeaderAdmin />} /> */}
+          <Route index element={<HeaderCustomer />} />
         </Route>
         <Route path="/admin">
           <Route index element={<Dashboard />} />
