@@ -1,11 +1,4 @@
-import {
-  Box,
-  TextField,
-  MenuItem,
-  Typography,
-  Button,
-  TextareaAutosize,
-} from "@mui/material";
+import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 import "../../api/homestay";
 import * as CONST from "../../constants";
@@ -115,7 +108,6 @@ export const UpdateHomestay = ({
           select
           required
           name="homeSize"
-          key={masterDataCode}
           value={masterDataName}
           sx={{ width: "50%" }}
           onChange={handleChangeHomestay}
@@ -164,7 +156,6 @@ export const UpdateHomestay = ({
           select
           required
           name="category"
-          key={categoryCode}
           value={categoryName}
           sx={{ width: "50%" }}
           onChange={handleChangeHomestay}

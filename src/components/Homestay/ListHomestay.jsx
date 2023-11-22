@@ -197,7 +197,7 @@ export const ListHomestay = () => {
   };
 
   const handleDataUpdateHomestay = (updateHomestay) => {
-    console.log(updateHomestay);
+    console.log("updateHomestay", updateHomestay);
     setSelectedHomestay(updateHomestay);
   };
 
