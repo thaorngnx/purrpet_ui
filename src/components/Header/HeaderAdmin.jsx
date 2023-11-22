@@ -28,7 +28,7 @@ export const HeaderAdmin = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Purr Pet Shop
+          logo
         </Typography>
         <IconButton
           size="large"
