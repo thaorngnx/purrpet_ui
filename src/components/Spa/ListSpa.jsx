@@ -75,7 +75,7 @@ export const ListSpa = () => {
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
     },
     {
-      field: "image",
+      field: "images",
       headerName: "Hình ảnh",
       flex: 3,
       headerAlign: "center",
@@ -83,7 +83,11 @@ export const ListSpa = () => {
       minWidth: 150,
       renderCell: (params) => (
         <img
-          src={params.value}
+          src={
+            params.value && params.value.length > 0
+              ? params.value[0].path
+              : null
+          }
           alt={`Image ${params.row.purrPetCode}`}
           width="100%"
           height="100%"

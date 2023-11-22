@@ -1,8 +1,8 @@
 import api from "./token";
 
-export async function getBookingSpas() {
+export async function getBookingSpas(params) {
   try {
-    const response = await api.get("bookingSpa/query");
+    const response = await api.get("bookingSpa/query", { params });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -45,6 +45,17 @@ export async function updateStatusBookingSpa(bookingSpa) {
       `bookingSpa/update-status/${bookingSpa.purrPetCode}`,
       { status: bookingSpa.status },
     );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getAvailableTime(params) {
+  try {
+    const response = await api.get("bookingSpa/get-available-time", {
+      params,
+    });
     return response.data;
   } catch (error) {
     console.error(error);

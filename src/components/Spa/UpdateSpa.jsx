@@ -1,7 +1,9 @@
-import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
+import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
 import * as CONST from "../../constants";
 import { useState } from "react";
 import "../../api/spa";
+import { UploadImage } from "../Image/UploadImage";
+
 export const UpdateSpa = ({ categories, spa, updateSpa }) => {
   const handleChangeSpa = (event) => {
     setError({ ...error, [event.target.name]: false });
@@ -39,6 +41,12 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
     return category ? category.categoryName : "";
   };
 
+  const handleUpdateImage = (updateData) => {
+    console.log("handleUpdateData", updateData);
+    setSpaUpdate(updateData);
+    updateSpa(updateData);
+  };
+
   const [spaUpdate, setSpaUpdate] = useState(spa);
   const [error, setError] = useState({});
   const [categoryCode, setCategoryCode] = useState(spa?.categoryCode);
@@ -73,6 +81,9 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
           error={error.description}
           helperText={error.description && "Mô tả spa không được để trống"}
           className="mb-3"
+          InputProps={{
+            inputComponent: TextareaAutosize,
+          }}
         />
         <TextField
           required
@@ -115,27 +126,13 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
           error={error.spaType}
           helperText={error.spaType && "Loại spa không được để trống"}
         >
-          <MenuItem value={CONST.PRODUCT_TYPE.DOG}>
-            {CONST.PRODUCT_TYPE.DOG}
-          </MenuItem>
-          <MenuItem value={CONST.PRODUCT_TYPE.CAT}>
-            {CONST.PRODUCT_TYPE.CAT}
-          </MenuItem>
+          {Object.values(CONST.PRODUCT_TYPE).map((type) => (
+            <MenuItem key={type} value={type}>
+              {type}
+            </MenuItem>
+          ))}
         </TextField>
-        <Typography variant="h6" gutterBottom component="div">
-          Hình ảnh
-          <Button variant="outlined" component="label">
-            Upload File
-            <input type="file" hidden />
-          </Button>
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <img
-            src="https://picsum.photos/200/300"
-            alt="spa"
-            style={{ width: "200px", height: "300px" }}
-          />
-        </Box>
+        <UploadImage product={spa} updateProduct={handleUpdateImage} />
       </div>
     </Box>
   );

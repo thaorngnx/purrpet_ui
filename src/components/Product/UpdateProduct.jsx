@@ -1,8 +1,11 @@
-import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
+import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 import "../../api/product";
+import { UploadImage } from "../Image/UploadImage";
+
 export const UpdateProduct = ({ categories, product, updateProduct }) => {
   const handleChangeProduct = (event) => {
+    console.log("handleChangeProduct", event.target);
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
@@ -29,6 +32,12 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
         [event.target.name]: event.target.value,
       });
     }
+  };
+
+  const handleUpdateImage = (updateData) => {
+    console.log("handleUpdateData", updateData);
+    setProductUpdate(updateData);
+    updateProduct(updateData);
   };
 
   const getCategoryName = (categoryCode) => {
@@ -72,6 +81,9 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           error={error.description}
           helperText={error.description && "Mô tả sản phẩm không được để trống"}
           className="mb-3"
+          InputProps={{
+            inputComponent: TextareaAutosize,
+          }}
         />
         <TextField
           required
@@ -122,20 +134,7 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
           }
           className="mb-3"
         />
-        <Typography variant="h6" gutterBottom component="div">
-          Hình ảnh
-          <Button variant="outlined" component="label">
-            Upload File
-            <input type="file" hidden />
-          </Button>
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <img
-            src="https://picsum.photos/200/300"
-            alt="product"
-            style={{ width: "200px", height: "300px" }}
-          />
-        </Box>
+        <UploadImage product={product} updateProduct={handleUpdateImage} />
       </div>
     </Box>
   );

@@ -1,8 +1,8 @@
 import api from "./token";
 
-export async function getMasterDatas() {
+export async function getMasterDatas(params) {
   try {
-    const response = await api.get("masterData/query");
+    const response = await api.get("masterData/query", { params });
     return response.data;
   } catch (error) {
     console.error(error);

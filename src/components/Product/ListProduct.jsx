@@ -72,7 +72,7 @@ export const ListProduct = () => {
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
     },
     {
-      field: "image",
+      field: "images",
       headerName: "Hình ảnh",
       flex: 3,
       headerAlign: "center",
@@ -80,7 +80,11 @@ export const ListProduct = () => {
       minWidth: 150,
       renderCell: (params) => (
         <img
-          src={params.value}
+          src={
+            params.value && params.value.length > 0
+              ? params.value[0].path
+              : null
+          }
           alt={`Image ${params.row.purrPetCode}`}
           width="100%"
           height="100%"
@@ -155,7 +159,7 @@ export const ListProduct = () => {
 
   const handleUpdateProduct = () => {
     setOpenEdit(false);
-    console.log(selectedProduct);
+    console.log("handleUpdateProduct", selectedProduct);
     updateProduct({
       purrPetCode: selectedProduct.purrPetCode,
       productName: selectedProduct.productName,
@@ -163,9 +167,8 @@ export const ListProduct = () => {
       description: selectedProduct.description,
       price: selectedProduct.price,
       categoryCode: selectedProduct.categoryCode,
-      image: selectedProduct.image,
+      images: selectedProduct.images,
       inventory: selectedProduct.inventory,
-      // updateBy: "admin"
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -194,7 +197,7 @@ export const ListProduct = () => {
   };
 
   const handleDataUpdateProduct = (updateProduct) => {
-    console.log(updateProduct);
+    console.log("selectedProduct", selectedProduct);
     setSelectedProduct(updateProduct);
   };
 
@@ -202,7 +205,6 @@ export const ListProduct = () => {
     setOpenAdd(true);
     setSelectedProduct({
       productName: "",
-      productType: "",
       description: "",
       price: 0,
       categoryCode: "",
@@ -220,13 +222,11 @@ export const ListProduct = () => {
     createProduct({
       purrPetCode: selectedProduct.purrPetCode,
       productName: selectedProduct.productName,
-      productType: selectedProduct.productType,
       description: selectedProduct.description,
       price: selectedProduct.price,
       categoryCode: selectedProduct.categoryCode,
-      image: selectedProduct.image,
+      images: selectedProduct.images,
       inventory: selectedProduct.inventory,
-      // updateBy: "admin"
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);

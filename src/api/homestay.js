@@ -20,7 +20,9 @@ export async function getHomestayByCode(code) {
 
 export async function createHomestay(homestay) {
   try {
-    const response = await api.post("homestay/create", homestay);
+    const response = await api.post("homestay/create", homestay, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -32,6 +34,9 @@ export async function updateHomestay(homestay) {
     const response = await api.put(
       `homestay/update/${homestay.purrPetCode}`,
       homestay,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data;
   } catch (error) {

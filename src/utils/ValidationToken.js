@@ -1,6 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import Cookies from "universal-cookie"; // Giả sử bạn đã cài đặt thư viện cookie
+import Cookies from "universal-cookie";
 
 const cookie = new Cookies();
 async function checkValidToken(originalRequest, path) {

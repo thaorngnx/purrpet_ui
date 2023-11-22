@@ -26,6 +26,7 @@ import {
 import { getCategories } from "../../api/category";
 import { UpdateHomestay } from "./UpdateHomestay";
 import * as CONST from "../../constants";
+import { getMasterDatas } from "../../api/masterData";
 
 export const ListHomestay = () => {
   const columns = [
@@ -38,8 +39,17 @@ export const ListHomestay = () => {
       minWidth: 100,
     },
     {
-      field: "homeName",
-      headerName: "Tên homestay",
+      field: "masterDataCode",
+      headerName: "Kich thước phòng",
+      flex: 3,
+      headerAlign: "center",
+      align: "left",
+      minWidth: 150,
+      valueGetter: (params) => getMasterDataName(params.row.masterDataCode),
+    },
+    {
+      field: "homeType",
+      headerName: "Loại phòng",
       flex: 3,
       headerAlign: "center",
       align: "left",
@@ -72,7 +82,7 @@ export const ListHomestay = () => {
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
     },
     {
-      field: "image",
+      field: "images",
       headerName: "Hình ảnh",
       flex: 3,
       headerAlign: "center",
@@ -80,21 +90,16 @@ export const ListHomestay = () => {
       minWidth: 150,
       renderCell: (params) => (
         <img
-          src={params.value}
+          src={
+            params.value && params.value.length > 0
+              ? params.value[0].path
+              : null
+          }
           alt={`Image ${params.row.purrPetCode}`}
           width="100%"
           height="100%"
         />
       ),
-    },
-    {
-      field: "inventory",
-      headerName: "Hàng tồn kho",
-      flex: 1,
-      headerAlign: "center",
-      align: "right",
-      minWidth: 100,
-      type: "number",
     },
     {
       field: "status",
@@ -158,12 +163,12 @@ export const ListHomestay = () => {
     console.log(selectedHomestay);
     updateHomestay({
       purrPetCode: selectedHomestay.purrPetCode,
-      homeName: selectedHomestay.homeName,
+      homeType: selectedHomestay.homeType,
       description: selectedHomestay.description,
       price: selectedHomestay.price,
       categoryCode: selectedHomestay.categoryCode,
-      image: selectedHomestay.image,
-      inventory: selectedHomestay.inventory,
+      masterDataCode: selectedHomestay.masterDataCode,
+      images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -199,12 +204,14 @@ export const ListHomestay = () => {
   const handleAddHomestay = () => {
     setOpenAdd(true);
     setSelectedHomestay({
-      homeName: "",
+      homeType: "",
       description: "",
       price: 0,
       categoryCode: "",
+      categoryName: "",
+      masterDataCode: "",
+      masterDataName: "",
       images: [],
-      inventory: 0,
     });
   };
 
@@ -215,14 +222,12 @@ export const ListHomestay = () => {
   const handleCreateHomestay = () => {
     setOpenAdd(false);
     createHomestay({
-      purrPetCode: selectedHomestay.purrPetCode,
-      homeName: selectedHomestay.homeName,
+      homeType: selectedHomestay.homeType,
       description: selectedHomestay.description,
       price: selectedHomestay.price,
       categoryCode: selectedHomestay.categoryCode,
-      image: selectedHomestay.image,
-      inventory: selectedHomestay.inventory,
-      // updateBy: "admin"
+      masterDataCode: selectedHomestay.masterDataCode,
+      images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -249,8 +254,16 @@ export const ListHomestay = () => {
     );
   };
 
+  const getMasterDataName = (masterDataCode) => {
+    const masterData = sizeHome.find(
+      (masterData) => masterData.purrPetCode === masterDataCode,
+    );
+    return masterData ? masterData.name : "";
+  };
+
   const [rows, setRows] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [sizeHome, setSizeHome] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
@@ -269,6 +282,12 @@ export const ListHomestay = () => {
       console.log(res.data);
       setCategories(res.data);
     });
+    getMasterDatas({ groupCode: CONST.MASTERDATA_HOMESTAY.HOME_SIZE }).then(
+      (res) => {
+        console.log(res.data);
+        setSizeHome(res.data);
+      },
+    );
   }, []);
 
   useEffect(() => {
@@ -342,6 +361,7 @@ export const ListHomestay = () => {
           </DialogTitle>
           <DialogContent>
             <UpdateHomestay
+              homeSize={sizeHome}
               categories={activeCategory}
               homestay={selectedHomestay}
               updateHomestay={handleDataUpdateHomestay}
@@ -358,6 +378,7 @@ export const ListHomestay = () => {
           </DialogTitle>
           <DialogContent>
             <UpdateHomestay
+              homeSize={sizeHome}
               categories={activeCategory}
               homestay={selectedHomestay}
               updateHomestay={handleDataUpdateHomestay}

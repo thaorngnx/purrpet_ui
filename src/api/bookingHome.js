@@ -50,3 +50,14 @@ export async function updateStatusBookingHome(bookingHome) {
     console.error(error);
   }
 }
+
+export async function getUnavailableDay(params) {
+  try {
+    const response = await api.get("bookingHome/get-unavailable-day", {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

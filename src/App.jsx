@@ -14,6 +14,8 @@ import { Spa } from "./pages/Admin/Spa";
 import { Account } from "./pages/Admin/Account";
 import { Homestay } from "./pages/Admin/Homestay";
 import { MasterData } from "./pages/Admin/MasterData";
+import { BookingSpaForm } from "./components/Booking/BookingSpaForm";
+import { BookingHomeForm } from "./components/Booking/BookingHomeForm";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<HeaderAdmin />} />
+          <Route path="booking/spa" element={<BookingSpaForm />} />
+          <Route path="booking/home" element={<BookingHomeForm />} />
         </Route>
         <Route path="/admin">
           <Route index element={<Dashboard />} />

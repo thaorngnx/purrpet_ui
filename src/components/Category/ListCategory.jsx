@@ -117,7 +117,6 @@ export const ListCategory = () => {
       purrPetCode: selectedCategory.purrPetCode,
       categoryName: selectedCategory.categoryName,
       categoryType: selectedCategory.categoryType,
-      // updateBy: "admin"
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -169,7 +168,6 @@ export const ListCategory = () => {
       purrPetCode: selectedCategory.purrPetCode,
       categoryName: selectedCategory.categoryName,
       categoryType: selectedCategory.categoryType,
-      // updateBy: "admin"
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);

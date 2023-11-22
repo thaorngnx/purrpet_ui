@@ -20,7 +20,10 @@ export async function getProductByCode(code) {
 
 export async function createProduct(product) {
   try {
-    const response = await api.post("product/create", product);
+    console.log("req", product);
+    const response = await api.post("product/create", product, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -29,9 +32,15 @@ export async function createProduct(product) {
 
 export async function updateProduct(product) {
   try {
+    console.log("req", product);
     const response = await api.put(
       `product/update/${product.purrPetCode}`,
       product,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return response.data;
   } catch (error) {

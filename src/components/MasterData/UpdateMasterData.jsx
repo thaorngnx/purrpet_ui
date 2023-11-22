@@ -1,4 +1,4 @@
-import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
+import { Box, getTextFieldUtilityClass, TextareaAutosize } from "@mui/material";
 
 import { useState } from "react";
 import "../../api/masterData";
@@ -74,6 +74,9 @@ export const UpdateMasterData = ({ masterData, updateMasterData }) => {
             error.description && "Mô tả masterData không được để trống"
           }
           className="mb-3"
+          InputProps={{
+            inputComponent: TextareaAutosize,
+          }}
         />
       </div>
     </Box>

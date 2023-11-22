@@ -1,7 +1,22 @@
-import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
+import {
+  Box,
+  TextField,
+  MenuItem,
+  Typography,
+  Button,
+  TextareaAutosize,
+} from "@mui/material";
 import { useState } from "react";
 import "../../api/homestay";
-export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
+import * as CONST from "../../constants";
+import { UploadImage } from "../Image/UploadImage";
+
+export const UpdateHomestay = ({
+  homeSize,
+  categories,
+  homestay,
+  updateHomestay,
+}) => {
   const handleChangeHomestay = (event) => {
     console.log(event.target);
     setError({ ...error, [event.target.name]: false });
@@ -20,6 +35,16 @@ export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
         categoryCode: category.purrPetCode,
       });
       updateHomestay({ ...homestayUpdate, categoryCode: category.purrPetCode });
+    } else if (event.target.name === "homeSize") {
+      const size = homeSize.find((size) => size.name === event.target.value);
+      setMasterDataName(size.name);
+      setMasterDataCode(size.purrPetCode);
+      setHomestayUpdate({
+        ...homestayUpdate,
+        masterDataName: size.name,
+        masterDataCode: size.purrPetCode,
+      });
+      updateHomestay({ ...homestayUpdate, masterDataCode: size.purrPetCode });
     } else {
       setHomestayUpdate({
         ...homestayUpdate,
@@ -39,28 +64,72 @@ export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
     return category ? category.categoryName : "";
   };
 
+  const getMasterDataName = (masterDataCode) => {
+    const masterData = homeSize.find(
+      (masterData) => masterData.purrPetCode === masterDataCode,
+    );
+    return masterData ? masterData.name : "";
+  };
+
+  const handleUpdateImage = (updateData) => {
+    console.log("handleUpdateData", updateData);
+    setHomestayUpdate(updateData);
+    updateHomestay(updateData);
+  };
+
   const [homestayUpdate, setHomestayUpdate] = useState(homestay);
   const [error, setError] = useState({});
   const [categoryCode, setCategoryCode] = useState(homestay?.categoryCode);
   const [categoryName, setCategoryName] = useState(
     getCategoryName(categoryCode),
   );
+  const [masterDataCode, setMasterDataCode] = useState(
+    homestay?.masterDataCode,
+  );
+  const [masterDataName, setMasterDataName] = useState(
+    getMasterDataName(masterDataCode),
+  );
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>
       <div className="mt-5">
         <TextField
+          label="Loại phòng"
+          select
           required
-          id="outlined-required"
-          label="Tên homestay"
-          fullWidth
-          name="homeName"
-          value={homestayUpdate.homeName}
+          name="homeType"
+          value={homestayUpdate.homeType}
+          sx={{ width: "50%" }}
           onChange={handleChangeHomestay}
-          error={error.homeName}
-          helperText={error.homeName && "Tên homestay không được để trống"}
-          className="mb-3"
-        />
+          error={error.homeType}
+          helperText={error.homeType && "Loại spa không được để trống"}
+        >
+          {Object.values(CONST.PRODUCT_TYPE).map((type) => (
+            <MenuItem key={type} value={type}>
+              {type}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Kích thước phòng"
+          select
+          required
+          name="homeSize"
+          key={masterDataCode}
+          value={masterDataName}
+          sx={{ width: "50%" }}
+          onChange={handleChangeHomestay}
+          error={error.homestayType}
+          helperText={
+            error.homestayType && "Danh mục homestay không được để trống"
+          }
+        >
+          {homeSize.map((size) => (
+            <MenuItem key={size.name} value={size.name}>
+              {size.name}
+            </MenuItem>
+          ))}
+        </TextField>
         <TextField
           required
           id="outlined-multiline-static"
@@ -73,6 +142,9 @@ export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
           error={error.description}
           helperText={error.description && "Mô tả homestay không được để trống"}
           className="mb-3"
+          InputProps={{
+            inputComponent: TextareaAutosize,
+          }}
         />
         <TextField
           required
@@ -107,36 +179,7 @@ export const UpdateHomestay = ({ categories, homestay, updateHomestay }) => {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          required
-          id="outlined-required"
-          label="Số lượng hàng tồn kho"
-          type="number"
-          InputProps={{ inputProps: { min: 0 } }}
-          fullWidth
-          name="inventory"
-          value={homestayUpdate.inventory}
-          onChange={handleChangeHomestay}
-          error={error.inventory}
-          helperText={
-            error.inventory && "Số lượng homestay không được để trống"
-          }
-          className="mb-3"
-        />
-        <Typography variant="h6" gutterBottom component="div">
-          Hình ảnh
-          <Button variant="outlined" component="label">
-            Upload File
-            <input type="file" hidden />
-          </Button>
-        </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <img
-            src="https://picsum.photos/200/300"
-            alt="homestay"
-            style={{ width: "200px", height: "300px" }}
-          />
-        </Box>
+        <UploadImage product={homestay} updateProduct={handleUpdateImage} />
       </div>
     </Box>
   );
