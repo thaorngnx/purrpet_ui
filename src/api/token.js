@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 const cookie = new Cookie();
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
@@ -18,8 +18,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    if (cookie.get("access_token")) {
-      config.headers["Authorization"] = `Bearer ${cookie.get("access_token")}`;
+    if (cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
+      config.headers["Authorization"] = `Bearer ${cookie.get(
+        import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
+      )}`;
     }
     return config;
   },
@@ -30,41 +32,56 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+    //if request is api logout, remove token, redirect to login page
+    if (response.request.responseURL === import.meta.env.VITE_API_LOGOUT_URL) {
+      cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
+      cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+      window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
+    }
     return response;
   },
   async (error) => {
+    console.log("error", error);
     const originalRequest = error.config;
     console.log("orin", originalRequest);
     if (
       error.response.status === 401 &&
-      originalRequest.url === "http://localhost:3000/api/auth/refresh"
+      originalRequest.url === import.meta.env.VITE_API_REFRESH_TOKEN_URL
     ) {
-      window.location.href = "admin/login";
+      window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
       return Promise.reject(error);
     }
 
     if (
       error.response.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== "http://localhost:3000/api/auth/refresh"
+      originalRequest.url !== import.meta.env.VITE_API_REFRESH_TOKEN_URL
     ) {
       originalRequest._retry = true;
       try {
-        const refresh_token = cookie.get("refresh_token");
+        const refresh_token = cookie.get(
+          import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN,
+        );
         if (jwtDecode(refresh_token).exp < Date.now() / 1000) {
           console.log("refresh token expired");
-          cookie.remove("access_token", { path: "/admin" });
-          cookie.remove("refresh_token", { path: "/admin" });
-          window.location.href = "/admin/login";
+          cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, {
+            path: import.meta.env.VITE_APP_PATH_ADMIN,
+          });
+          cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN, {
+            path: import.meta.env.VITE_APP_PATH_ADMIN,
+          });
+          window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
           return Promise.reject(error);
         }
         console.log("refresh token not expired");
         const response = await refreshToken();
         console.log("after refresh", response);
         const access_token = response.access_token;
-        cookie.set("access_token", access_token, { path: "/admin" });
+        cookie.set(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, access_token, {
+          path: import.meta.env.VITE_APP_PATH_ADMIN,
+        });
         api.defaults.headers["Authorization"] =
-          "Bearer " + cookie.get("access_token");
+          "Bearer " + cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
         return api(originalRequest);
       } catch (error) {
         console.error(error);

@@ -8,6 +8,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
+import { logout } from "../../api/auth";
 
 export const HeaderAdmin = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -21,7 +22,7 @@ export const HeaderAdmin = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout functionality here
+    logout();
   };
 
   return (

@@ -1,7 +1,12 @@
+import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
+
 export const BookingSpa = () => {
   return (
-    <div>
-      <h1>BookingSpa</h1>
-    </div>
+    <>
+      <HeaderAdmin />
+      <div>
+        <h1>BookingSpa</h1>
+      </div>
+    </>
   );
 };

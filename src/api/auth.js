@@ -64,39 +64,8 @@ export async function refreshToken() {
 
 export async function logout() {
   try {
-    const response = await api.post("auth/logout", cookie.get("access_token"));
-    cookie.remove("access_token");
-    cookie.remove("refresh_token");
+    const response = await api.post("auth/logout");
     return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-//check valid token in cookie --> if valid, continue
-//if not, refresh token --> if refresh token valid, continue
-//if not, redirect to login page
-export async function checkValidToken(path) {
-  try {
-    if (cookie.get("access_token")) {
-      const decodedAccessToken = jwtDecode(cookie.get("access_token"));
-      console.log("ac", decodedAccessToken);
-      if (decodedAccessToken.exp * 1000 > Date.now()) {
-        return true;
-      }
-    } else if (cookie.get("refresh_token")) {
-      const decodedRefreshToken = jwtDecode(cookie.get("refresh_token"));
-      console.log("rf", decodedRefreshToken);
-      if (decodedRefreshToken.exp * 1000 > Date.now()) {
-        const response = await refreshToken();
-        console.log("res", response);
-        if (response.err === 0) {
-          return true;
-        } else {
-          window.location.href = `${path}/login`;
-        }
-      }
-    }
   } catch (error) {
     console.error(error);
   }

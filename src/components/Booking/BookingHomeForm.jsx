@@ -32,22 +32,14 @@ export const BookingHomeForm = () => {
       const masterData = homeSizes.find(
         (size) => size.name === event.target.value,
       );
-      console.log("masterData", masterData);
-      console.log("bookingInfo", bookingInfo);
       const home = validHomes.find(
         (home) =>
           home.masterDataCode === masterData.purrPetCode &&
           home.homeType === bookingInfo.petType &&
           home.categoryCode === bookingInfo.categoryCode,
       );
-      console.log("home", home);
-      console.log("masterData.purrPetCode", masterData.purrPetCode);
-      console.log("bookingInfo.petType", bookingInfo.petType);
-      console.log("bookingInfo.categoryCode", bookingInfo.categoryCode);
       getUnavailableDay({
         masterDataCode: masterData.purrPetCode,
-        homeType: bookingInfo.petType,
-        categoryCode: bookingInfo.categoryCode,
       }).then((res) => {
         if (res.err === 0) {
           console.log("unavailable", res.data);

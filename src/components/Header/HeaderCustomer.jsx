@@ -106,7 +106,7 @@ export function HeaderCustomer() {
               TransitionComponent={Fade}
             >
               {categories.map((category) => (
-                <MenuItem onClick={handleClose}>
+                <MenuItem key={category.categoryName} onClick={handleClose}>
                   {category.categoryName}
                 </MenuItem>
               ))}
