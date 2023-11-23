@@ -50,6 +50,7 @@ export const BookingHomeForm = () => {
         categoryCode: bookingInfo.categoryCode,
       }).then((res) => {
         if (res.err === 0) {
+          console.log("unavailable", res.data);
           setUnavailableDays(res.data);
         } else {
           setUnavailableDays([]);
@@ -377,10 +378,8 @@ export const BookingHomeForm = () => {
                 format="DD/MM/YYYY"
                 minDate={dayjs()}
                 shouldDisableDate={(date) => {
-                  return unavailableDays.some(
-                    (day) =>
-                      dayjs(date).isSame(dayjs(day).subtract(1, "day")) ||
-                      dayjs(date).isSame(dayjs(day)),
+                  return unavailableDays.some((day) =>
+                    dayjs(date).isSame(dayjs(day)),
                   );
                 }}
                 maxDate={dayjs().add(1, "year")}
@@ -397,8 +396,8 @@ export const BookingHomeForm = () => {
                   shouldDisableDate={(date) => {
                     return unavailableDays.some(
                       (day) =>
-                        dayjs(date).isSame(dayjs(day).add(1, "day")) ||
-                        dayjs(date).isSame(dayjs(day)),
+                        dayjs(date).isSame(dayjs(bookingInfo.dateCheckIn)) &&
+                        dayjs(date).isSame(dayjs(day).add(1, "day")),
                     );
                   }}
                   maxDate={maxDateCheckOut}

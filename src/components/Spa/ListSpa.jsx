@@ -16,7 +16,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import "../../api/spa";
 import { createSpa, getSpas, updateSpa, updateStatusSpa } from "../../api/spa";
 import { getCategories } from "../../api/category";
 import { UpdateSpa } from "./UpdateSpa";

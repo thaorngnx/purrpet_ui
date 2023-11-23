@@ -1,7 +1,6 @@
 import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
 import * as CONST from "../../constants";
 import { useState } from "react";
-import "../../api/spa";
 import { UploadImage } from "../Image/UploadImage";
 
 export const UpdateSpa = ({ categories, spa, updateSpa }) => {
