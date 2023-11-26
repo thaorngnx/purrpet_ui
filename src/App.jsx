@@ -17,6 +17,7 @@ import { Homestay } from "./pages/Admin/Homestay";
 import { MasterData } from "./pages/Admin/MasterData";
 import { BookingSpaForm } from "./components/Booking/BookingSpaForm";
 import { BookingHomeForm } from "./components/Booking/BookingHomeForm";
+import FooterCustomer from "./components/Footer/FooterCustomer";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="booking/home" element={<BookingHomeForm />} />
         </Route>
         <Route path="/admin">
+          <Route index element={<HeaderAdmin />} />
           <Route index element={<Dashboard />} />
           <Route path="login" element={<Login />} />
           <Route path="category" element={<Category />} />
@@ -42,6 +44,7 @@ function App() {
           <Route path="x/account" element={<ListAccount />} />
         </Route>
       </Routes>
+      <FooterCustomer />
     </BrowserRouter>
   );
 }
