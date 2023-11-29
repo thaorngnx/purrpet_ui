@@ -1,4 +1,4 @@
-import { Sidenav } from "../../components/Admin/Sidenav";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box, Typography } from "@mui/material";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
@@ -7,7 +7,7 @@ export const Dashboard = () => {
     <>
       <HeaderAdmin />
       <Box sx={{ display: "flex" }}>
-        <Sidenav />
+        <SideNavAdmin />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <h1>Dashboard</h1>
           <Typography paragraph>

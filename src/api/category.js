@@ -9,6 +9,15 @@ export async function getCategories(params) {
   }
 }
 
+export async function getActiveCategories(params) {
+  try {
+    const response = await api.get("category/query-customer", { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getCategoryByCode(code) {
   try {
     const response = await api.get(`/${code}`);

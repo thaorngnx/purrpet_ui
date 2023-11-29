@@ -94,7 +94,7 @@ const NavList = [
   },
 ];
 
-export const Sidenav = () => {
+export const SideNavAdmin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();

@@ -1,27 +1,34 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Fade from "@mui/material/Fade";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { AiOutlineSearch } from "react-icons/ai";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Menu,
+  Container,
+  Button,
+  MenuItem,
+  Fade,
+  Badge,
+  TextField,
+} from "@mui/material";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import * as CONST from "../../constants";
-
-import { getCategories } from "../../api/category";
+import { getActiveCategories } from "../../api/category";
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import img from "../../assets/logo.jpg";
+import { getCart } from "../../api/cart";
 
 export function HeaderCustomer() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorProduct, setAnchorProduct] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorProduct, setAnchorProduct] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [cartBadge, setCartBadge] = useState(0);
   const open = Boolean(anchorProduct);
   const openNav = Boolean(anchorElNav);
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -31,63 +38,66 @@ export function HeaderCustomer() {
     setAnchorElNav(null);
   };
 
-  const handleClick = (event) => {
-    setAnchorProduct(event.currentTarget);
-  };
   const handleClose = () => {
     setAnchorProduct(null);
   };
 
   useEffect(() => {
-    getCategories();
     const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
-    getCategories(params).then((res) => {
+    getActiveCategories(params).then((res) => {
       console.log(res.data);
       setCategories(res.data);
     });
   }, []);
 
+  useEffect(() => {
+    getCart().then((res) => {
+      console.log(res.data);
+      setCartBadge(res.length);
+    });
+  }, [cartBadge]);
+
   return (
-    <AppBar position="static" className="bg-[#d9d9d9]">
-      <Container maxWidth="xl">
+    <AppBar position="static" className="mb-8 bg-[#d9d9d9]">
+      <Container className="p-0">
         <Toolbar disableGutters>
           <img src={img} alt="logo" width="15%" />
           <Box
             sx={{
-              // flexGrow: 1,
               display: { xs: "none", md: "flex" },
               justifyContent: "space-around",
-              width: "60%",
+              width: "50%",
             }}
           >
             <Button
               sx={{
-                my: 2,
                 color: "black",
                 display: "block",
                 fontWeight: "bold",
+              }}
+              onClick={() => {
+                navigate("/");
               }}
             >
               Trang chủ
             </Button>
             <Button
               sx={{
-                my: 2,
                 color: "black",
                 display: "block",
                 fontWeight: "bold",
+              }}
+              onClick={() => {
+                navigate("/introduction");
               }}
             >
               Giới thiệu
             </Button>
             <Button
-              sx={{
-                my: 2,
-                color: "black",
-                display: "block",
-                fontWeight: "bold",
+              className="flex font-bold text-black"
+              onClick={() => {
+                navigate("/product");
               }}
-              onClick={handleClick}
             >
               Sản phẩm
             </Button>
@@ -108,12 +118,13 @@ export function HeaderCustomer() {
               ))}
             </Menu>
             <Button
-              onClick={handleOpenNavMenu}
               sx={{
-                my: 2,
                 color: "black",
                 display: "block",
                 fontWeight: "bold",
+              }}
+              onClick={() => {
+                navigate("/service");
               }}
             >
               Dịch vụ
@@ -125,17 +136,25 @@ export function HeaderCustomer() {
               }}
               anchorEl={anchorElNav}
               open={openNav}
-              onClose={handleCloseNavMenu}
               TransitionComponent={Fade}
             >
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem
+                onClick={() => {
+                  navigate("/service/spa");
+                }}
+              >
                 Dịch vụ khách sạn
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>Dịch vụ Spa</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  navigate("/service/homestay");
+                }}
+              >
+                Dịch vụ Spa
+              </MenuItem>
             </Menu>
             <Button
               sx={{
-                my: 2,
                 color: "black",
                 display: "block",
                 fontWeight: "bold",
@@ -144,22 +163,42 @@ export function HeaderCustomer() {
               Đặt lịch
             </Button>
           </Box>
-          <div className="relative flex w-[25%] max-w-full items-center justify-between text-black">
-            <a href="#">Tra cứu đơn hàng</a>
-            <div className="relative">
-              <input
-                type="text"
-                className="bg-[#d9d9d9]"
-                placeholder="Tìm kiếm..."
+          <Box className="flex w-[35%] items-center justify-end text-center text-black">
+            <Button
+              sx={{
+                color: "black",
+                display: "block",
+                fontWeight: "bold",
+                border: "1px solid black",
+                textTransform: "none",
+                mr: 1,
+              }}
+              onClick={() => {
+                navigate("/lookup");
+              }}
+            >
+              Tra cứu đơn hàng
+            </Button>
+            <Box>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Tìm kiếm"
+                className="w-[150px]"
               />
-              <div className="absolute right-0 top-0 flex h-full items-center px-2 text-gray-400">
-                <AiOutlineSearch className="text-lg text-black" />
-              </div>
-            </div>
-            <a href="">
-              <AiOutlineShoppingCart className="text-lg text-black" />
-            </a>
-          </div>
+              <SearchOutlinedIcon />
+              <Badge
+                badgeContent={cartBadge > 0 ? cartBadge : null}
+                color="primary"
+              >
+                <ShoppingCartOutlinedIcon
+                  onClick={() => {
+                    navigate("/cart");
+                  }}
+                />
+              </Badge>
+            </Box>
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

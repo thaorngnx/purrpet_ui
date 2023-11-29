@@ -1,6 +1,6 @@
-import { Sidenav } from "../../components/Admin/Sidenav";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box } from "@mui/material";
-import { ListHomestay } from "../../components/Homestay/ListHomestay";
+import { TableHomestay } from "../../components/Homestay/TableHomestay";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
 export const Homestay = () => {
@@ -8,7 +8,7 @@ export const Homestay = () => {
     <>
       <HeaderAdmin />
       <Box sx={{ display: "flex" }}>
-        <Sidenav />
+        <SideNavAdmin />
         <Box
           sx={{
             display: "block",
@@ -18,7 +18,7 @@ export const Homestay = () => {
             marginBottom: "30px",
           }}
         >
-          <ListHomestay />
+          <TableHomestay />
         </Box>
       </Box>
     </>

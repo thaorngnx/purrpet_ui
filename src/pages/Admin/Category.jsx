@@ -1,6 +1,6 @@
-import { Sidenav } from "../../components/Admin/Sidenav";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box } from "@mui/material";
-import { ListCategory } from "../../components/Category/ListCategory";
+import { TableCategory } from "../../components/Category/TableCategory";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
 export const Category = () => {
@@ -8,7 +8,7 @@ export const Category = () => {
     <>
       <HeaderAdmin />
       <Box sx={{ display: "flex" }}>
-        <Sidenav />
+        <SideNavAdmin />
         <Box
           sx={{
             display: "block",
@@ -18,7 +18,7 @@ export const Category = () => {
             marginBottom: "30px",
           }}
         >
-          <ListCategory />
+          <TableCategory />
         </Box>
       </Box>
     </>

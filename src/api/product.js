@@ -1,8 +1,17 @@
 import api from "./token";
 
-export async function getProducts() {
+export async function getProducts(params) {
   try {
-    const response = await api.get("product/query");
+    const response = await api.get("product/query", { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getActiveProducts(params) {
+  try {
+    const response = await api.get("product/query-customer", { params });
     return response.data;
   } catch (error) {
     console.error(error);

@@ -1,6 +1,6 @@
-import { Sidenav } from "../../components/Admin/Sidenav";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box } from "@mui/material";
-import { ListSpa } from "../../components/Spa/ListSpa";
+import { TableSpa } from "../../components/Spa/TableSpa";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
 export const Spa = () => {
@@ -8,7 +8,7 @@ export const Spa = () => {
     <>
       <HeaderAdmin />
       <Box sx={{ display: "flex" }}>
-        <Sidenav />
+        <SideNavAdmin />
         <Box
           sx={{
             display: "block",
@@ -18,7 +18,7 @@ export const Spa = () => {
             marginBottom: "30px",
           }}
         >
-          <ListSpa />
+          <TableSpa />
         </Box>
       </Box>
     </>

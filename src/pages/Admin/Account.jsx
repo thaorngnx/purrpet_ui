@@ -1,4 +1,4 @@
-import { Sidenav } from "../../components/Admin/Sidenav";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box } from "@mui/material";
 import { ListAccount } from "../../components/Account/ListAccount";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
@@ -8,7 +8,7 @@ export const Account = () => {
     <>
       <HeaderAdmin />
       <Box sx={{ display: "flex" }}>
-        <Sidenav />
+        <SideNavAdmin />
         <Box
           sx={{
             display: "block",

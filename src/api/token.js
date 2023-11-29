@@ -1,9 +1,9 @@
 import axios from "axios";
-import Cookie from "universal-cookie";
+import Cookies from "universal-cookie";
 import { refreshToken } from "./auth";
 import { jwtDecode } from "jwt-decode";
 
-const cookie = new Cookie();
+const cookie = new Cookies();
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

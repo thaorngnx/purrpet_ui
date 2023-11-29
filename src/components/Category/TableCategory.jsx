@@ -26,7 +26,7 @@ import {
 import { UpdateCategory } from "./UpdateCategory";
 import * as CONST from "../../constants";
 
-export const ListCategory = () => {
+export const TableCategory = () => {
   const columns = [
     {
       field: "purrPetCode",

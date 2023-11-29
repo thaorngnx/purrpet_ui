@@ -3,6 +3,16 @@ import api from "./token";
 export async function getSpas(params) {
   try {
     const response = await api.get("spa/query", { params });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getActiveSpas(params) {
+  try {
+    const response = await api.get("spa/query-customer", { params });
     return response.data;
   } catch (error) {
     console.error(error);

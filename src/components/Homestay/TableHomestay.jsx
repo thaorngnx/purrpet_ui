@@ -16,32 +16,42 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import "../../api/product";
+import "../../api/homestay";
 import {
-  createProduct,
-  getProducts,
-  updateProduct,
-  updateStatusProduct,
-} from "../../api/product";
+  createHomestay,
+  getHomestays,
+  updateHomestay,
+  updateStatusHomestay,
+} from "../../api/homestay";
 import { getCategories } from "../../api/category";
-import { UpdateProduct } from "./UpdateProduct";
+import { UpdateHomestay } from "./UpdateHomestay";
 import * as CONST from "../../constants";
+import { getMasterDatas } from "../../api/masterData";
 
-export const ListProduct = () => {
+export const TableHomestay = () => {
   const columns = [
     {
       field: "purrPetCode",
-      headerName: "Mã",
+      headerName: "Mã homestay",
       flex: 1,
       align: "left",
-      headerAlign: "left",
-      minWidth: 70,
+      headerAlign: "center",
+      minWidth: 100,
     },
     {
-      field: "productName",
-      headerName: "Tên sản phẩm",
+      field: "masterDataCode",
+      headerName: "Kich thước phòng",
       flex: 3,
-      headerAlign: "left",
+      headerAlign: "center",
+      align: "left",
+      minWidth: 150,
+      valueGetter: (params) => getMasterDataName(params.row.masterDataCode),
+    },
+    {
+      field: "homeType",
+      headerName: "Loại phòng",
+      flex: 3,
+      headerAlign: "center",
       align: "left",
       minWidth: 150,
     },
@@ -49,7 +59,7 @@ export const ListProduct = () => {
       field: "description",
       headerName: "Mô tả",
       flex: 3,
-      headerAlign: "left",
+      headerAlign: "center",
       align: "left",
       minWidth: 100,
     },
@@ -66,7 +76,7 @@ export const ListProduct = () => {
       field: "categoryName",
       headerName: "Danh mục",
       flex: 3,
-      headerAlign: "left",
+      headerAlign: "center",
       align: "left",
       minWidth: 150,
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
@@ -92,15 +102,6 @@ export const ListProduct = () => {
       ),
     },
     {
-      field: "inventory",
-      headerName: "Hàng tồn kho",
-      flex: 1,
-      headerAlign: "center",
-      align: "right",
-      minWidth: 100,
-      type: "number",
-    },
-    {
       field: "status",
       headerName: "Trạng thái",
       headerAlign: "center",
@@ -116,7 +117,7 @@ export const ListProduct = () => {
                 inputProps={{
                   "aria-label": "controlled",
                 }}
-                onChange={() => handleChangeStatusProduct(params.row)}
+                onChange={() => handleChangeStatusHomestay(params.row)}
               />
             }
             label={params.value === CONST.STATUS_PRODUCT.ACTIVE ? "Hiện" : "Ẩn"}
@@ -137,7 +138,7 @@ export const ListProduct = () => {
       renderCell: (params) => (
         <>
           <Tooltip title="Sửa">
-            <EditIcon onClick={() => handleEditProduct(params.row)}></EditIcon>
+            <EditIcon onClick={() => handleEditHomestay(params.row)}></EditIcon>
           </Tooltip>
         </>
       ),
@@ -148,27 +149,26 @@ export const ListProduct = () => {
     return row.purrPetCode;
   };
 
-  const handleEditProduct = (row) => {
+  const handleEditHomestay = (row) => {
     setOpenEdit(true);
-    setSelectedProduct(row);
+    setSelectedHomestay(row);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
   };
 
-  const handleUpdateProduct = () => {
+  const handleUpdateHomestay = () => {
     setOpenEdit(false);
-    console.log("handleUpdateProduct", selectedProduct);
-    updateProduct({
-      purrPetCode: selectedProduct.purrPetCode,
-      productName: selectedProduct.productName,
-      productType: selectedProduct.productType,
-      description: selectedProduct.description,
-      price: selectedProduct.price,
-      categoryCode: selectedProduct.categoryCode,
-      images: selectedProduct.images,
-      inventory: selectedProduct.inventory,
+    console.log(selectedHomestay);
+    updateHomestay({
+      purrPetCode: selectedHomestay.purrPetCode,
+      homeType: selectedHomestay.homeType,
+      description: selectedHomestay.description,
+      price: selectedHomestay.price,
+      categoryCode: selectedHomestay.categoryCode,
+      masterDataCode: selectedHomestay.masterDataCode,
+      images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -176,40 +176,42 @@ export const ListProduct = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
+      getHomestays().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleChangeStatusProduct = (row) => {
-    updateStatusProduct(row.purrPetCode).then((res) => {
+  const handleChangeStatusHomestay = (row) => {
+    updateStatusHomestay(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
+      getHomestays().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleDataUpdateProduct = (updateProduct) => {
-    console.log("selectedProduct", selectedProduct);
-    setSelectedProduct(updateProduct);
+  const handleDataUpdateHomestay = (updateHomestay) => {
+    console.log("updateHomestay", updateHomestay);
+    setSelectedHomestay(updateHomestay);
   };
 
-  const handleAddProduct = () => {
+  const handleAddHomestay = () => {
     setOpenAdd(true);
-    setSelectedProduct({
-      productName: "",
+    setSelectedHomestay({
+      homeType: "",
       description: "",
       price: 0,
       categoryCode: "",
+      categoryName: "",
+      masterDataCode: "",
+      masterDataName: "",
       images: [],
-      inventory: 0,
     });
   };
 
@@ -217,16 +219,15 @@ export const ListProduct = () => {
     setOpenAdd(false);
   };
 
-  const handleCreateProduct = () => {
+  const handleCreateHomestay = () => {
     setOpenAdd(false);
-    createProduct({
-      purrPetCode: selectedProduct.purrPetCode,
-      productName: selectedProduct.productName,
-      description: selectedProduct.description,
-      price: selectedProduct.price,
-      categoryCode: selectedProduct.categoryCode,
-      images: selectedProduct.images,
-      inventory: selectedProduct.inventory,
+    createHomestay({
+      homeType: selectedHomestay.homeType,
+      description: selectedHomestay.description,
+      price: selectedHomestay.price,
+      categoryCode: selectedHomestay.categoryCode,
+      masterDataCode: selectedHomestay.masterDataCode,
+      images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -234,7 +235,7 @@ export const ListProduct = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
+      getHomestays().then((res) => {
         setRows(res.data);
       });
     });
@@ -253,26 +254,40 @@ export const ListProduct = () => {
     );
   };
 
+  const getMasterDataName = (masterDataCode) => {
+    const masterData = sizeHome.find(
+      (masterData) => masterData.purrPetCode === masterDataCode,
+    );
+    return masterData ? masterData.name : "";
+  };
+
   const [rows, setRows] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [sizeHome, setSizeHome] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedHomestay, setSelectedHomestay] = useState(null);
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    getProducts().then((res) => {
+    getHomestays().then((res) => {
       console.log(res.data);
       setRows(res.data);
     });
-    const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
+    const params = { categoryType: CONST.CATEGORY_TYPE.HOMESTAY };
     getCategories(params).then((res) => {
       console.log(res.data);
       setCategories(res.data);
     });
+    getMasterDatas({ groupCode: CONST.MASTERDATA_HOMESTAY.HOME_SIZE }).then(
+      (res) => {
+        console.log(res.data);
+        setSizeHome(res.data);
+      },
+    );
   }, []);
 
   useEffect(() => {
@@ -295,7 +310,7 @@ export const ListProduct = () => {
         component="h5"
         className="m-5 text-center font-bold"
       >
-        DANH SÁCH SẢN PHẨM
+        DANH SÁCH HOMESTAY
       </Typography>
       <Paper
         sx={{
@@ -310,9 +325,9 @@ export const ListProduct = () => {
           variant="outlined"
           startIcon={<AddIcon />}
           className="relative m-5"
-          onClick={handleAddProduct}
+          onClick={handleAddHomestay}
         >
-          Thêm sản phẩm
+          Thêm homestay
         </Button>
         <DataGrid
           rows={rows}
@@ -342,34 +357,36 @@ export const ListProduct = () => {
         />
         <Dialog open={openEdit} onClose={handleCloseEditDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            SỬA SẢN PHẨM
+            SỬA HOMESTAY
           </DialogTitle>
           <DialogContent>
-            <UpdateProduct
+            <UpdateHomestay
+              homeSize={sizeHome}
               categories={activeCategory}
-              product={selectedProduct}
-              updateProduct={handleDataUpdateProduct}
+              homestay={selectedHomestay}
+              updateHomestay={handleDataUpdateHomestay}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDialog}>Hủy</Button>
-            <Button onClick={handleUpdateProduct}>Cập nhật</Button>
+            <Button onClick={handleUpdateHomestay}>Cập nhật</Button>
           </DialogActions>
         </Dialog>
         <Dialog open={openAdd} onClose={handleCloseAddDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            THÊM SẢN PHẨM
+            THÊM HOMESTAY
           </DialogTitle>
           <DialogContent>
-            <UpdateProduct
+            <UpdateHomestay
+              homeSize={sizeHome}
               categories={activeCategory}
-              product={selectedProduct}
-              updateProduct={handleDataUpdateProduct}
+              homestay={selectedHomestay}
+              updateHomestay={handleDataUpdateHomestay}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAddDialog}>Hủy</Button>
-            <Button onClick={handleCreateProduct}>Tạo</Button>
+            <Button onClick={handleCreateHomestay}>Tạo</Button>
           </DialogActions>
         </Dialog>
       </Paper>

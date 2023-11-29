@@ -16,44 +16,36 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import "../../api/homestay";
-import {
-  createHomestay,
-  getHomestays,
-  updateHomestay,
-  updateStatusHomestay,
-} from "../../api/homestay";
+import { createSpa, getSpas, updateSpa, updateStatusSpa } from "../../api/spa";
 import { getCategories } from "../../api/category";
-import { UpdateHomestay } from "./UpdateHomestay";
+import { UpdateSpa } from "./UpdateSpa";
 import * as CONST from "../../constants";
-import { getMasterDatas } from "../../api/masterData";
 
-export const ListHomestay = () => {
+export const TableSpa = () => {
   const columns = [
     {
       field: "purrPetCode",
-      headerName: "Mã homestay",
+      headerName: "Mã spa",
       flex: 1,
       align: "left",
       headerAlign: "center",
       minWidth: 100,
     },
     {
-      field: "masterDataCode",
-      headerName: "Kich thước phòng",
+      field: "spaName",
+      headerName: "Tên spa",
       flex: 3,
       headerAlign: "center",
       align: "left",
       minWidth: 150,
-      valueGetter: (params) => getMasterDataName(params.row.masterDataCode),
     },
     {
-      field: "homeType",
-      headerName: "Loại phòng",
-      flex: 3,
+      field: "spaType",
+      headerName: "Loại spa",
+      flex: 1,
       headerAlign: "center",
       align: "left",
-      minWidth: 150,
+      minWidth: 100,
     },
     {
       field: "description",
@@ -117,7 +109,7 @@ export const ListHomestay = () => {
                 inputProps={{
                   "aria-label": "controlled",
                 }}
-                onChange={() => handleChangeStatusHomestay(params.row)}
+                onChange={() => handleChangeStatusSpa(params.row)}
               />
             }
             label={params.value === CONST.STATUS_PRODUCT.ACTIVE ? "Hiện" : "Ẩn"}
@@ -138,7 +130,7 @@ export const ListHomestay = () => {
       renderCell: (params) => (
         <>
           <Tooltip title="Sửa">
-            <EditIcon onClick={() => handleEditHomestay(params.row)}></EditIcon>
+            <EditIcon onClick={() => handleEditSpa(params.row)}></EditIcon>
           </Tooltip>
         </>
       ),
@@ -149,26 +141,26 @@ export const ListHomestay = () => {
     return row.purrPetCode;
   };
 
-  const handleEditHomestay = (row) => {
+  const handleEditSpa = (row) => {
     setOpenEdit(true);
-    setSelectedHomestay(row);
+    setSelectedSpa(row);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
   };
 
-  const handleUpdateHomestay = () => {
+  const handleUpdateSpa = () => {
     setOpenEdit(false);
-    console.log(selectedHomestay);
-    updateHomestay({
-      purrPetCode: selectedHomestay.purrPetCode,
-      homeType: selectedHomestay.homeType,
-      description: selectedHomestay.description,
-      price: selectedHomestay.price,
-      categoryCode: selectedHomestay.categoryCode,
-      masterDataCode: selectedHomestay.masterDataCode,
-      images: selectedHomestay.images,
+    console.log(selectedSpa);
+    updateSpa({
+      purrPetCode: selectedSpa.purrPetCode,
+      spaName: selectedSpa.spaName,
+      spaType: selectedSpa.spaType,
+      description: selectedSpa.description,
+      price: selectedSpa.price,
+      categoryCode: selectedSpa.categoryCode,
+      images: selectedSpa.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -176,41 +168,39 @@ export const ListHomestay = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getHomestays().then((res) => {
+      getSpas().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleChangeStatusHomestay = (row) => {
-    updateStatusHomestay(row.purrPetCode).then((res) => {
+  const handleChangeStatusSpa = (row) => {
+    updateStatusSpa(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getHomestays().then((res) => {
+      getSpas().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleDataUpdateHomestay = (updateHomestay) => {
-    console.log("updateHomestay", updateHomestay);
-    setSelectedHomestay(updateHomestay);
+  const handleDataUpdateSpa = (updateSpa) => {
+    console.log(updateSpa);
+    setSelectedSpa(updateSpa);
   };
 
-  const handleAddHomestay = () => {
+  const handleAddSpa = () => {
     setOpenAdd(true);
-    setSelectedHomestay({
-      homeType: "",
+    setSelectedSpa({
+      spaName: "",
+      spaType: "",
       description: "",
       price: 0,
       categoryCode: "",
-      categoryName: "",
-      masterDataCode: "",
-      masterDataName: "",
       images: [],
     });
   };
@@ -219,15 +209,16 @@ export const ListHomestay = () => {
     setOpenAdd(false);
   };
 
-  const handleCreateHomestay = () => {
+  const handleCreateSpa = () => {
     setOpenAdd(false);
-    createHomestay({
-      homeType: selectedHomestay.homeType,
-      description: selectedHomestay.description,
-      price: selectedHomestay.price,
-      categoryCode: selectedHomestay.categoryCode,
-      masterDataCode: selectedHomestay.masterDataCode,
-      images: selectedHomestay.images,
+    createSpa({
+      purrPetCode: selectedSpa.purrPetCode,
+      spaName: selectedSpa.spaName,
+      spaType: selectedSpa.spaType,
+      description: selectedSpa.description,
+      price: selectedSpa.price,
+      categoryCode: selectedSpa.categoryCode,
+      images: selectedSpa.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -235,7 +226,7 @@ export const ListHomestay = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getHomestays().then((res) => {
+      getSpas().then((res) => {
         setRows(res.data);
       });
     });
@@ -254,40 +245,26 @@ export const ListHomestay = () => {
     );
   };
 
-  const getMasterDataName = (masterDataCode) => {
-    const masterData = sizeHome.find(
-      (masterData) => masterData.purrPetCode === masterDataCode,
-    );
-    return masterData ? masterData.name : "";
-  };
-
   const [rows, setRows] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [sizeHome, setSizeHome] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const [selectedHomestay, setSelectedHomestay] = useState(null);
+  const [selectedSpa, setSelectedSpa] = useState(null);
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    getHomestays().then((res) => {
+    getSpas().then((res) => {
       console.log(res.data);
       setRows(res.data);
     });
-    const params = { categoryType: CONST.CATEGORY_TYPE.HOMESTAY };
+    const params = { categoryType: CONST.CATEGORY_TYPE.SPA };
     getCategories(params).then((res) => {
       console.log(res.data);
       setCategories(res.data);
     });
-    getMasterDatas({ groupCode: CONST.MASTERDATA_HOMESTAY.HOME_SIZE }).then(
-      (res) => {
-        console.log(res.data);
-        setSizeHome(res.data);
-      },
-    );
   }, []);
 
   useEffect(() => {
@@ -310,7 +287,7 @@ export const ListHomestay = () => {
         component="h5"
         className="m-5 text-center font-bold"
       >
-        DANH SÁCH HOMESTAY
+        DANH SÁCH SPA
       </Typography>
       <Paper
         sx={{
@@ -325,9 +302,9 @@ export const ListHomestay = () => {
           variant="outlined"
           startIcon={<AddIcon />}
           className="relative m-5"
-          onClick={handleAddHomestay}
+          onClick={handleAddSpa}
         >
-          Thêm homestay
+          Thêm spa
         </Button>
         <DataGrid
           rows={rows}
@@ -357,36 +334,34 @@ export const ListHomestay = () => {
         />
         <Dialog open={openEdit} onClose={handleCloseEditDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            SỬA HOMESTAY
+            SỬA SPA
           </DialogTitle>
           <DialogContent>
-            <UpdateHomestay
-              homeSize={sizeHome}
+            <UpdateSpa
               categories={activeCategory}
-              homestay={selectedHomestay}
-              updateHomestay={handleDataUpdateHomestay}
+              spa={selectedSpa}
+              updateSpa={handleDataUpdateSpa}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDialog}>Hủy</Button>
-            <Button onClick={handleUpdateHomestay}>Cập nhật</Button>
+            <Button onClick={handleUpdateSpa}>Cập nhật</Button>
           </DialogActions>
         </Dialog>
         <Dialog open={openAdd} onClose={handleCloseAddDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            THÊM HOMESTAY
+            THÊM SPA
           </DialogTitle>
           <DialogContent>
-            <UpdateHomestay
-              homeSize={sizeHome}
+            <UpdateSpa
               categories={activeCategory}
-              homestay={selectedHomestay}
-              updateHomestay={handleDataUpdateHomestay}
+              spa={selectedSpa}
+              updateSpa={handleDataUpdateSpa}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAddDialog}>Hủy</Button>
-            <Button onClick={handleCreateHomestay}>Tạo</Button>
+            <Button onClick={handleCreateSpa}>Tạo</Button>
           </DialogActions>
         </Dialog>
       </Paper>

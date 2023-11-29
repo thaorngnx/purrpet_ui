@@ -3,12 +3,12 @@ import img from "../../assets/logo.jpg";
 import { FaPhoneVolume } from "react-icons/fa6";
 import { MdOutlineEmail } from "react-icons/md";
 
-const FooterCustomer = () => {
+export const FooterCustomer = () => {
   return (
     <>
-      <div className="footer-maininfo">
-        <div className="container  max-w-fit bg-[#d9d9d9]">
-          <div className="m-[20px] grid grid-cols-3 gap-4 ">
+      <div className="footer-maininfo w-full">
+        <div className="w-full bg-[#d9d9d9]">
+          <div className="mt-8 grid grid-cols-3 gap-4 px-8 ">
             <div className="m-[20px]">
               <h2 className="title-footer opened text-lg font-bold">
                 Thông tin liên hệ
@@ -24,7 +24,7 @@ const FooterCustomer = () => {
                     href="#"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full "
+                    className="w-full"
                   >
                     <img
                       src={img}
@@ -36,12 +36,14 @@ const FooterCustomer = () => {
               </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 widget-footer m-[20px]">
-              <h2 class="title-footer text-lg font-bold">Thông tin cửa hàng</h2>
-              <div class="content-footer block-collapse">
-                <div class="address-footer">
+            <div className="col-md-3 col-sm-12 col-xs-12 widget-footer m-[20px]">
+              <h2 className="title-footer text-lg font-bold">
+                Thông tin cửa hàng
+              </h2>
+              <div className="content-footer block-collapse">
+                <div className="address-footer">
                   <ul>
-                    <li class="contact-1">
+                    <li className="contact-1">
                       <b>Cửa hàng 1 </b>:{" "}
                       <a
                         rel="noopener noreferrer"
@@ -60,11 +62,11 @@ const FooterCustomer = () => {
                         484, Lê Văn Việt, P.Tăng Nhơn Phú A, Q.9, HCM
                       </a>
                     </li>
-                    <li class="contact-2  flex items-center">
+                    <li className="contact-2 flex items-center">
                       <FaPhoneVolume className="mr-[20px] text-lg" />{" "}
                       0342.596.563
                     </li>
-                    <li class="contact-2  flex items-center ">
+                    <li className="contact-2 flex items-center ">
                       <MdOutlineEmail className="mr-[20px] text-lg" />{" "}
                       purrpet@gmail.com
                     </li>
@@ -73,40 +75,42 @@ const FooterCustomer = () => {
               </div>
             </div>
 
-            <div class="col-md-3 col-sm-12 col-xs-12 widget-footer m-[20px]">
-              <h2 class="title-footer text-lg font-bold">Hỗ trợ khách hàng</h2>
-              <div class="content-footer block-collapse">
-                <ul class="footerNav-link">
-                  <li class="item">
+            <div className="col-md-3 col-sm-12 col-xs-12 widget-footer m-[20px]">
+              <h2 className="title-footer text-lg font-bold">
+                Hỗ trợ khách hàng
+              </h2>
+              <div className="content-footer block-collapse">
+                <ul className="footerNav-link">
+                  <li className="item">
                     <a href="#" title="Tìm kiếm">
                       Tìm kiếm
                     </a>
                   </li>
 
-                  <li class="item">
+                  <li className="item">
                     <a href="#" title="Giới thiệu">
                       Giới thiệu
                     </a>
                   </li>
 
-                  <li class="item">
+                  <li className="item">
                     <a href="#" title="Chính sách bảo mật">
                       Tra cứu đơn hàng
                     </a>
                   </li>
-                  <li class="item">
+                  <li className="item">
                     <a href="#" title="Chính sách đổi trả">
                       Thông tin sản phẩm
                     </a>
                   </li>
 
-                  <li class="item">
+                  <li className="item">
                     <a href="#" title="Hướng dẫn mua hàng">
                       Dịch vụ spa - grooming
                     </a>
                   </li>
 
-                  <li class="item">
+                  <li className="item">
                     <a href="#" title="Điều khoản dịch vụ">
                       Đặt lịch dịch vụ
                     </a>
@@ -120,5 +124,3 @@ const FooterCustomer = () => {
     </>
   );
 };
-
-export default FooterCustomer;

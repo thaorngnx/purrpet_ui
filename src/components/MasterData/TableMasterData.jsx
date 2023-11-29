@@ -24,7 +24,7 @@ import { getCategories } from "../../api/category";
 import { UpdateMasterData } from "./UpdateMasterData";
 import * as CONST from "../../constants";
 
-export const ListMasterData = () => {
+export const TableMasterData = () => {
   const columns = [
     {
       field: "purrPetCode",

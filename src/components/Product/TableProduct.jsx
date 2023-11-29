@@ -16,42 +16,40 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { DataGrid, GridToolbar, viVN } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { createSpa, getSpas, updateSpa, updateStatusSpa } from "../../api/spa";
+import "../../api/product";
+import {
+  createProduct,
+  getProducts,
+  updateProduct,
+  updateStatusProduct,
+} from "../../api/product";
 import { getCategories } from "../../api/category";
-import { UpdateSpa } from "./UpdateSpa";
+import { UpdateProduct } from "./UpdateProduct";
 import * as CONST from "../../constants";
 
-export const ListSpa = () => {
+export const TableProduct = () => {
   const columns = [
     {
       field: "purrPetCode",
-      headerName: "Mã spa",
+      headerName: "Mã",
       flex: 1,
       align: "left",
-      headerAlign: "center",
-      minWidth: 100,
+      headerAlign: "left",
+      minWidth: 70,
     },
     {
-      field: "spaName",
-      headerName: "Tên spa",
+      field: "productName",
+      headerName: "Tên sản phẩm",
       flex: 3,
-      headerAlign: "center",
+      headerAlign: "left",
       align: "left",
       minWidth: 150,
-    },
-    {
-      field: "spaType",
-      headerName: "Loại spa",
-      flex: 1,
-      headerAlign: "center",
-      align: "left",
-      minWidth: 100,
     },
     {
       field: "description",
       headerName: "Mô tả",
       flex: 3,
-      headerAlign: "center",
+      headerAlign: "left",
       align: "left",
       minWidth: 100,
     },
@@ -68,7 +66,7 @@ export const ListSpa = () => {
       field: "categoryName",
       headerName: "Danh mục",
       flex: 3,
-      headerAlign: "center",
+      headerAlign: "left",
       align: "left",
       minWidth: 150,
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
@@ -94,6 +92,15 @@ export const ListSpa = () => {
       ),
     },
     {
+      field: "inventory",
+      headerName: "Hàng tồn kho",
+      flex: 1,
+      headerAlign: "center",
+      align: "right",
+      minWidth: 100,
+      type: "number",
+    },
+    {
       field: "status",
       headerName: "Trạng thái",
       headerAlign: "center",
@@ -109,7 +116,7 @@ export const ListSpa = () => {
                 inputProps={{
                   "aria-label": "controlled",
                 }}
-                onChange={() => handleChangeStatusSpa(params.row)}
+                onChange={() => handleChangeStatusProduct(params.row)}
               />
             }
             label={params.value === CONST.STATUS_PRODUCT.ACTIVE ? "Hiện" : "Ẩn"}
@@ -130,7 +137,7 @@ export const ListSpa = () => {
       renderCell: (params) => (
         <>
           <Tooltip title="Sửa">
-            <EditIcon onClick={() => handleEditSpa(params.row)}></EditIcon>
+            <EditIcon onClick={() => handleEditProduct(params.row)}></EditIcon>
           </Tooltip>
         </>
       ),
@@ -141,26 +148,27 @@ export const ListSpa = () => {
     return row.purrPetCode;
   };
 
-  const handleEditSpa = (row) => {
+  const handleEditProduct = (row) => {
     setOpenEdit(true);
-    setSelectedSpa(row);
+    setSelectedProduct(row);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
   };
 
-  const handleUpdateSpa = () => {
+  const handleUpdateProduct = () => {
     setOpenEdit(false);
-    console.log(selectedSpa);
-    updateSpa({
-      purrPetCode: selectedSpa.purrPetCode,
-      spaName: selectedSpa.spaName,
-      spaType: selectedSpa.spaType,
-      description: selectedSpa.description,
-      price: selectedSpa.price,
-      categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+    console.log("handleUpdateProduct", selectedProduct);
+    updateProduct({
+      purrPetCode: selectedProduct.purrPetCode,
+      productName: selectedProduct.productName,
+      productType: selectedProduct.productType,
+      description: selectedProduct.description,
+      price: selectedProduct.price,
+      categoryCode: selectedProduct.categoryCode,
+      images: selectedProduct.images,
+      inventory: selectedProduct.inventory,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -168,40 +176,40 @@ export const ListSpa = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getSpas().then((res) => {
+      getProducts().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleChangeStatusSpa = (row) => {
-    updateStatusSpa(row.purrPetCode).then((res) => {
+  const handleChangeStatusProduct = (row) => {
+    updateStatusProduct(row.purrPetCode).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
       if (res.err === -1) {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getSpas().then((res) => {
+      getProducts().then((res) => {
         setRows(res.data);
       });
     });
   };
 
-  const handleDataUpdateSpa = (updateSpa) => {
-    console.log(updateSpa);
-    setSelectedSpa(updateSpa);
+  const handleDataUpdateProduct = (updateProduct) => {
+    console.log("selectedProduct", selectedProduct);
+    setSelectedProduct(updateProduct);
   };
 
-  const handleAddSpa = () => {
+  const handleAddProduct = () => {
     setOpenAdd(true);
-    setSelectedSpa({
-      spaName: "",
-      spaType: "",
+    setSelectedProduct({
+      productName: "",
       description: "",
       price: 0,
       categoryCode: "",
       images: [],
+      inventory: 0,
     });
   };
 
@@ -209,16 +217,16 @@ export const ListSpa = () => {
     setOpenAdd(false);
   };
 
-  const handleCreateSpa = () => {
+  const handleCreateProduct = () => {
     setOpenAdd(false);
-    createSpa({
-      purrPetCode: selectedSpa.purrPetCode,
-      spaName: selectedSpa.spaName,
-      spaType: selectedSpa.spaType,
-      description: selectedSpa.description,
-      price: selectedSpa.price,
-      categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+    createProduct({
+      purrPetCode: selectedProduct.purrPetCode,
+      productName: selectedProduct.productName,
+      description: selectedProduct.description,
+      price: selectedProduct.price,
+      categoryCode: selectedProduct.categoryCode,
+      images: selectedProduct.images,
+      inventory: selectedProduct.inventory,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -226,7 +234,7 @@ export const ListSpa = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getSpas().then((res) => {
+      getProducts().then((res) => {
         setRows(res.data);
       });
     });
@@ -250,17 +258,17 @@ export const ListSpa = () => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const [selectedSpa, setSelectedSpa] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    getSpas().then((res) => {
+    getProducts().then((res) => {
       console.log(res.data);
       setRows(res.data);
     });
-    const params = { categoryType: CONST.CATEGORY_TYPE.SPA };
+    const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
     getCategories(params).then((res) => {
       console.log(res.data);
       setCategories(res.data);
@@ -287,7 +295,7 @@ export const ListSpa = () => {
         component="h5"
         className="m-5 text-center font-bold"
       >
-        DANH SÁCH SPA
+        DANH SÁCH SẢN PHẨM
       </Typography>
       <Paper
         sx={{
@@ -302,9 +310,9 @@ export const ListSpa = () => {
           variant="outlined"
           startIcon={<AddIcon />}
           className="relative m-5"
-          onClick={handleAddSpa}
+          onClick={handleAddProduct}
         >
-          Thêm spa
+          Thêm sản phẩm
         </Button>
         <DataGrid
           rows={rows}
@@ -334,34 +342,34 @@ export const ListSpa = () => {
         />
         <Dialog open={openEdit} onClose={handleCloseEditDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            SỬA SPA
+            SỬA SẢN PHẨM
           </DialogTitle>
           <DialogContent>
-            <UpdateSpa
+            <UpdateProduct
               categories={activeCategory}
-              spa={selectedSpa}
-              updateSpa={handleDataUpdateSpa}
+              product={selectedProduct}
+              updateProduct={handleDataUpdateProduct}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDialog}>Hủy</Button>
-            <Button onClick={handleUpdateSpa}>Cập nhật</Button>
+            <Button onClick={handleUpdateProduct}>Cập nhật</Button>
           </DialogActions>
         </Dialog>
         <Dialog open={openAdd} onClose={handleCloseAddDialog}>
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            THÊM SPA
+            THÊM SẢN PHẨM
           </DialogTitle>
           <DialogContent>
-            <UpdateSpa
+            <UpdateProduct
               categories={activeCategory}
-              spa={selectedSpa}
-              updateSpa={handleDataUpdateSpa}
+              product={selectedProduct}
+              updateProduct={handleDataUpdateProduct}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAddDialog}>Hủy</Button>
-            <Button onClick={handleCreateSpa}>Tạo</Button>
+            <Button onClick={handleCreateProduct}>Tạo</Button>
           </DialogActions>
         </Dialog>
       </Paper>
