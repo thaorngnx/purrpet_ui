@@ -1,30 +1,18 @@
 import { useEffect, useState } from "react";
 import {
   TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   FormControl,
   FormLabel,
   Typography,
   Paper,
-  MenuItem,
   Button,
 } from "@mui/material";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import * as CONST from "../../constants";
-import { getCategories } from "../../api/category";
-import { getSpas } from "../../api/spa";
-import { getMasterDatas } from "../../api/masterData";
-import { getBookingSpas } from "../../api/bookingSpa";
 import {
   createCustomer,
   getCustomerByPhone,
   updateCustomer,
 } from "../../api/customer";
+import { sendOtp, verifyOtp } from "../../api/otp";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   const handleChangeCustomerInfo = (event) => {
@@ -54,36 +42,46 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   };
 
   const handleSendOTPCLick = () => {
-    setOtpClick(true);
+    console.log("send otp");
+    //api send otp
+    sendOtp({ email: customerInfo.customerEmail }).then((res) => {
+      if (res.err === 0) {
+        console.log(res);
+        setOtpClick(true);
+      }
+    });
   };
 
   const handleValidOTPCLick = () => {
     console.log("send otp");
     //api check otp
-    //oke
-    setOtpValid(true);
-    getCustomerByPhone({ phoneNumber: customerInfo.customerPhone }).then(
-      (res) => {
-        if (res.err === 0) {
-          setExistCustomer(true);
-          setEditInfo(false);
-          confirmInfo(true);
-          customer({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-          });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-          });
-        } else {
-          setEditInfo(true);
-          confirmInfo(false);
-        }
-      },
-    );
+    verifyOtp({
+      email: customerInfo.customerEmail,
+      otp: customerInfo.otp,
+    }).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        setOtpValid(true);
+        setExistCustomer(true);
+        setEditInfo(false);
+        confirmInfo(true);
+        customer({
+          ...customerInfo,
+          customerCode: res.data.purrPetCode,
+          customerName: res.data.name,
+          customerPhone: res.data.phoneNumber,
+        });
+        setCustomerInfo({
+          ...customerInfo,
+          customerCode: res.data.purrPetCode,
+          customerName: res.data.name,
+          customerPhone: res.data.phoneNumber,
+        });
+      } else {
+        setEditInfo(true);
+        confirmInfo(false);
+      }
+    });
   };
 
   const handleEditInfo = () => {
@@ -96,10 +94,19 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       updateCustomer({
         purrPetCode: customerInfo.customerCode,
         name: customerInfo.customerName,
+        phoneNumber: customerInfo.customerPhone,
       }).then((res) => {
         if (res.err === 0) {
-          customer({ ...customerInfo, customerName: res.data.name });
-          setCustomerInfo({ ...customerInfo, customerName: res.data.name });
+          customer({
+            ...customerInfo,
+            customerName: res.data.name,
+            customerPhone: res.data.phoneNumber,
+          });
+          setCustomerInfo({
+            ...customerInfo,
+            customerName: res.data.name,
+            customerPhone: res.data.phoneNumber,
+          });
         }
       });
       //oke
@@ -110,6 +117,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       //api create customer
       createCustomer({
         phoneNumber: customerInfo.customerPhone,
+        email: customerInfo.customerEmail,
         name: customerInfo.customerName,
       }).then((res) => {
         if (res.err === 0) {
@@ -165,19 +173,16 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         Thông tin khách hàng
       </Typography>
       <FormControl>
-        <FormLabel className="font-bold text-black">Số điện thoại:</FormLabel>
+        <FormLabel className="font-bold text-black">Email:</FormLabel>
         <TextField
           required
-          name="customerPhone"
-          value={customerInfo.customerPhone}
-          type="number"
+          name="customerEmail"
+          value={customerInfo.customerEmail}
           disabled={otpValid}
           onChange={handleChangeCustomerInfo}
           variant="outlined"
-          error={error.customerPhone}
-          helperText={
-            error.customerPhone && "Số điện thoại không được để trống"
-          }
+          error={error.customerEmail}
+          helperText={error.customerPhone && "Email không được để trống"}
         />
         {!otpValid && (
           <Button
@@ -196,6 +201,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
           <TextField
             required
             name="otp"
+            type="number"
             value={customerInfo.otp}
             onChange={handleChangeCustomerInfo}
             variant="outlined"
@@ -227,6 +233,19 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             error={error.customerName}
             helperText={
               error.customerName && "Tên khách hàng không được để trống"
+            }
+          />
+          <FormLabel className="font-bold text-black">Số điện thoại:</FormLabel>
+          <TextField
+            required
+            name="customerPhone"
+            value={customerInfo.customerPhone}
+            disabled={!editInfo}
+            onChange={handleChangeCustomerInfo}
+            variant="outlined"
+            error={error.customerPhone}
+            helperText={
+              error.customerPhone && "Số điện thoại không được để trống"
             }
           />
           {existCustomer && editInfo && (

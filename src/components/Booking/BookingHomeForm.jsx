@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Radio,
@@ -23,6 +24,7 @@ import dayjs from "dayjs";
 import { createBookingHome, getUnavailableDay } from "../../api/bookingHome";
 
 export const BookingHomeForm = () => {
+  const navigate = useNavigate();
   const handleChangeBookingInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -196,6 +198,8 @@ export const BookingHomeForm = () => {
       dateCheckOut: bookingInfo.dateCheckOut,
     }).then((res) => {
       console.log(res.data);
+      // navigate("/bookingHome/" + res.data.bookingHomeCode);
+      navigate("/booking");
       setMessage(res.message);
     });
   };

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Radio,
@@ -19,6 +20,7 @@ import { TimeSpaForm } from "./TimeSpaForm";
 import { createBookingSpa } from "../../api/bookingSpa";
 
 export const BookingSpaForm = () => {
+  const navigate = useNavigate();
   const handleChangeBookingInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -130,6 +132,7 @@ export const BookingSpaForm = () => {
       bookingTime: bookingInfo.bookingTime,
     }).then((res) => {
       console.log(res.data);
+      navigate("/booking");
       setMessage(res.message);
     });
   };

@@ -7,8 +7,6 @@ import { Spa } from "./pages/Admin/Spa";
 import { Account } from "./pages/Admin/Account";
 import { Homestay } from "./pages/Admin/Homestay";
 import { MasterData } from "./pages/Admin/MasterData";
-import { BookingSpaForm } from "./components/Booking/BookingSpaForm";
-import { BookingHomeForm } from "./components/Booking/BookingHomeForm";
 import { ProductDetailPage } from "./pages/Customer/ProductDetailPage";
 import { ProductPage } from "./pages/Customer/ProductPage";
 import { CartPage } from "./pages/Customer/CartPage";
@@ -21,6 +19,8 @@ import { CustomerInfoPage } from "./pages/Customer/CustomerInfoPage";
 import { OrderHistoryPage } from "./pages/Customer/OrderHistoryPage";
 import { HomestayPage } from "./pages/Customer/HomestayPage";
 import { SpaPage } from "./pages/Customer/SpaPage";
+import { BookingHomePage } from "./pages/Customer/BookingHomePage";
+import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 
 function App() {
   return (
@@ -36,8 +36,8 @@ function App() {
           <Route path="service/spa" element={<SpaPage />} />
           <Route path="service/homestay" element={<HomestayPage />} />
           <Route path="booking" element={<BookingPage />} />
-          <Route path="booking/spa" element={<BookingSpaForm />} />
-          <Route path="booking/home" element={<BookingHomeForm />} />
+          <Route path="booking/spa" element={<BookingSpaPage />} />
+          <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="lookup" element={<LookUpOrderPage />} />
           <Route path="customer" element={<CustomerInfoPage />} />
