@@ -54,33 +54,22 @@ export function HeaderCustomer() {
               width: "50%",
             }}
           >
-            <Button
-              sx={{
-                color: "black",
-                display: "block",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-              onClick={() => {
-                navigate("/");
-              }}
+            <a
+              href="/"
+              className="s-{16px}  flex pb-[3px] font-bold text-black"
             >
-              Trang chủ
-            </Button>
-            <Button
-              sx={{
-                color: "black",
-                display: "block",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-              onClick={() => {
-                navigate("/introduction");
-              }}
+              TRANG CHỦ
+            </a>
+            <a
+              href="/introduction"
+              className="s-{16px}  flex pb-[3px] font-bold text-black"
             >
-              Giới thiệu
-            </Button>
-            <Box sx={{ position: "relative" }}>
+              GIỚI THIỆU
+            </a>
+            <div
+              className="relative inline-block"
+              onMouseEnter={() => setStyle2(false)}
+            >
               <a
                 href="/product"
                 onMouseEnter={() => setStyle(true)}
@@ -88,10 +77,9 @@ export function HeaderCustomer() {
               >
                 SẢN PHẨM
               </a>
-
               {style && (
                 <div
-                  className="  absolute  z-10  mt-7 w-max rounded-md bg-white shadow-lg"
+                  className=" t-[100%] l-[50%]  absolute z-10 mt-7  w-max translate-x-[-35%] rounded-md bg-white shadow-lg"
                   onMouseLeave={() => setStyle(false)}
                 >
                   {categories.map((category) => (
@@ -99,51 +87,65 @@ export function HeaderCustomer() {
                       key={category.categoryName}
                       className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100"
                     >
-                      <Button className="text-black">
+                      <Button
+                        className="text-black"
+                        onClick={() => {
+                          navigate(`/product`);
+                        }}
+                      >
                         {category.categoryName}
                       </Button>
                     </div>
                   ))}
                 </div>
               )}
-            </Box>
-            <Box sx={{ position: "relative" }}>
+            </div>
+            <div
+              className="relative inline-block"
+              onMouseEnter={() => setStyle(false)}
+            >
               <a
                 href="/service"
                 onMouseEnter={() => setStyle2(true)}
-                className="s-{16px}  flex pb-[3px] font-bold text-black"
+                className="s-{16px} flex  pb-[3px] font-bold text-black"
               >
                 DỊCH VỤ
               </a>
 
               {style2 && (
                 <div
-                  className=" absolute  z-10  mt-9 w-max rounded-md bg-white shadow-lg"
+                  className="t-[100%] l-[50%] absolute z-10  mt-7  w-max translate-x-[-26%] rounded-md bg-white shadow-lg"
                   onMouseLeave={() => setStyle2(false)}
                 >
                   <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
-                    <Link to={`/service/homestay`} className="text-black">
+                    <Button
+                      className="text-black"
+                      onClick={() => {
+                        navigate(`/service/homestay`);
+                      }}
+                    >
                       Dịch vụ khách sạn
-                    </Link>
+                    </Button>
                   </div>
                   <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
-                    <Link to={`/service/spa`} className="text-black">
+                    <Button
+                      className="text-black"
+                      onClick={() => {
+                        navigate(`/service/spa`);
+                      }}
+                    >
                       Dịch vụ Spa
-                    </Link>
+                    </Button>
                   </div>
                 </div>
               )}
-            </Box>
-            <Button
-              sx={{
-                color: "black",
-                display: "block",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
+            </div>
+            <a
+              href="/introduction"
+              className="s-{16px}  flex pb-[3px] font-bold text-black"
             >
-              Đặt lịch
-            </Button>
+              ĐẶT LỊCH
+            </a>
           </Box>
           <Box className="flex w-[35%] items-center justify-end text-center text-black">
             <Button
