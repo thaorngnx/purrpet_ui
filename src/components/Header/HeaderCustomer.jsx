@@ -3,11 +3,8 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Menu,
   Container,
   Button,
-  MenuItem,
-  Fade,
   Badge,
   TextField,
 } from "@mui/material";
@@ -18,8 +15,7 @@ import { getActiveCategories } from "../../api/category";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/logo.jpg";
-import { getCart, getProducts } from "../../api/cart";
-import Tooltip from "@mui/material/Tooltip";
+import { getCart } from "../../api/cart";
 import { Link } from "react-router-dom";
 
 export function HeaderCustomer() {
@@ -37,13 +33,6 @@ export function HeaderCustomer() {
       setCategories(res.data);
     });
   }, []);
-
-  const hadleClickCategory = (category) => {
-    const params = { category: category };
-    getProducts(params).then((res) => {
-      navigate("/product", { state: res.data });
-    });
-  };
 
   useEffect(() => {
     getCart().then((res) => {
@@ -110,10 +99,7 @@ export function HeaderCustomer() {
                       key={category.categoryName}
                       className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100"
                     >
-                      <Button
-                        onClick={() => hadleClickCategory(category.purrPetCode)} // chỉnh lại phần này nhe
-                        className="text-black"
-                      >
+                      <Button className="text-black">
                         {category.categoryName}
                       </Button>
                     </div>

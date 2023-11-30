@@ -110,8 +110,6 @@ export const BookingSpaForm = () => {
     setBookingInfo({
       ...bookingInfo,
       customerCode: customerInfo.customerCode,
-      customerName: customerInfo.customerName,
-      customerPhone: customerInfo.customerPhone,
       customerNote: customerInfo.customerNote,
     });
   };

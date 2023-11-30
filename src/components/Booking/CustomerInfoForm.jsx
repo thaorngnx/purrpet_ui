@@ -148,6 +148,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     customerPhone: "",
     otp: "",
     customerName: "",
+    customerEmail: "",
     customerNote: "",
     customerCode: "",
   });
