@@ -7,11 +7,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import {
-  createCustomer,
-  getCustomerByPhone,
-  updateCustomer,
-} from "../../api/customer";
+import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
@@ -62,21 +58,26 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       console.log(res);
       if (res.err === 0) {
         setOtpValid(true);
-        setExistCustomer(true);
-        setEditInfo(false);
-        confirmInfo(true);
-        customer({
-          ...customerInfo,
-          customerCode: res.data.purrPetCode,
-          customerName: res.data.name,
-          customerPhone: res.data.phoneNumber,
-        });
-        setCustomerInfo({
-          ...customerInfo,
-          customerCode: res.data.purrPetCode,
-          customerName: res.data.name,
-          customerPhone: res.data.phoneNumber,
-        });
+        if (res.data === null) {
+          setExistCustomer(false);
+          setEditInfo(true);
+        } else {
+          setExistCustomer(true);
+          setEditInfo(false);
+          confirmInfo(true);
+          customer({
+            ...customerInfo,
+            customerCode: res.data.purrPetCode,
+            customerName: res.data.name,
+            customerPhone: res.data.phoneNumber,
+          });
+          setCustomerInfo({
+            ...customerInfo,
+            customerCode: res.data.purrPetCode,
+            customerName: res.data.name,
+            customerPhone: res.data.phoneNumber,
+          });
+        }
       } else {
         setEditInfo(true);
         confirmInfo(false);

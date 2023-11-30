@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { getCart, updateCart, deleteCart } from "../../api/cart";
 import { getProductByCode } from "../../api/product";
 import { formatCurrency } from "../../utils/FormatPrice";
-import { CustomerInfoWithAddressForm } from "./CustomerInfoWithAddressForm";
+import { CustomerInfoFormForOrder } from "./CustomerInfoFormForOrder";
 
 export const ListCart = () => {
   const handleAddQuantity = (product) => {
@@ -32,6 +32,16 @@ export const ListCart = () => {
         return item;
       });
       setProductCart(newProductCart);
+      setOrderInfo({
+        ...orderInfo,
+        orderItems: newProductCart.map((item) => {
+          return {
+            productCode: item.purrPetCode,
+            quantity: item.quantity,
+            // price: item.price,
+          };
+        }),
+      });
       updateCart({
         productCode: product.purrPetCode,
         quantity: product.quantity + 1,
@@ -52,6 +62,16 @@ export const ListCart = () => {
         return item;
       });
       setProductCart(newProductCart);
+      setOrderInfo({
+        ...orderInfo,
+        orderItems: newProductCart.map((item) => {
+          return {
+            productCode: item.purrPetCode,
+            quantity: item.quantity,
+            price: item.price,
+          };
+        }),
+      });
       updateCart({
         productCode: product.purrPetCode,
         quantity: product.quantity - 1,
@@ -64,6 +84,16 @@ export const ListCart = () => {
       (item) => item.purrPetCode !== product.purrPetCode,
     );
     setProductCart(newProductCart);
+    setOrderInfo({
+      ...orderInfo,
+      orderItems: newProductCart.map((item) => {
+        return {
+          productCode: item.purrPetCode,
+          quantity: item.quantity,
+          price: item.price,
+        };
+      }),
+    });
     console.log(product.purrPetCode);
     deleteCart({ productCode: product.purrPetCode }).then((res) => {
       console.log(res);
@@ -75,21 +105,32 @@ export const ListCart = () => {
   };
 
   const handleCustomerInfo = (customerInfo) => {
-    setBookingInfo({
-      ...bookingInfo,
+    setOrderInfo({
+      ...orderInfo,
       customerCode: customerInfo.customerCode,
-      customerName: customerInfo.customerName,
-      customerPhone: customerInfo.customerPhone,
+      customerAddress: customerInfo.customerAddress,
       customerNote: customerInfo.customerNote,
     });
   };
 
   const handleConfirmInfo = (confirm) => {
-    setShowBtnConfirmBook(confirm);
+    setShowBtnConfirmOrder(confirm);
   };
 
   const [productCart, setProductCart] = useState([]);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
+  const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
+  const [orderInfo, setOrderInfo] = useState({
+    customerCode: "",
+    customerAddress: {
+      street: "",
+      province: "",
+      district: "",
+      ward: "",
+    },
+    customerNote: "",
+    orderItems: [],
+  });
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -116,7 +157,7 @@ export const ListCart = () => {
     fetchData();
   }, []);
   return (
-    <Box>
+    <Box className="flex-col">
       <Typography variant="h4" className="text-center font-bold">
         Giỏ hàng
       </Typography>
@@ -196,10 +237,18 @@ export const ListCart = () => {
         </Box>
       </Paper>
       {openCustomerInfoForm && (
-        <CustomerInfoWithAddressForm
+        <CustomerInfoFormForOrder
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
         />
+      )}
+      {showBtnConfirmOrder && (
+        <Button
+          variant="contained"
+          className="m-1 min-w-fit bg-cyan-900 p-2 text-white"
+        >
+          Xác nhận đơn hàng
+        </Button>
       )}
     </Box>
   );
