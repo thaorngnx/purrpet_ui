@@ -25,6 +25,7 @@ export function HeaderCustomer() {
   const [style, setStyle] = useState(false);
 
   const [style2, setStyle2] = useState(false);
+  const [style3, setStyle3] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export function HeaderCustomer() {
   }, [cartBadge]);
 
   return (
-    <AppBar position="static" className="mb-8 bg-[#d9d9d9]">
+    <AppBar position="static" className=" fixed top-0 z-[100] bg-[#d9d9d9]">
       <Container className="p-0">
         <Toolbar disableGutters>
           <img src={img} alt="logo" width="15%" />
@@ -68,7 +69,7 @@ export function HeaderCustomer() {
             </a>
             <div
               className="relative inline-block"
-              onMouseEnter={() => setStyle2(false)}
+              onMouseEnter={() => setStyle2(false) ?? setStyle3(false)}
             >
               <a
                 href="/product"
@@ -102,7 +103,7 @@ export function HeaderCustomer() {
             </div>
             <div
               className="relative inline-block"
-              onMouseEnter={() => setStyle(false)}
+              onMouseEnter={() => setStyle(false) ?? setStyle3(false)}
             >
               <a
                 href="/service"
@@ -140,12 +141,42 @@ export function HeaderCustomer() {
                 </div>
               )}
             </div>
-            <a
-              href="/introduction"
-              className="s-{16px}  flex pb-[3px] font-bold text-black"
-            >
-              ĐẶT LỊCH
-            </a>
+            <div onMouseEnter={() => setStyle2(false) ?? setStyle(false)}>
+              <a
+                href="/introduction"
+                className="s-{16px}  flex pb-[3px] font-bold text-black"
+                onMouseEnter={() => setStyle3(true)}
+              >
+                ĐẶT LỊCH
+              </a>
+              {style3 && (
+                <div
+                  className="t-[100%] l-[50%] absolute z-10  mt-7  w-max translate-x-[-26%] rounded-md bg-white shadow-lg"
+                  onMouseLeave={() => setStyle3(false)}
+                >
+                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                    <Button
+                      className="text-black"
+                      onClick={() => {
+                        navigate(`/booking/home`);
+                      }}
+                    >
+                      Đặt lịch khách sạn
+                    </Button>
+                  </div>
+                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                    <Button
+                      className="text-black"
+                      onClick={() => {
+                        navigate(`/booking/spa`);
+                      }}
+                    >
+                      Đặt lịch Spa
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </Box>
           <Box className="flex w-[35%] items-center justify-end text-center text-black">
             <Button
