@@ -16,9 +16,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { getCart } from "../../api/cart";
-import { Link } from "react-router-dom";
 
-export function HeaderCustomer() {
+export function HeaderCustomer({ onSelectCategory }) {
   const [categories, setCategories] = useState([]);
   const [cartBadge, setCartBadge] = useState(0);
 
@@ -41,6 +40,10 @@ export function HeaderCustomer() {
       setCartBadge(res.length);
     });
   }, [cartBadge]);
+  const handleCategorySelect = (categoryCode, section) => {
+    navigate("/product");
+    onSelectCategory(categoryCode, section);
+  };
 
   return (
     <AppBar position="static" className=" fixed top-0 z-[100] bg-[#d9d9d9]">
@@ -91,7 +94,7 @@ export function HeaderCustomer() {
                       <Button
                         className="text-black"
                         onClick={() => {
-                          navigate(`/product`);
+                          handleCategorySelect(category.purrPetCode, null);
                         }}
                       >
                         {category.categoryName}
@@ -106,7 +109,7 @@ export function HeaderCustomer() {
               onMouseEnter={() => setStyle(false) ?? setStyle3(false)}
             >
               <a
-                href="/service"
+                // href="/service"
                 onMouseEnter={() => setStyle2(true)}
                 className="s-{16px} flex  pb-[3px] font-bold text-black"
               >
@@ -143,7 +146,7 @@ export function HeaderCustomer() {
             </div>
             <div onMouseEnter={() => setStyle2(false) ?? setStyle(false)}>
               <a
-                href="/introduction"
+                // href="/introduction"
                 className="s-{16px}  flex pb-[3px] font-bold text-black"
                 onMouseEnter={() => setStyle3(true)}
               >

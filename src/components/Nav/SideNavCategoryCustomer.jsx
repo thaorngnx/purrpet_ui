@@ -1,20 +1,38 @@
 import { Box, List, ListItemButton, Typography, Divider } from "@mui/material";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import { getActiveCategories } from "../../api/category";
 import * as CONST from "../../constants";
 
-export const SideNavCategoryCustomer = () => {
+export const SideNavCategoryCustomer = ({ onSelect }) => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
 
   useEffect(() => {
     const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
     getActiveCategories(params).then((res) => {
-      console.log(res.data);
       setCategories(res.data);
     });
   }, []);
+
+  const handleCategoryClick = (categoryCode) => {
+    setSelectedCategoryCode(categoryCode);
+    setSelectedSection("");
+    onSelect(categoryCode, "");
+  };
+
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setSelectedSection(value);
+    onSelect(selectedCategoryCode, value);
+  };
+
   return (
-    <Box className="w-1/5 flex-col">
+    <Box className="text-bold w-1/5 flex-col">
       <Typography variant="h6" className="text-center font-sans font-bold">
         Danh mục sản phẩm
       </Typography>
@@ -22,11 +40,11 @@ export const SideNavCategoryCustomer = () => {
       <List className="flex-col">
         {categories.map((category) => (
           <ListItemButton
-            key={category.categoryCode}
+            key={category.purrPetCode}
             disablePadding
             sx={{ display: "block" }}
             onClick={() => {
-              navigate(`/product/${category.categoryCode}`);
+              handleCategoryClick(category.purrPetCode);
             }}
           >
             <Typography
@@ -38,6 +56,23 @@ export const SideNavCategoryCustomer = () => {
           </ListItemButton>
         ))}
       </List>
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Sắp xếp</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedSection}
+            label="Filter"
+            onChange={handleChange}
+          >
+            <MenuItem value={"price.asc"}>Giá tăng dần</MenuItem>
+            <MenuItem value={"price.desc"}>Giá giảm dần</MenuItem>
+            <MenuItem value={"productName.asc"}>A đến Z</MenuItem>
+            <MenuItem value={"productName.desc"}>Z đến A</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
     </Box>
   );
 };

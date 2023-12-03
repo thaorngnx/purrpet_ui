@@ -62,7 +62,7 @@ export const ProductDetail = () => {
 
   return (
     <Box>
-      <Paper sx={{ width: "80%" }}>
+      <Paper sx={{ width: "80%", marginTop: "80px" }}>
         <Box sx={{ display: "flex", flexDirection: "row", height: "300px" }}>
           <Box sx={{ width: "50%" }}>
             <img

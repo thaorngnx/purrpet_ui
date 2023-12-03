@@ -6,7 +6,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
   Fab,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
