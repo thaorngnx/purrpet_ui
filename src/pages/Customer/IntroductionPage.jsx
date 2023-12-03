@@ -7,7 +7,14 @@ import img4 from "../../assets/vs2-1809.png";
 import img5 from "../../assets/vs3-0048.png";
 import img6 from "../../assets/vs4-7317.png";
 import img7 from "../../assets/bannervschon-4944.png";
-import SliderComponent from "../../components/Slider/SliderComponent";
+import img8 from "../../assets/long-ngan.png";
+import img9 from "../../assets/trang-vang.png";
+import img10 from "../../assets/tai-cup.png";
+import img11 from "../../assets/cho-corgi.png";
+import img12 from "../../assets/canh-to.png";
+import img13 from "../../assets/meo.png";
+import img14 from "../../assets/husky.png";
+import img15 from "../../assets/husky-va-alaska-nen-nuoi-loai-nao.png";
 import MultipleSlides from "../../components/Slider/MultipleSlides";
 
 export const IntroductionPage = () => {
@@ -99,7 +106,16 @@ export const IntroductionPage = () => {
           <img src={img7} alt="Slide 3" className="relative z-[10] " />
         </div>
       </div>
-      <MultipleSlides />
+      <MultipleSlides
+        img1={img8}
+        img2={img9}
+        img3={img10}
+        img4={img11}
+        img5={img12}
+        img6={img13}
+        img7={img14}
+        img8={img15}
+      />
       <FooterCustomer />
     </>
   );
