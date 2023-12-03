@@ -6,9 +6,9 @@ import { MdOutlineEmail } from "react-icons/md";
 export const FooterCustomer = () => {
   return (
     <>
-      <div className="footer-maininfo w-full">
+      <div className="footer-maininfo  w-full">
         <div className="w-full bg-[#d9d9d9]">
-          <div className="mt-8 grid grid-cols-3 gap-4 px-8 ">
+          <div className=" grid grid-cols-3 gap-4 px-8 ">
             <div className="m-[20px]">
               <h2 className="title-footer opened text-lg font-bold">
                 Thông tin liên hệ
