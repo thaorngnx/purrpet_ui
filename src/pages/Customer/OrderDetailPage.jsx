@@ -1,11 +1,12 @@
 import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
+import { OrderDetail } from "../../components/Order/OrderDetail";
 
-export const ServicePage = () => {
+export const OrderDetailPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div>ServicePage</div>
+      <OrderDetail />
       <FooterCustomer />
     </>
   );

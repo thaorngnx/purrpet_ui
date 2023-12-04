@@ -19,9 +19,7 @@ export const SpaPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div className="mt-[80px]">
-        <SliderComponent />
-      </div>
+      <SliderComponent />
       <div className="flex justify-center">
         <h1 className="mt-10 text-4xl font-bold text-[#ED952D]">
           Dịch vụ Spa - PurrPet

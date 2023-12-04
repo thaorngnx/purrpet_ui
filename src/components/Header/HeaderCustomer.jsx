@@ -46,7 +46,10 @@ export function HeaderCustomer({ onSelectCategory }) {
   };
 
   return (
-    <AppBar position="static" className=" fixed top-0 z-[100] bg-[#d9d9d9]">
+    <AppBar
+      position="static"
+      className="sticky top-0 z-[100] flex-none bg-[#d9d9d9]"
+    >
       <Container className="p-0">
         <Toolbar disableGutters>
           <img src={img} alt="logo" width="15%" />

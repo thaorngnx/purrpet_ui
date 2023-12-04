@@ -197,7 +197,7 @@ export const BookingHomeForm = () => {
     }).then((res) => {
       console.log(res.data);
       // navigate("/bookingHome/" + res.data.bookingHomeCode);
-      navigate("/booking");
+      navigate("/");
       setMessage(res.message);
     });
   };
@@ -253,7 +253,10 @@ export const BookingHomeForm = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column" }}
+      className="min-h-screen"
+    >
       <Typography
         variant="h5"
         component="h5"

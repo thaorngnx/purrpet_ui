@@ -16,7 +16,7 @@ const saveToken = (response) => {
     path: path,
   });
 
-  const decodedRefreshToken = jwtDecode(response.data.refresh_token);
+  expirationDate.setDate(expirationDate.getDate() + 365);
   cookie.set("refresh_token", response.data.refresh_token, {
     expires: expirationDate,
     path: path,

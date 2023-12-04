@@ -1,10 +1,5 @@
 import api from "./token";
 
-if (cookie.get("access_token")) {
-  api.defaults.headers.common["Authorization"] =
-    "Bearer " + cookie.get("access_token");
-}
-
 export async function getOrders() {
   try {
     const response = await api.get("order/query");
@@ -41,10 +36,10 @@ export async function updateOrder(order) {
   }
 }
 
-export async function updateStatusOrder(order) {
+export async function updateStatusOrder(orderCode, newStatus) {
   try {
-    const response = await api.put(`order/update-status/${order.purrPetCode}`, {
-      status: order.status,
+    const response = await api.put(`order/update-status/${orderCode}`, {
+      status: newStatus,
     });
     return response.data;
   } catch (error) {

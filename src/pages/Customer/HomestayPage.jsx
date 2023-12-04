@@ -14,12 +14,8 @@ export const HomestayPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div className="mt-[80px]">
-        <img
-          className="mt-[80px] h-[500px] max-h-full w-full"
-          src={img3}
-          alt="img1"
-        />
+      <div>
+        <img className="h-[500px] max-h-full w-full" src={img3} alt="img1" />
       </div>
       <div className="flex justify-center">
         <h1 className="mt-10 text-4xl font-bold text-[#ED952D]">

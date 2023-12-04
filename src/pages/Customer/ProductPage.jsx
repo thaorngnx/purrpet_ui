@@ -16,7 +16,7 @@ export const ProductPage = () => {
   return (
     <>
       <HeaderCustomer onSelectCategory={handleCategorySelect} />
-      <Box sx={{ display: "flex", marginTop: "80px" }}>
+      <Box sx={{ display: "flex", marginTop: "10px" }}>
         <SideNavCategoryCustomer onSelect={handleCategorySelect} />
         <ProductGrid
           categoryCode={selectedCategoryCode}

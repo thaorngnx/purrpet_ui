@@ -25,7 +25,7 @@ export const ProductGrid = ({ categoryCode, section }) => {
     setPage(value);
   };
   return (
-    <Box className="w-4/5 flex-col">
+    <Box className="min-h-screen w-4/5 flex-col">
       <Grid container spacing={2}>
         {products.map((product) => (
           <Grid

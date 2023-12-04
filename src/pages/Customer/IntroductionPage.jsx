@@ -21,7 +21,7 @@ export const IntroductionPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div className="mb-[50px] mt-[80px] grid  grid-cols-2 gap-1">
+      <div className="mb-[50px] grid grid-cols-2 gap-1">
         <div>
           <img
             src={img1}
@@ -48,7 +48,7 @@ export const IntroductionPage = () => {
         CHÚNG TÔI CUNG CẤP
       </h1>
       <div className="relative">
-        <div class="relative z-[1] my-[60px] grid grid-cols-2 justify-items-center gap-[5rem]  ">
+        <div className="relative z-[1] my-[60px] grid grid-cols-2 justify-items-center gap-[5rem]  ">
           <div className="w-[400px]">
             <div className="flex  justify-end">
               <h1 className="text-center text-xl font-bold ">

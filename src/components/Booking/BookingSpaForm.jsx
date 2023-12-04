@@ -130,7 +130,7 @@ export const BookingSpaForm = () => {
       bookingTime: bookingInfo.bookingTime,
     }).then((res) => {
       console.log(res.data);
-      navigate("/booking");
+      navigate("/");
       setMessage(res.message);
     });
   };
@@ -176,7 +176,10 @@ export const BookingSpaForm = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column" }}
+      className="min-h-screen"
+    >
       <Typography
         variant="h5"
         component="h5"

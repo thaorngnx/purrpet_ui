@@ -46,3 +46,16 @@ export async function deleteCart(product) {
     console.error(error);
   }
 }
+
+export async function deleteProductCart(product) {
+  try {
+    console.log(product);
+    const response = await api.delete("cart/delete-product", {
+      data: product,
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

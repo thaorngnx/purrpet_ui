@@ -1,9 +1,15 @@
-import { Box, List, ListItemButton, Typography, Divider } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import {
+  Box,
+  List,
+  ListItemButton,
+  Typography,
+  Divider,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
 import { getActiveCategories } from "../../api/category";
 import * as CONST from "../../constants";
 
@@ -41,7 +47,6 @@ export const SideNavCategoryCustomer = ({ onSelect }) => {
         {categories.map((category) => (
           <ListItemButton
             key={category.purrPetCode}
-            disablePadding
             sx={{ display: "block" }}
             onClick={() => {
               handleCategoryClick(category.purrPetCode);

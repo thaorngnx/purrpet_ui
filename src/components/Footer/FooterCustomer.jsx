@@ -2,11 +2,12 @@ import React from "react";
 import img from "../../assets/logo.jpg";
 import { FaPhoneVolume } from "react-icons/fa6";
 import { MdOutlineEmail } from "react-icons/md";
+import { Box } from "@mui/material";
 
 export const FooterCustomer = () => {
   return (
-    <>
-      <div className="footer-maininfo  w-full">
+    <Box>
+      <div className="footer-maininfo w-full">
         <div className="w-full bg-[#d9d9d9]">
           <div className=" grid grid-cols-3 gap-4 px-8 ">
             <div className="m-[20px]">
@@ -121,6 +122,6 @@ export const FooterCustomer = () => {
           </div>
         </div>
       </div>
-    </>
+    </Box>
   );
 };

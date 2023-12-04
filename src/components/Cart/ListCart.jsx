@@ -3,8 +3,6 @@ import {
   Button,
   List,
   ListItem,
-  ListItemAvatar,
-  ListItemText,
   Paper,
   TextField,
   Typography,
@@ -13,12 +11,21 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
-import { getCart, updateCart, deleteCart } from "../../api/cart";
+import {
+  getCart,
+  updateCart,
+  deleteCart,
+  deleteProductCart,
+} from "../../api/cart";
 import { getProductByCode } from "../../api/product";
 import { formatCurrency } from "../../utils/FormatPrice";
 import { CustomerInfoFormForOrder } from "./CustomerInfoFormForOrder";
+import { useNavigate } from "react-router-dom";
+import { createOrder } from "../../api/order";
 
 export const ListCart = () => {
+  const navigate = useNavigate();
+
   const handleAddQuantity = (product) => {
     if (product.quantity < product.inventory) {
       const newProductCart = productCart.map((item) => {
@@ -38,7 +45,6 @@ export const ListCart = () => {
           return {
             productCode: item.purrPetCode,
             quantity: item.quantity,
-            // price: item.price,
           };
         }),
       });
@@ -68,7 +74,6 @@ export const ListCart = () => {
           return {
             productCode: item.purrPetCode,
             quantity: item.quantity,
-            price: item.price,
           };
         }),
       });
@@ -95,7 +100,7 @@ export const ListCart = () => {
       }),
     });
     console.log(product.purrPetCode);
-    deleteCart({ productCode: product.purrPetCode }).then((res) => {
+    deleteProductCart({ productCode: product.purrPetCode }).then((res) => {
       console.log(res);
     });
   };
@@ -115,6 +120,24 @@ export const ListCart = () => {
 
   const handleConfirmInfo = (confirm) => {
     setShowBtnConfirmOrder(confirm);
+  };
+
+  const handleConfirmOrder = () => {
+    console.log("orderInfo", orderInfo);
+    createOrder(orderInfo).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        console.log("order success");
+        //delete cart
+        deleteCart().then((res) => {
+          console.log("delete cart", res);
+          if (res.err === 0) {
+          }
+        });
+        //navigate
+        navigate(`/order/${res.data.purrPetCode}`);
+      }
+    });
   };
 
   const [productCart, setProductCart] = useState([]);
@@ -149,6 +172,15 @@ export const ListCart = () => {
         console.log("productList", productList);
         setProductCart(productList);
         console.log("productCart", productCart);
+        setOrderInfo({
+          ...orderInfo,
+          orderItems: productList.map((item) => {
+            return {
+              productCode: item.purrPetCode,
+              quantity: item.quantity,
+            };
+          }),
+        });
       } catch (error) {
         console.log(error);
       }
@@ -157,8 +189,8 @@ export const ListCart = () => {
     fetchData();
   }, []);
   return (
-    <Box className="flex-col">
-      <Typography variant="h4" className="text-center font-bold">
+    <Box className="min-h-screen flex-col">
+      <Typography variant="h4" className="m-3 text-center font-bold">
         Giỏ hàng
       </Typography>
       <Paper
@@ -167,72 +199,114 @@ export const ListCart = () => {
           ml: "auto",
           mr: "auto",
           display: "block",
-          p: 5,
+          px: 5,
           position: "relative",
         }}
       >
         <List>
+          <ListItem key="title" className="my-3 p-0">
+            <Typography
+              variant="body1"
+              className="w-1/6 font-bold"
+            ></Typography>
+            <Typography variant="body1" className="w-1/3 p-2 font-bold">
+              Sản phẩm
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-2 w-1/6 text-center font-bold"
+            >
+              Đơn giá
+            </Typography>
+            <Typography variant="body1" className="w-1/4 text-center font-bold">
+              Số lượng
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-2 w-1/6 text-center font-bold"
+            >
+              Thành tiền
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-2 w-1/12 text-center font-bold"
+            >
+              Xóa
+            </Typography>
+          </ListItem>
           {productCart.map((item) => {
             return (
-              <ListItem key={item.purrPetCode} className="my-3 p-0">
-                <ListItemAvatar className="w-1/6">
-                  <img src={item.images[0]?.path} alt="" />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={item.productName}
-                  className="w-1/3 p-2"
-                />
-                <Button
-                  variant="contained"
-                  className="min-w-min bg-gray-300 p-2 text-black"
-                  onClick={() => handleSubtractQuantity(item)}
-                >
-                  <RemoveIcon />
-                </Button>
-                <TextField
-                  type="number"
-                  variant="outlined"
-                  size="small"
-                  value={item.quantity}
-                  disabled
-                  sx={{ width: "80px" }}
-                  inputProps={{
-                    style: { textAlign: "center" },
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  className="min-w-min bg-gray-300 p-2 text-black"
-                  onClick={() => handleAddQuantity(item)}
-                >
-                  <AddIcon />
-                </Button>
-                <ListItemText
-                  primary={formatCurrency(item.totalPrice)}
-                  className="m-2 w-1/6 text-end font-bold"
-                />
-                <Button
-                  variant="contained"
-                  className="min-w-min bg-red-500 p-1 p-2 text-white"
-                  onClick={() => handleDeleteCart(item)}
-                >
-                  <DeleteIcon />
-                </Button>
+              <ListItem
+                key={item.purrPetCode}
+                className="my-3 min-h-[100px] p-0"
+              >
+                <Box className="w-1/6">
+                  <img
+                    src={item.images[0]?.path}
+                    alt=""
+                    className="h-[100px] w-[100px] object-cover"
+                  />
+                </Box>
+                <Typography variant="body1" className="w-1/3 p-2">
+                  {item.productName}
+                </Typography>
+                <Typography variant="body1" className="m-2 w-1/6 text-end">
+                  {formatCurrency(item.price)}
+                </Typography>
+                <Box className="flex w-1/4 justify-center">
+                  <Button
+                    variant="contained"
+                    className="min-w-min bg-gray-300 p-2 text-black"
+                    onClick={() => handleSubtractQuantity(item)}
+                  >
+                    <RemoveIcon />
+                  </Button>
+                  <TextField
+                    type="number"
+                    variant="outlined"
+                    size="small"
+                    value={item.quantity}
+                    disabled
+                    sx={{ width: "70px" }}
+                    inputProps={{
+                      style: { textAlign: "center" },
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    className="min-w-min bg-gray-300 p-2 text-black"
+                    onClick={() => handleAddQuantity(item)}
+                  >
+                    <AddIcon />
+                  </Button>
+                </Box>
+                <Typography variant="body1" className="m-2 w-1/6 text-end">
+                  {formatCurrency(item.totalPrice)}
+                </Typography>
+                <Box className="m-2 flex w-1/12 justify-center">
+                  <Button
+                    variant="contained"
+                    className="min-w-min bg-red-500 p-1 text-white"
+                    onClick={() => handleDeleteCart(item)}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </Box>
               </ListItem>
             );
           })}
         </List>
         <Box className="text-end">
-          <Typography variant="h6" className="text-base font-bold">
+          <Typography variant="h6" className="text-l text-base font-bold">
             Tổng tiền:{" "}
             {formatCurrency(productCart.reduce((a, b) => a + b.totalPrice, 0))}
           </Typography>
           <Button
             variant="contained"
-            className="m-1 min-w-min bg-cyan-900 p-2 text-white"
+            className="my-5 min-w-min bg-cyan-900 p-2 text-white"
             onClick={handleOpenCustomerInfoForm}
           >
-            Tiến hành thanh toán
+            Tiến hành đặt hàng
           </Button>
         </Box>
       </Paper>
@@ -246,8 +320,9 @@ export const ListCart = () => {
         <Button
           variant="contained"
           className="m-1 min-w-fit bg-cyan-900 p-2 text-white"
+          onClick={handleConfirmOrder}
         >
-          Xác nhận đơn hàng
+          Tiến hành thanh toán
         </Button>
       )}
     </Box>

@@ -11,8 +11,6 @@ import { ProductDetailPage } from "./pages/Customer/ProductDetailPage";
 import { ProductPage } from "./pages/Customer/ProductPage";
 import { CartPage } from "./pages/Customer/CartPage";
 import { HomePage } from "./pages/Customer/HomePage";
-import { ServicePage } from "./pages/Customer/ServicePage";
-import { BookingPage } from "./pages/Customer/BookingPage";
 import { IntroductionPage } from "./pages/Customer/IntroductionPage";
 import { LookUpOrderPage } from "./pages/Customer/LookUpOrderPage";
 import { CustomerInfoPage } from "./pages/Customer/CustomerInfoPage";
@@ -21,6 +19,7 @@ import { HomestayPage } from "./pages/Customer/HomestayPage";
 import { SpaPage } from "./pages/Customer/SpaPage";
 import { BookingHomePage } from "./pages/Customer/BookingHomePage";
 import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
+import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
 
 function App() {
   return (
@@ -32,16 +31,15 @@ function App() {
           <Route path="introduction" element={<IntroductionPage />} />
           <Route path="product" element={<ProductPage />} />
           <Route path="product/:productCode" element={<ProductDetailPage />} />
-          <Route path="service" element={<ServicePage />} />
           <Route path="service/spa" element={<SpaPage />} />
           <Route path="service/homestay" element={<HomestayPage />} />
-          <Route path="booking" element={<BookingPage />} />
           <Route path="booking/spa" element={<BookingSpaPage />} />
           <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="lookup" element={<LookUpOrderPage />} />
           <Route path="customer" element={<CustomerInfoPage />} />
           <Route path="order" element={<OrderHistoryPage />} />
+          <Route path="order/:orderCode" element={<OrderDetailPage />} />
         </Route>
         <Route path="/admin">
           <Route index element={<Dashboard />} />

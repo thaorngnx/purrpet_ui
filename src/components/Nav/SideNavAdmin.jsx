@@ -113,7 +113,6 @@ export const SideNavAdmin = () => {
           {NavList.map((nav) => (
             <ListItem
               key={nav.text}
-              disablePadding
               sx={{ display: "block" }}
               onClick={() => {
                 navigate(nav.href);

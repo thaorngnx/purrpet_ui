@@ -20,9 +20,7 @@ export const HomePage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div className="mt-[80px]">
-        <SliderComponent />
-      </div>
+      <SliderComponent />
       <div>
         <ButtonGroup
           variant="contained"
