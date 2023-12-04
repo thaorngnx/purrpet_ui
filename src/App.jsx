@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./components/Account/Login";
+import { LoginStaff } from "./components/Account/LoginStaff";
 import { Dashboard } from "./pages/Admin/Dashboard";
 import { Category } from "./pages/Admin/Category";
 import { Product } from "./pages/Admin/Product";
@@ -51,6 +52,9 @@ function App() {
           <Route path="account" element={<Account />} />
           <Route path="homestay" element={<Homestay />} />
           <Route path="masterData" element={<MasterData />} />
+        </Route>
+        <Route path="/staff">
+          <Route path="login" element={<LoginStaff />} />
         </Route>
       </Routes>
     </BrowserRouter>
