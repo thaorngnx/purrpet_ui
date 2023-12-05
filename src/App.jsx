@@ -41,12 +41,12 @@ function App() {
   //get cart
   useEffect(() => {
     getCart();
-  }, [cartState]);
+  }, [getCart]);
 
   //get active categories of product
   useEffect(() => {
     getActiveCategories();
-  }, [activeProductCategoryState]);
+  }, [getActiveCategories]);
 
   //get customer info
   //get access token from cookie
@@ -63,7 +63,7 @@ function App() {
       //get customer info
       getCustomerById(id);
     }
-  }, [customerState]);
+  }, [getCustomerById]);
 
   if (activeProductCategoryState.loading || customerState.loading) {
     return (
