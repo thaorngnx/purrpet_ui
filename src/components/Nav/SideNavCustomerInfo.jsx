@@ -1,8 +1,18 @@
 import { Box, Button, Link, Typography } from "@mui/material";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
+import { useStore } from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 export const SideNavCustomerInfo = () => {
+  const navigate = useNavigate();
+
+  const { logout } = useStore();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/lookup");
+  };
   return (
     <Box className="flex min-h-screen w-1/4 flex-col p-2 pt-5 shadow-md shadow-zinc-400">
       <Link
@@ -52,6 +62,7 @@ export const SideNavCustomerInfo = () => {
             color: "white",
           },
         }}
+        onClick={handleLogout}
       >
         Đăng xuất
       </Button>

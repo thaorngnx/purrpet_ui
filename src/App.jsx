@@ -21,8 +21,65 @@ import { SpaPage } from "./pages/Customer/SpaPage";
 import { BookingHomePage } from "./pages/Customer/BookingHomePage";
 import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
+import { useEffect } from "react";
+import { useStore } from "./zustand/store";
+import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";
+import * as CONST from "./constants";
+import { CircularProgress } from "@mui/material";
 
 function App() {
+  const {
+    getCart,
+    getActiveCategories,
+    getCustomerById,
+    cartState,
+    activeProductCategoryState,
+    customerState,
+  } = useStore();
+
+  //get cart
+  useEffect(() => {
+    getCart();
+  }, [cartState]);
+
+  //get active categories of product
+  useEffect(() => {
+    getActiveCategories();
+  }, [activeProductCategoryState]);
+
+  //get customer info
+  //get access token from cookie
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    const accessToken = cookies.get(
+      import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
+      { path: "/" },
+    );
+    if (accessToken) {
+      const decoded = jwtDecode(accessToken);
+      const id = decoded.id;
+      //get customer info
+      getCustomerById(id);
+    }
+  }, [customerState]);
+
+  if (activeProductCategoryState.loading || customerState.loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>

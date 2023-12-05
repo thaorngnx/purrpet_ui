@@ -13,7 +13,7 @@ import logo from "../../assets/logo.jpg";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
-export const HeaderAdmin = () => {
+export const HeaderStaff = () => {
   const navigate = useNavigate();
   const cookies = new Cookies();
 
@@ -40,7 +40,7 @@ export const HeaderAdmin = () => {
       if (res.err === 0) {
         cookies.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
         cookies.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
-        navigate("/admin/login");
+        navigate("/staff/login");
       }
     });
   };

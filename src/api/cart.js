@@ -6,7 +6,7 @@ export async function addToCart(cart) {
     const response = await api.post("cart/add", cart, {
       withCredentials: true,
     });
-    return response.headers;
+    return response.data;
   } catch (error) {
     console.error(error);
   }

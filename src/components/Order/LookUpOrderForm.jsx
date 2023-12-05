@@ -10,10 +10,15 @@ import {
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import FiberPinIcon from "@mui/icons-material/FiberPin";
-import { sendOtp, verifyOtp } from "../../api/otp";
+import { sendOtp } from "../../api/otp";
+import { useStore } from "../../zustand/store";
 
 export const LookUpOrderForm = () => {
   const navigate = useNavigate();
+
+  const customer = useStore((state) => state.customer);
+
+  const { verifyOtp } = useStore();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -36,13 +41,13 @@ export const LookUpOrderForm = () => {
 
   const handleVerifyOTP = () => {
     console.log("verify otp");
-    verifyOtp({ email: email, otp: otp }).then((res) => {
-      console.log(res);
-      if (res.err === 0) {
-        //message success
-        navigate("/order");
-      }
-    });
+    verifyOtp({ email: email, otp: otp });
+    if (customer != []) {
+      navigate("/order");
+    } else {
+      //message error
+      console.log("error");
+    }
   };
 
   const [email, setEmail] = useState("");

@@ -13,11 +13,14 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { addToCart } from "../../api/cart";
+// import { addToCart } from "../../api/cart";
 import { formatCurrency } from "../../utils/FormatPrice";
+import { useStore } from "../../zustand/store";
 
 export const ProductDetail = () => {
   const { productCode } = useParams();
+
+  const { addToCart } = useStore();
 
   const handleDescriptionTab = () => {
     setReviewTab(false);
@@ -43,9 +46,7 @@ export const ProductDetail = () => {
 
   const handleAddToCart = () => {
     console.log(productCode, quantity);
-    addToCart({ productCode: productCode, quantity: quantity }).then((res) => {
-      console.log(res);
-    });
+    addToCart({ productCode: productCode, quantity: quantity });
   };
 
   const [product, setProduct] = useState({});

@@ -13,12 +13,33 @@ import { styled } from "@mui/system";
 import axios from "axios";
 import { updateCustomer } from "../../api/customer";
 import { useEffect, useState } from "react";
+import { useStore } from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 export const CustomerInfo = () => {
+  const navigate = useNavigate();
+  const customer = useStore((state) => state.customerState.data);
+  if (customer) {
+    console.log("customer", customer);
+  } else {
+    console.log("no customer");
+    navigate("/lookup");
+  }
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    }
+    console.log("event.target.name", event.target.name);
+    if (event.target.name === "street") {
+      setCustomerInfo({
+        ...customerInfo,
+        address: {
+          ...customerInfo.address,
+          street: event.target.value,
+        },
+      });
+      return;
     }
     setCustomerInfo({
       ...customerInfo,
@@ -29,39 +50,21 @@ export const CustomerInfo = () => {
   const handleEditInfo = () => {
     if (!editInfo) {
       setEditInfo(true);
-      confirmInfo(false);
     } else if (editInfo) {
       console.log("edit customer");
       //api update customer
+      console.log("customerInfo", customerInfo);
       updateCustomer(customerInfo).then((res) => {
         if (res.err === 0) {
           console.log(res);
         }
       });
       setEditInfo(false);
-      confirmInfo(true);
     }
   };
 
-  //styled button
-  const MyButton = styled(Button)({
-    fontSize: "16px",
-    color: "black",
-    display: "block",
-    width: "fit-content",
-    fontWeight: "bold",
-    border: "1px solid black",
-    padding: "6px 15px",
-    textTransform: "none",
-    ":hover": {
-      backgroundColor: "black",
-      color: "white",
-    },
-  });
-
   const handleCancleEditInfo = () => {
     setEditInfo(false);
-    confirmInfo(true);
   };
 
   const handleProvinceChange = (e) => {
@@ -136,14 +139,14 @@ export const CustomerInfo = () => {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({
-    name: "",
-    phoneNumber: "",
-    email: "",
+    purrPetCode: customer.purrPetCode,
+    name: customer.name,
+    phoneNumber: customer.phoneNumber,
     address: {
-      province: "",
-      district: "",
-      ward: "",
-      street: "",
+      province: customer.address?.province || "",
+      district: customer.address?.district || "",
+      ward: customer.address?.ward || "",
+      street: customer.address?.street || "",
     },
   });
 
@@ -153,14 +156,41 @@ export const CustomerInfo = () => {
         "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       );
       setProvinces(response.data);
+      if (customer.address) {
+        const selectedProvince = response.data.find(
+          (province) => province.Name === customer.address.province,
+        );
+        if (selectedProvince) {
+          setDistricts(selectedProvince.Districts);
+          const selectedDistrict = selectedProvince.Districts.find(
+            (district) => district.Name === customer.address.district,
+          );
+          if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+          }
+        }
+      }
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("customerInfo", customerInfo);
-  }, [customerInfo]);
+  //styled button
+  const MyButton = styled(Button)({
+    fontSize: "16px",
+    color: "black",
+    display: "block",
+    width: "fit-content",
+    fontWeight: "bold",
+    border: "1px solid black",
+    padding: "6px 15px",
+    textTransform: "none",
+    ":hover": {
+      backgroundColor: "black",
+      color: "white",
+    },
+  });
+
   return (
     <Box className=" flex min-h-screen w-3/4 flex-col items-center">
       <Typography variant="h6" className="m-3 ml-5 font-bold">
@@ -174,29 +204,27 @@ export const CustomerInfo = () => {
             </FormLabel>
             <TextField
               required
-              name="customerName"
-              value={customerInfo.customerName}
+              name="name"
+              value={customerInfo.name}
               disabled={!editInfo}
               onChange={handleChangeCustomerInfo}
               variant="outlined"
-              error={error.customerName}
-              helperText={
-                error.customerName && "Tên khách hàng không được để trống"
-              }
+              error={error.name}
+              helperText={error.name && "Tên khách hàng không được để trống"}
             />
             <FormLabel className="my-1 font-bold text-black">
               Số điện thoại:
             </FormLabel>
             <TextField
               required
-              name="customerPhone"
-              value={customerInfo.customerPhone}
+              name="phoneNumber"
+              value={customerInfo.phoneNumber}
               disabled={!editInfo}
               onChange={handleChangeCustomerInfo}
               variant="outlined"
-              error={error.customerPhone}
+              error={error.phoneNumber}
               helperText={
-                error.customerPhone && "Số điện thoại không được để trống"
+                error.phoneNumber && "Số điện thoại không được để trống"
               }
             />
             <FormLabel className="my-1 font-bold text-black">
@@ -204,7 +232,7 @@ export const CustomerInfo = () => {
             </FormLabel>
             <TextField
               required
-              name="address"
+              name="street"
               value={customerInfo.address?.street}
               disabled={!editInfo}
               onChange={handleChangeCustomerInfo}

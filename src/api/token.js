@@ -32,12 +32,6 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    //if request is api logout, remove token, redirect to login page
-    if (response.request.responseURL === import.meta.env.VITE_API_LOGOUT_URL) {
-      cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-      cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
-      window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
-    }
     return response;
   },
   async (error) => {

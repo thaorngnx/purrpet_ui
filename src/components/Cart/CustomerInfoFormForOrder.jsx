@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
+import { useStore } from "../../zustand/store";
 
 export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
+  const customerState = useStore((state) => state.customerState.data);
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -264,7 +266,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const [otpClick, setOtpClick] = useState(false);
   const [otpValid, setOtpValid] = useState(false);
   const [hasAddress, setHasAddress] = useState(false);
-  const [existCustomer, setExistCustomer] = useState(false);
+  const [existCustomer, setExistCustomer] = useState();
   const [editInfo, setEditInfo] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     customerPhone: "",
@@ -287,10 +289,47 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       );
       setProvinces(response.data);
+      if (customerState) {
+        setExistCustomer(true);
+        setOtpValid(true);
+        if (customerState.address) {
+          setCustomerInfo({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerEmail: customerState.email,
+            customerName: customerState.name,
+            customerPhone: customerState.phoneNumber,
+            customerAddress: customerState.address,
+          });
+          setEditInfo(false);
+          setHasAddress(true);
+          confirmInfo(true);
+          console.log("customerState", customerState);
+          console.log("provinces", response.data);
+          const selectedProvince = response.data.find(
+            (province) => province.Name === customerState.address.province,
+          );
+          const selectedDistrict = selectedProvince.Districts.find(
+            (district) => district.Name === customerState.address.district,
+          );
+          setDistricts(selectedProvince.Districts);
+          setWards(selectedDistrict.Wards);
+        } else {
+          setCustomerInfo({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerName: customerState.name,
+            customerPhone: customerState.phoneNumber,
+          });
+          setEditInfo(true);
+          setHasAddress(false);
+          confirmInfo(false);
+        }
+      }
     };
 
     fetchData();
-  }, []);
+  }, [customerState]);
 
   const [error, setError] = useState({});
   return (
@@ -314,50 +353,54 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       >
         Thông tin khách hàng
       </Typography>
-      <FormControl>
-        <FormLabel className="font-bold text-black">Email:</FormLabel>
-        <TextField
-          required
-          name="customerEmail"
-          value={customerInfo.customerEmail}
-          disabled={otpValid}
-          onChange={handleChangeCustomerInfo}
-          variant="outlined"
-          error={error.customerEmail}
-          helperText={error.customerPhone && "Email không được để trống"}
-        />
-        {!otpValid && (
-          <Button
-            variant="outlined"
-            className="w-fit"
-            onClick={handleSendOTPCLick}
-          >
-            {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-          </Button>
-        )}
-      </FormControl>
+      {!customerState && (
+        <>
+          <FormControl>
+            <FormLabel className="font-bold text-black">Email:</FormLabel>
+            <TextField
+              required
+              name="customerEmail"
+              value={customerInfo.customerEmail}
+              disabled={otpValid}
+              onChange={handleChangeCustomerInfo}
+              variant="outlined"
+              error={error.customerEmail}
+              helperText={error.customerPhone && "Email không được để trống"}
+            />
+            {!otpValid && (
+              <Button
+                variant="outlined"
+                className="w-fit"
+                onClick={handleSendOTPCLick}
+              >
+                {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
+              </Button>
+            )}
+          </FormControl>
 
-      {otpClick && !otpValid && (
-        <FormControl>
-          <FormLabel className="font-bold text-black">OTP:</FormLabel>
-          <TextField
-            required
-            name="otp"
-            type="number"
-            value={customerInfo.otp}
-            onChange={handleChangeCustomerInfo}
-            variant="outlined"
-            error={error.otp}
-            helperText={error.otp && "OTP không được để trống"}
-          />
-          <Button
-            variant="outlined"
-            className="w-fit"
-            onClick={handleValidOTPCLick}
-          >
-            Xác thực
-          </Button>
-        </FormControl>
+          {otpClick && !otpValid && (
+            <FormControl>
+              <FormLabel className="font-bold text-black">OTP:</FormLabel>
+              <TextField
+                required
+                name="otp"
+                type="number"
+                value={customerInfo.otp}
+                onChange={handleChangeCustomerInfo}
+                variant="outlined"
+                error={error.otp}
+                helperText={error.otp && "OTP không được để trống"}
+              />
+              <Button
+                variant="outlined"
+                className="w-fit"
+                onClick={handleValidOTPCLick}
+              >
+                Xác thực
+              </Button>
+            </FormControl>
+          )}
+        </>
       )}
 
       {otpValid && (

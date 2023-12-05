@@ -5,11 +5,10 @@ import {
   List,
   ListItem,
   Divider,
-  Link,
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { formatCurrency } from "../../utils/FormatPrice";
 import { getOrderByCode, updateStatusOrder } from "../../api/order";
 import { getCustomerByCode } from "../../api/customer";
@@ -102,6 +101,10 @@ export const OrderDetail = () => {
               <span className="font-bold">Trạng thái: </span>
               {order.status}
             </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Ghi chú: </span>
+              {order.customerNote}
+            </Typography>
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -184,7 +187,7 @@ export const OrderDetail = () => {
                     {formatCurrency(item.totalPrice)}
                   </Typography>
                   <Link
-                    href={`/product/${item.productCode}`}
+                    to={`/product/${item.productCode}`}
                     underline="hover"
                     color={"inherit"}
                     className="w-1/6"

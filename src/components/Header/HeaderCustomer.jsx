@@ -10,37 +10,21 @@ import {
 } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import * as CONST from "../../constants";
-import { getActiveCategories } from "../../api/category";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import img from "../../assets/logo.jpg";
-import { getCart } from "../../api/cart";
+import { useStore } from "../../zustand/store";
 
-export function HeaderCustomer({ onSelectCategory,  onSearch }) {
-  const [categories, setCategories] = useState([]);
-  const [cartBadge, setCartBadge] = useState(0);
+export function HeaderCustomer({ onSelectCategory, onSearch }) {
+  const cart = useStore((state) => state.cartState.data);
+  const categories = useStore((state) => state.activeProductCategoryState.data);
 
   const [style, setStyle] = useState(false);
-
   const [style2, setStyle2] = useState(false);
   const [style3, setStyle3] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
-    getActiveCategories(params).then((res) => {
-      setCategories(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    getCart().then((res) => {
-      console.log(res.data);
-      setCartBadge(res.length);
-    });
-  }, [cartBadge]);
   const handleCategorySelect = (categoryCode, section) => {
     navigate("/product");
     onSelectCategory(categoryCode, section);
@@ -65,29 +49,32 @@ export function HeaderCustomer({ onSelectCategory,  onSearch }) {
               width: "50%",
             }}
           >
-            <a
-              href="/"
+            <Link
+              to="/"
+              underline="none"
               className="s-{16px}  flex pb-[3px] font-bold text-black"
             >
               TRANG CHỦ
-            </a>
-            <a
-              href="/introduction"
+            </Link>
+            <Link
+              to="/introduction"
+              underline="none"
               className="s-{16px}  flex pb-[3px] font-bold text-black"
             >
               GIỚI THIỆU
-            </a>
+            </Link>
             <div
               className="relative inline-block"
               onMouseEnter={() => setStyle2(false) ?? setStyle3(false)}
             >
-              <a
-                href="/product"
+              <Link
+                to="/product"
+                underline="none"
                 onMouseEnter={() => setStyle(true)}
                 className="s-{16px}  flex pb-[3px] font-bold text-black"
               >
                 SẢN PHẨM
-              </a>
+              </Link>
               {style && (
                 <div
                   className=" t-[100%] l-[50%]  absolute z-10 mt-7  w-max translate-x-[-35%] rounded-md bg-white shadow-lg"
@@ -115,13 +102,13 @@ export function HeaderCustomer({ onSelectCategory,  onSearch }) {
               className="relative inline-block"
               onMouseEnter={() => setStyle(false) ?? setStyle3(false)}
             >
-              <a
-                // href="/service"
+              <Link
+                underline="none"
                 onMouseEnter={() => setStyle2(true)}
                 className="s-{16px} flex  pb-[3px] font-bold text-black"
               >
                 DỊCH VỤ
-              </a>
+              </Link>
 
               {style2 && (
                 <div
@@ -152,13 +139,13 @@ export function HeaderCustomer({ onSelectCategory,  onSearch }) {
               )}
             </div>
             <div onMouseEnter={() => setStyle2(false) ?? setStyle(false)}>
-              <a
-                // href="/introduction"
+              <Link
+                underline="none"
                 className="s-{16px}  flex pb-[3px] font-bold text-black"
                 onMouseEnter={() => setStyle3(true)}
               >
                 ĐẶT LỊCH
-              </a>
+              </Link>
               {style3 && (
                 <div
                   className="t-[100%] l-[50%] absolute z-10  mt-7  w-max translate-x-[-26%] rounded-md bg-white shadow-lg"
@@ -213,9 +200,9 @@ export function HeaderCustomer({ onSelectCategory,  onSearch }) {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               />
-              <SearchOutlinedIcon onClick={handleSearch}/>
+              <SearchOutlinedIcon onClick={handleSearch} />
               <Badge
-                badgeContent={cartBadge > 0 ? cartBadge : null}
+                badgeContent={cart.length > 0 ? cart.length : null}
                 color="primary"
               >
                 <ShoppingCartOutlinedIcon

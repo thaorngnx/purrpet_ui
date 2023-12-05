@@ -11,20 +11,18 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
-import {
-  getCart,
-  updateCart,
-  deleteCart,
-  deleteProductCart,
-} from "../../api/cart";
 import { getProductByCode } from "../../api/product";
 import { formatCurrency } from "../../utils/FormatPrice";
 import { CustomerInfoFormForOrder } from "./CustomerInfoFormForOrder";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/order";
+import { useStore } from "../../zustand/store";
 
 export const ListCart = () => {
   const navigate = useNavigate();
+
+  const cart = useStore((state) => state.cartState.data);
+  const { updateCart, deleteCart, deleteProductCart } = useStore();
 
   const handleAddQuantity = (product) => {
     if (product.quantity < product.inventory) {
@@ -100,9 +98,7 @@ export const ListCart = () => {
       }),
     });
     console.log(product.purrPetCode);
-    deleteProductCart({ productCode: product.purrPetCode }).then((res) => {
-      console.log(res);
-    });
+    deleteProductCart({ productCode: product.purrPetCode });
   };
 
   const handleOpenCustomerInfoForm = () => {
@@ -129,11 +125,7 @@ export const ListCart = () => {
       if (res.err === 0) {
         console.log("order success");
         //delete cart
-        deleteCart().then((res) => {
-          console.log("delete cart", res);
-          if (res.err === 0) {
-          }
-        });
+        deleteCart();
         //navigate
         navigate(`/order/${res.data.purrPetCode}`);
       }
@@ -157,16 +149,14 @@ export const ListCart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cartData = await getCart();
-
         const productList = [];
-        for (let i = 0; i < cartData.length; i++) {
-          const productData = await getProductByCode(cartData[i].productCode);
+        for (let i = 0; i < cart.length; i++) {
+          const productData = await getProductByCode(cart[i].productCode);
           console.log("res", productData.data);
           productList.push({
             ...productData.data,
-            quantity: cartData[i].quantity,
-            totalPrice: productData.data.price * cartData[i].quantity,
+            quantity: cart[i].quantity,
+            totalPrice: productData.data.price * cart[i].quantity,
           });
         }
         console.log("productList", productList);
@@ -187,7 +177,7 @@ export const ListCart = () => {
     };
 
     fetchData();
-  }, []);
+  }, [cart]);
   return (
     <Box className="min-h-screen flex-col">
       <Typography variant="h4" className="m-3 text-center font-bold">

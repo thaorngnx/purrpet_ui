@@ -10,20 +10,12 @@ import {
   FormControl,
   Select,
 } from "@mui/material";
-import { getActiveCategories } from "../../api/category";
-import * as CONST from "../../constants";
+import { useStore } from "../../zustand/store";
 
 export const SideNavCategoryCustomer = ({ onSelect }) => {
-  const [categories, setCategories] = useState([]);
+  const categories = useStore((state) => state.activeProductCategoryState.data);
   const [selectedCategoryCode, setSelectedCategoryCode] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-
-  useEffect(() => {
-    const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
-    getActiveCategories(params).then((res) => {
-      setCategories(res.data);
-    });
-  }, []);
 
   const handleCategoryClick = (categoryCode) => {
     setSelectedCategoryCode(categoryCode);

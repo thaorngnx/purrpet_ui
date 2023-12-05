@@ -19,9 +19,9 @@ export async function getCustomerByCode(code) {
   }
 }
 
-export async function getCustomerByPhone(body) {
+export async function getCustomerById(id) {
   try {
-    const response = await api.post("customer/find-by-phone", body);
+    const response = await api.post(`customer/find-by-id/${id}`);
     return response.data;
   } catch (error) {
     console.error(error);

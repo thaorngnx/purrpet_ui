@@ -12,9 +12,12 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { addToCart } from "../../api/cart";
 import { formatCurrency } from "../../utils/FormatPrice";
+import { useStore } from "../../zustand/store";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+
+  const { addToCart } = useStore();
 
   const handleProductClick = () => {
     navigate(`/product/${product.purrPetCode}`);
@@ -24,8 +27,6 @@ export const ProductCard = ({ product }) => {
     addToCart({
       productCode: product.purrPetCode,
       quantity: 1,
-    }).then((res) => {
-      console.log(res);
     });
   };
 

@@ -9,8 +9,11 @@ import {
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
+import { useStore } from "../../zustand/store";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
+  const customerState = useStore((state) => state.customerState.data);
+
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -141,6 +144,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     confirmInfo(true);
   };
 
+  const [error, setError] = useState({});
   const [otpClick, setOtpClick] = useState(false);
   const [otpValid, setOtpValid] = useState(false);
   const [existCustomer, setExistCustomer] = useState(false);
@@ -153,7 +157,22 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     customerNote: "",
     customerCode: "",
   });
-  const [error, setError] = useState({});
+
+  useEffect(() => {
+    if (customerState) {
+      setCustomerInfo({
+        ...customerInfo,
+        customerName: customerState.name,
+        customerPhone: customerState.phoneNumber,
+        customerCode: customerState.purrPetCode,
+      });
+      setExistCustomer(true);
+      setEditInfo(false);
+      confirmInfo(true);
+      setOtpValid(true);
+    }
+  }, [customerState]);
+
   return (
     <Paper
       sx={{
@@ -174,50 +193,54 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       >
         Thông tin khách hàng
       </Typography>
-      <FormControl>
-        <FormLabel className="font-bold text-black">Email:</FormLabel>
-        <TextField
-          required
-          name="customerEmail"
-          value={customerInfo.customerEmail}
-          disabled={otpValid}
-          onChange={handleChangeCustomerInfo}
-          variant="outlined"
-          error={error.customerEmail}
-          helperText={error.customerPhone && "Email không được để trống"}
-        />
-        {!otpValid && (
-          <Button
-            variant="outlined"
-            className="w-fit"
-            onClick={handleSendOTPCLick}
-          >
-            {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-          </Button>
-        )}
-      </FormControl>
+      {!customerState && (
+        <>
+          <FormControl>
+            <FormLabel className="font-bold text-black">Email:</FormLabel>
+            <TextField
+              required
+              name="customerEmail"
+              value={customerInfo.customerEmail}
+              disabled={otpValid}
+              onChange={handleChangeCustomerInfo}
+              variant="outlined"
+              error={error.customerEmail}
+              helperText={error.customerPhone && "Email không được để trống"}
+            />
+            {!otpValid && (
+              <Button
+                variant="outlined"
+                className="w-fit"
+                onClick={handleSendOTPCLick}
+              >
+                {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
+              </Button>
+            )}
+          </FormControl>
 
-      {otpClick && !otpValid && (
-        <FormControl>
-          <FormLabel className="font-bold text-black">OTP:</FormLabel>
-          <TextField
-            required
-            name="otp"
-            type="number"
-            value={customerInfo.otp}
-            onChange={handleChangeCustomerInfo}
-            variant="outlined"
-            error={error.otp}
-            helperText={error.otp && "OTP không được để trống"}
-          />
-          <Button
-            variant="outlined"
-            className="w-fit"
-            onClick={handleValidOTPCLick}
-          >
-            Xác thực
-          </Button>
-        </FormControl>
+          {otpClick && !otpValid && (
+            <FormControl>
+              <FormLabel className="font-bold text-black">OTP:</FormLabel>
+              <TextField
+                required
+                name="otp"
+                type="number"
+                value={customerInfo.otp}
+                onChange={handleChangeCustomerInfo}
+                variant="outlined"
+                error={error.otp}
+                helperText={error.otp && "OTP không được để trống"}
+              />
+              <Button
+                variant="outlined"
+                className="w-fit"
+                onClick={handleValidOTPCLick}
+              >
+                Xác thực
+              </Button>
+            </FormControl>
+          )}
+        </>
       )}
 
       {otpValid && (
