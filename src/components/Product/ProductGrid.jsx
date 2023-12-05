@@ -3,7 +3,7 @@ import { ProductCard } from "./ProducCard";
 import { getActiveProducts } from "../../api/product";
 import { useEffect, useState } from "react";
 
-export const ProductGrid = ({ categoryCode, section }) => {
+export const ProductGrid = ({ categoryCode, section, searchValue }) => {
   const [products, setProducts] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
@@ -11,14 +11,14 @@ export const ProductGrid = ({ categoryCode, section }) => {
   useEffect(() => {
     const params = {
       page: page,
-      key: categoryCode,
+      key: categoryCode || searchValue,
       order: section,
     };
     getActiveProducts(params).then((res) => {
       setProducts(res.data);
       setTotalPage(res.totalPage);
     });
-  }, [page, categoryCode, section]);
+  }, [page, categoryCode, section, searchValue]);
 
   const handlePage = (event, value) => {
     console.log(value);

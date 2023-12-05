@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { getCart } from "../../api/cart";
 
-export function HeaderCustomer({ onSelectCategory }) {
+export function HeaderCustomer({ onSelectCategory,  onSearch }) {
   const [categories, setCategories] = useState([]);
   const [cartBadge, setCartBadge] = useState(0);
 
@@ -25,6 +25,7 @@ export function HeaderCustomer({ onSelectCategory }) {
 
   const [style2, setStyle2] = useState(false);
   const [style3, setStyle3] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +44,9 @@ export function HeaderCustomer({ onSelectCategory }) {
   const handleCategorySelect = (categoryCode, section) => {
     navigate("/product");
     onSelectCategory(categoryCode, section);
+  };
+  const handleSearch = () => {
+    onSearch(searchValue);
   };
 
   return (
@@ -206,8 +210,10 @@ export function HeaderCustomer({ onSelectCategory }) {
                 size="small"
                 placeholder="Tìm kiếm"
                 className=" w-[150px]"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
               />
-              <SearchOutlinedIcon />
+              <SearchOutlinedIcon onClick={handleSearch}/>
               <Badge
                 badgeContent={cartBadge > 0 ? cartBadge : null}
                 color="primary"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -9,9 +9,19 @@ import {
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { logout } from "../../api/auth";
+import logo from "../../assets/logo.jpg";
+import { space } from "postcss/lib/list";
 
 export const HeaderAdmin = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [username, setUsername] = useState(""); 
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -26,15 +36,22 @@ export const HeaderAdmin = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static"sx={{ background: "#d9d9d9"}} >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          logo
+        <Typography sx={{ flexGrow: 1 }}>
+         <img src={logo} alt="logo" style={{width:"20%", marginRight:"25%", marginLeft: "auto"}}/>
         </Typography>
+        <Typography variant="inherit" sx={{
+          flexGrow: 1,
+          color: "#000000",
+          fontWeight: "bold",
+          textAlign: "end",
+       
+        }}>Hi, {username}</Typography>
         <IconButton
           size="large"
           edge="end"
-          color="inherit"
+          color="base"
           aria-label="account of current user"
           aria-controls="menu-appbar"
           aria-haspopup="true"
@@ -59,7 +76,8 @@ export const HeaderAdmin = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>
+            Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
