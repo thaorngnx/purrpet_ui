@@ -11,7 +11,7 @@ import {
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { addToCart } from "../../api/cart";
-import { formatCurrency } from "../../utils/FormatPrice";
+import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 
 export const ProductCard = ({ product }) => {

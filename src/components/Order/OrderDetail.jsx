@@ -8,15 +8,16 @@ import {
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { formatCurrency } from "../../utils/FormatPrice";
+import { useParams, useNavigate } from "react-router-dom";
+import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { getOrderByCode, updateStatusOrder } from "../../api/order";
-import { getCustomerByCode } from "../../api/customer";
-import { getProductByCode } from "../../api/product";
+import { getProducts } from "../../api/product";
 import { createPaymentUrl } from "../../api/pay";
 import * as CONST from "../../constants";
 
 export const OrderDetail = () => {
+  const navigate = useNavigate();
+
   const { orderCode } = useParams();
 
   const handlePaymentClick = () => {
@@ -42,45 +43,44 @@ export const OrderDetail = () => {
   };
 
   const [order, setOrder] = useState({});
-  const [orderItems, setOrderItems] = useState([]);
   const [productOrder, setProductOrder] = useState([]);
-  const [customer, setCustomer] = useState({});
+
   useEffect(() => {
     getOrderByCode(orderCode).then((res) => {
       console.log(res);
       if (res.err === 0) {
         setOrder(res.data);
-        setOrderItems(res.data.orderItems);
-        getCustomerByCode(res.data.customerCode).then((res) => {
+        const orderItems = res.data.orderItems;
+        const productCodes = [];
+        res.data.orderItems.forEach((item) => {
+          productCodes.push(item.productCode);
+        });
+        getProducts({ productCodes: productCodes.toString() }).then((res) => {
           console.log(res);
           if (res.err === 0) {
-            setCustomer(res.data);
+            let productOrder = [];
+            res.data.forEach((item) => {
+              orderItems.forEach((orderItem) => {
+                if (item.purrPetCode === orderItem.productCode) {
+                  let product = {
+                    productCode: orderItem.productCode,
+                    images: item.images,
+                    name: item.productName,
+                    quantity: orderItem.quantity,
+                    price: orderItem.productPrice,
+                    totalPrice: orderItem.totalPrice,
+                  };
+                  console.log(product);
+                  productOrder.push(product);
+                }
+              });
+            });
+            setProductOrder(productOrder);
           }
         });
       }
     });
   }, [orderCode]);
-  useEffect(() => {
-    let productOrder = [];
-    orderItems.map((item) => {
-      console.log(item);
-      getProductByCode(item.productCode).then((res) => {
-        console.log(res);
-        if (res.err === 0) {
-          let product = {
-            productCode: item.productCode,
-            images: res.data.images,
-            name: res.data.productName,
-            quantity: item.quantity,
-            price: item.productPrice,
-            totalPrice: item.totalPrice,
-          };
-          productOrder.push(product);
-        }
-      });
-    });
-    setProductOrder(productOrder);
-  }, [orderItems]);
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
       <Typography variant="h5" className="font-bold">
@@ -95,7 +95,7 @@ export const OrderDetail = () => {
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt hàng: </span>
-              {order.createdAt}
+              {formatDateTime(order.createdAt)}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
@@ -109,19 +109,19 @@ export const OrderDetail = () => {
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Họ tên: </span>
-              {customer.name}
+              {order.customerName}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Số điện thoại: </span>
-              {customer.phoneNumber}
+              {order.customerPhone}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Email: </span>
-              {customer.email}
+              {order.customerEmail}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Địa chỉ nhận hàng: </span>
-              {order.customerAddress?.street}, {order.customerAddress?.ward},
+              {order.customerAddress?.street}, {order.customerAddress?.ward},{" "}
               {order.customerAddress?.district},{" "}
               {order.customerAddress?.province}
             </Typography>
@@ -186,16 +186,28 @@ export const OrderDetail = () => {
                   <Typography variant="body1" className="m-2 w-1/6 text-end">
                     {formatCurrency(item.totalPrice)}
                   </Typography>
-                  <Link
-                    to={`/product/${item.productCode}`}
-                    underline="hover"
-                    color={"inherit"}
-                    className="w-1/6"
-                  >
-                    <Typography variant="body1" className="text-center text-sm">
-                      Xem sản phẩm
-                    </Typography>
-                  </Link>
+                  <Box className="flex w-1/6 justify-center">
+                    <Button
+                      size="small"
+                      sx={{
+                        color: "black",
+                        display: "block",
+                        fontWeight: "bold",
+                        border: "1px solid black",
+                        textTransform: "none",
+                        m: 2,
+                        ":hover": {
+                          backgroundColor: "black",
+                          color: "white",
+                        },
+                      }}
+                      onClick={() => {
+                        navigate(`/product/${item.productCode}`);
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                  </Box>
                 </ListItem>
               );
             })}
@@ -211,7 +223,7 @@ export const OrderDetail = () => {
                   className="mr-3 mt-3 bg-black"
                   onClick={handleChangeStatus}
                 >
-                  Hủy đơn hàng
+                  Hủy đơn
                 </Button>
                 <Button
                   variant="contained"

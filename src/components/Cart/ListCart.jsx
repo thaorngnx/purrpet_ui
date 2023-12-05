@@ -12,7 +12,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { getProductByCode } from "../../api/product";
-import { formatCurrency } from "../../utils/FormatPrice";
+import { formatCurrency } from "../../utils/formatData";
 import { CustomerInfoFormForOrder } from "./CustomerInfoFormForOrder";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/order";

@@ -18,6 +18,15 @@ export async function getOrderByCode(code) {
   }
 }
 
+export async function getOrdersByCustomer() {
+  try {
+    const response = await api.get("order/get-by-customer");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function createOrder(order) {
   try {
     const response = await api.post("order/create", order);

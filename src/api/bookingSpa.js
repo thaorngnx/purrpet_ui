@@ -18,6 +18,15 @@ export async function getBookingSpaByCode(code) {
   }
 }
 
+export async function getBookingSpaByCustomer() {
+  try {
+    const response = await api.get("bookingSpa/get-by-customer");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function createBookingSpa(bookingSpa) {
   try {
     const response = await api.post("bookingSpa/create", bookingSpa);
@@ -39,11 +48,11 @@ export async function updateBookingSpa(bookingSpa) {
   }
 }
 
-export async function updateStatusBookingSpa(bookingSpa) {
+export async function updateStatusBookingSpa(bookingSpaCode, newStatus) {
   try {
     const response = await api.put(
-      `bookingSpa/update-status/${bookingSpa.purrPetCode}`,
-      { status: bookingSpa.status },
+      `bookingSpa/update-status/${bookingSpaCode}`,
+      { status: newStatus },
     );
     return response.data;
   } catch (error) {

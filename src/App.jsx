@@ -21,11 +21,12 @@ import { SpaPage } from "./pages/Customer/SpaPage";
 import { BookingHomePage } from "./pages/Customer/BookingHomePage";
 import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
+import { BookingSpaDetailPage } from "./pages/Customer/BookingSpaDetailPage";
+import { BookingHomeDetailPage } from "./pages/Customer/BookingHomeDetailPage";
 import { useEffect } from "react";
 import { useStore } from "./zustand/store";
 import Cookies from "universal-cookie";
 import { jwtDecode } from "jwt-decode";
-import * as CONST from "./constants";
 import { CircularProgress } from "@mui/material";
 
 function App() {
@@ -98,6 +99,14 @@ function App() {
           <Route path="customer" element={<CustomerInfoPage />} />
           <Route path="order" element={<OrderHistoryPage />} />
           <Route path="order/:orderCode" element={<OrderDetailPage />} />
+          <Route
+            path="bookingSpa/:bookingSpaCode"
+            element={<BookingSpaDetailPage />}
+          />
+          <Route
+            path="bookingHome/:bookingHomeCode"
+            element={<BookingHomeDetailPage />}
+          />
         </Route>
         <Route path="/admin">
           <Route index element={<Dashboard />} />

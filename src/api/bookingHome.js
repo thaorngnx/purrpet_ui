@@ -18,6 +18,15 @@ export async function getBookingHomeByCode(code) {
   }
 }
 
+export async function getBookingHomeByCustomer() {
+  try {
+    const response = await api.get("bookingHome/get-by-customer");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function createBookingHome(bookingHome) {
   try {
     const response = await api.post("bookingHome/create", bookingHome);
@@ -39,11 +48,11 @@ export async function updateBookingHome(bookingHome) {
   }
 }
 
-export async function updateStatusBookingHome(bookingHome) {
+export async function updateStatusBookingHome(bookingHomeCode, newStatus) {
   try {
     const response = await api.put(
-      `bookingHome/update-status/${bookingHome.purrPetCode}`,
-      { status: bookingHome.status },
+      `bookingHome/update-status/${bookingHomeCode}`,
+      { status: newStatus },
     );
     return response.data;
   } catch (error) {

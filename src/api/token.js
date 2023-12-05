@@ -18,9 +18,15 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    //get path to set cookie
+    const path = window.location.pathname;
+
     if (cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
       config.headers["Authorization"] = `Bearer ${cookie.get(
         import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
+        {
+          path: path,
+        },
       )}`;
     }
     return config;

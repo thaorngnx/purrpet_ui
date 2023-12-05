@@ -9,17 +9,15 @@ const saveToken = (response) => {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 30);
   const decodedAccessToken = jwtDecode(response.data.access_token);
-  const path =
-    decodedAccessToken.role === CONST.ROLE.STAFF ? "/staff" : "/admin";
   cookie.set("access_token", response.data.access_token, {
     expires: expirationDate,
-    path: path,
+    path: decodedAccessToken.path,
   });
 
   expirationDate.setDate(expirationDate.getDate() + 365);
   cookie.set("refresh_token", response.data.refresh_token, {
     expires: expirationDate,
-    path: path,
+    path: decodedAccessToken.path,
   });
 };
 

@@ -14,7 +14,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 // import { addToCart } from "../../api/cart";
-import { formatCurrency } from "../../utils/FormatPrice";
+import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 
 export const ProductDetail = () => {
