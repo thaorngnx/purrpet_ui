@@ -101,11 +101,11 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         phoneNumber: customerInfo.customerPhone,
       }).then((res) => {
         if (res.err === 0) {
-          customer({
-            ...customerInfo,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
-          });
+          // customer({
+          //   ...customerInfo,
+          //   customerName: res.data.name,
+          //   customerPhone: res.data.phoneNumber,
+          // });
           setCustomerInfo({
             ...customerInfo,
             customerName: res.data.name,
@@ -160,6 +160,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   useEffect(() => {
     if (customerState) {
+      customer({ ...customerInfo, customerCode: customerState.purrPetCode });
       setCustomerInfo({
         ...customerInfo,
         customerName: customerState.name,
