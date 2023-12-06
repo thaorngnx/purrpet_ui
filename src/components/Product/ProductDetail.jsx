@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-// import { addToCart } from "../../api/cart";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 

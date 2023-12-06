@@ -6,6 +6,7 @@ export const STATUS_ACCOUNT = {
 export const ROLE = {
   ADMIN: "Quản trị viên",
   STAFF: "Nhân viên",
+  CUSTOMER: "Khách hàng",
 };
 
 export const STATUS_PRODUCT = {

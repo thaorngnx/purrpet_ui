@@ -68,7 +68,7 @@ export const HomeHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem className="flex">
+            <ListItem key="title" className="flex">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã đặt phòng
               </Typography>
@@ -111,7 +111,10 @@ export const HomeHistory = () => {
             </ListItem>
             {bHomeByStatus.map((bookingHome) => {
               return (
-                <ListItem key={bookingHome.id} className="flex justify-center">
+                <ListItem
+                  key={bookingHome.purrPetCode}
+                  className="flex justify-center"
+                >
                   <Box className="flex w-full flex-col">
                     <Box className="mb-2 flex flex-row items-center">
                       <Typography variant="body1" className="w-1/6 px-1">

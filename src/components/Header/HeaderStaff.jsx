@@ -11,12 +11,10 @@ import { AccountCircle } from "@mui/icons-material";
 import { logout } from "../../api/auth";
 import logo from "../../assets/logo.jpg";
 import { useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
+import Cookie from "js-cookie";
 
 export const HeaderStaff = () => {
   const navigate = useNavigate();
-  const cookies = new Cookies();
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [username, setUsername] = useState("");
 
@@ -38,8 +36,8 @@ export const HeaderStaff = () => {
   const handleLogout = () => {
     logout().then((res) => {
       if (res.err === 0) {
-        cookies.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-        cookies.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
         navigate("/staff/login");
       }
     });

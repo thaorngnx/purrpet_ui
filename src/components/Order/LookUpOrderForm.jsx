@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -53,6 +53,12 @@ export const LookUpOrderForm = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [sentOtp, setSentOtp] = useState(false);
+
+  useEffect(() => {
+    if (customer != []) {
+      navigate("/order");
+    }
+  }, [customer]);
 
   return (
     <Box className="flex min-h-screen flex-col items-center justify-center">

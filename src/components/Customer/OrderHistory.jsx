@@ -68,7 +68,7 @@ export const OrderHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem className="flex">
+            <ListItem key="title" className="flex">
               <Typography variant="body1" className="w-1/5 font-bold">
                 Mã ĐH
               </Typography>

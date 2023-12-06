@@ -67,7 +67,7 @@ export const SpaHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem className="flex">
+            <ListItem key="title" className="flex">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã đặt lịch
               </Typography>
@@ -104,7 +104,10 @@ export const SpaHistory = () => {
             </ListItem>
             {bSpaByStatus.map((bookingSpa) => {
               return (
-                <ListItem key={bookingSpa.id} className="flex justify-center">
+                <ListItem
+                  key={bookingSpa.purrPetCode}
+                  className="flex justify-center"
+                >
                   <Box className="flex w-full flex-col">
                     <Box className="mb-2 flex flex-row items-center">
                       <Typography variant="body1" className="w-1/6 px-1">

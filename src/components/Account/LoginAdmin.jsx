@@ -13,15 +13,14 @@ import * as CONST from "../../constants";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
+import Cookie from "js-cookie";
 
-export const Login = () => {
+export const LoginAdmin = () => {
   const navigate = useNavigate();
-  const cookies = new Cookies();
 
   useEffect(() => {
-    if (cookies.get("access_token")) {
-      navigate("/admin/login");
+    if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
+      navigate("/admin");
     }
   }, []);
 
