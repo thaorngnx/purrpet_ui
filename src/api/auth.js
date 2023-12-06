@@ -54,7 +54,7 @@ export async function loginAdmin(account) {
 export async function refreshToken() {
   try {
     const response = await api.post("auth/refresh-token", {
-      refresh_token: cookie.get(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN),
+      refresh_token: Cookie.get(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN),
     });
 
     if (response.data.err === 0) {

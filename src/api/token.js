@@ -64,7 +64,7 @@ api.interceptors.response.use(
           console.log("refresh token expired");
           Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
           Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
-          window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
+          window.location.pathname = import.meta.env.VITE_APP_ROUTE_LOGIN;
           return Promise.reject(error);
         }
 

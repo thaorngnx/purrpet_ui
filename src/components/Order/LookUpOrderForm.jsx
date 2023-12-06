@@ -16,7 +16,10 @@ import { useStore } from "../../zustand/store";
 export const LookUpOrderForm = () => {
   const navigate = useNavigate();
 
-  const customer = useStore((state) => state.customer);
+  const customer = useStore((state) => state.customerState.data);
+  if (customer) {
+    navigate("/order");
+  }
 
   const { verifyOtp } = useStore();
 
@@ -53,12 +56,6 @@ export const LookUpOrderForm = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [sentOtp, setSentOtp] = useState(false);
-
-  useEffect(() => {
-    if (customer != []) {
-      navigate("/order");
-    }
-  }, [customer]);
 
   return (
     <Box className="flex min-h-screen flex-col items-center justify-center">

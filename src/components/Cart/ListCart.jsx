@@ -179,7 +179,7 @@ export const ListCart = () => {
     fetchData();
   }, [cart]);
   return (
-    <Box className="min-h-screen flex-col">
+    <Box className="flex min-h-screen flex-col">
       <Typography variant="h4" className="m-3 text-center font-bold">
         Giỏ hàng
       </Typography>
@@ -309,7 +309,7 @@ export const ListCart = () => {
       {showBtnConfirmOrder && (
         <Button
           variant="contained"
-          className="m-1 min-w-fit bg-cyan-900 p-2 text-white"
+          className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
           onClick={handleConfirmOrder}
         >
           Tiến hành thanh toán

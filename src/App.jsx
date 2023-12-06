@@ -46,15 +46,7 @@ function App() {
   //get cart
   useEffect(() => {
     getCart();
-  }, [getCart]);
-
-  //get active categories of product
-  useEffect(() => {
     getActiveCategories();
-  }, [getActiveCategories]);
-
-  //get customer info
-  useEffect(() => {
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
       { path: "/" },
@@ -65,7 +57,7 @@ function App() {
         getCustomerById(decoded.id);
       }
     }
-  }, [getCustomerById]);
+  }, [getCart, getActiveCategories, getCustomerById]);
 
   if (activeProductCategoryState.loading || customerState.loading) {
     return (
