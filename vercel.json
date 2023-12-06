@@ -1,18 +1,8 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "App.jsx",
-        "use": "@vercel/static-build",
-        "config": {
-          "zeroConfig": true
-        }
-      }
-    ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/App.jsx"
-      }
+        {
+            "src": "/[^/]*",
+            "dest": "/"
+        }
     ]
-  }
+}
