@@ -22,6 +22,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { createBookingHome, getUnavailableDay } from "../../api/bookingHome";
+import { createPaymentUrl } from "../../api/pay";
 
 export const BookingHomeForm = () => {
   const navigate = useNavigate();
@@ -197,7 +198,14 @@ export const BookingHomeForm = () => {
     }).then((res) => {
       if (res.err === 0) {
         // navigate(`/bookingHome/${res.data.purrPetCode}`);
-        navigate("/");
+        // navigate("/");
+        createPaymentUrl({
+          orderCode: res.data.purrPetCode
+        }).then((res) => {
+          if (res.err === 0) {
+            window.location.href = res.data.paymentUrl;
+          }
+        });
       }
       setMessage(res.message);
     });

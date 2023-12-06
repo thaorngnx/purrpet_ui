@@ -17,6 +17,7 @@ import { CustomerInfoFormForOrder } from "./CustomerInfoFormForOrder";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/order";
 import { useStore } from "../../zustand/store";
+import { createPaymentUrl } from "../../api/pay";
 
 export const ListCart = () => {
   const navigate = useNavigate();
@@ -127,7 +128,14 @@ export const ListCart = () => {
         //delete cart
         deleteCart();
         //navigate
-        navigate(`/order/${res.data.purrPetCode}`);
+        // navigate(`/order/${res.data.purrPetCode}`);
+        createPaymentUrl({
+          orderCode: res.data.purrPetCode,
+        }).then((res) => {
+          if (res.err === 0) {
+            window.location.href = res.data.paymentUrl;
+          }
+        });
       }
     });
   };

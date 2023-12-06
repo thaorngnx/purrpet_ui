@@ -18,6 +18,7 @@ import { getSpas } from "../../api/spa";
 import { CustomerInfoForm } from "./CustomerInfoForm";
 import { TimeSpaForm } from "./TimeSpaForm";
 import { createBookingSpa } from "../../api/bookingSpa";
+import { createPaymentUrl } from "../../api/pay";
 
 export const BookingSpaForm = () => {
   const navigate = useNavigate();
@@ -132,7 +133,14 @@ export const BookingSpaForm = () => {
       console.log(res);
       if (res.err === 0) {
         // navigate(`/bookingSpa/${res.data.purrPetCode}`);
-        navigate("/");
+        // navigate("/");
+        createPaymentUrl({
+          orderCode: res.data.purrPetCode,
+        }).then((res) => {
+          if (res.err === 0) {
+            window.location.href = res.data.paymentUrl;
+          }
+        });
       }
       setMessage(res.message);
     });
