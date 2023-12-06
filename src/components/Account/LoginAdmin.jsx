@@ -14,13 +14,20 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 export const LoginAdmin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
-      navigate("/admin");
+      const decode = jwtDecode(
+        Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN),
+      );
+      console.log(decode);
+      if (decode.role === CONST.ROLE.ADMIN) {
+        navigate("/admin");
+      }
     }
   }, []);
 

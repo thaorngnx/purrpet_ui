@@ -12,14 +12,26 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import FiberPinIcon from "@mui/icons-material/FiberPin";
 import { sendOtp } from "../../api/otp";
 import { useStore } from "../../zustand/store";
+import Cookie from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import * as CONST from "../../constants";
 
 export const LookUpOrderForm = () => {
   const navigate = useNavigate();
 
-  const customer = useStore((state) => state.customerState.data);
-  if (customer) {
-    navigate("/order");
-  }
+  const { customer } = useStore();
+
+  useEffect(() => {
+    if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
+      const decode = jwtDecode(
+        Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN),
+      );
+      console.log(decode);
+      if (decode.role === CONST.ROLE.CUSTOMER) {
+        navigate("/order");
+      }
+    }
+  }, []);
 
   const { verifyOtp } = useStore();
 
@@ -45,7 +57,7 @@ export const LookUpOrderForm = () => {
   const handleVerifyOTP = () => {
     console.log("verify otp");
     verifyOtp({ email: email, otp: otp });
-    if (customer != []) {
+    if (customer != [] || customer != null) {
       navigate("/order");
     } else {
       //message error

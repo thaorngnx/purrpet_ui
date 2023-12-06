@@ -49,7 +49,7 @@ export const ProductGrid = () => {
     });
   }, [page, categoryCode, sort, searchKey]);
 
-  const handlePage = (value) => {
+  const handlePage = (event, value) => {
     setPage(value);
   };
   return (
@@ -93,14 +93,22 @@ export const ProductGrid = () => {
           </Grid>
         ))}
       </Grid>
-      <Stack spacing={2}>
-        <Pagination
-          onChange={handlePage}
-          count={totalPage}
-          shape="rounded"
-          className="flex justify-end"
-        />
-      </Stack>
+      {products.length === 0 && (
+        <Box className="flex h-[50vh] items-center justify-center">
+          Không tìm thấy sản phẩm
+        </Box>
+      )}
+      {products.length > 0 && (
+        <Stack spacing={2}>
+          <Pagination
+            onChange={handlePage}
+            page={page}
+            count={totalPage}
+            shape="rounded"
+            className="flex justify-end"
+          />
+        </Stack>
+      )}
     </Box>
   );
 };
