@@ -101,11 +101,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         phoneNumber: customerInfo.customerPhone,
       }).then((res) => {
         if (res.err === 0) {
-          // customer({
-          //   ...customerInfo,
-          //   customerName: res.data.name,
-          //   customerPhone: res.data.phoneNumber,
-          // });
           setCustomerInfo({
             ...customerInfo,
             customerName: res.data.name,
@@ -125,6 +120,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         name: customerInfo.customerName,
       }).then((res) => {
         if (res.err === 0) {
+          console.log("after create customer oke");
           setCustomerInfo({
             ...customerInfo,
             customerCode: res.data.purrPetCode,
@@ -132,6 +128,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
           customer({ ...customerInfo, customerCode: res.data.purrPetCode });
         }
       });
+
       //oke
       setExistCustomer(true);
       setEditInfo(false);
