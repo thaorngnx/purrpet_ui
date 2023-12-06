@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { addToCart } from "../../api/cart";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 
@@ -68,13 +67,13 @@ export const ProductCard = ({ product }) => {
         {isHover && (
           <div className="absolute flex h-full w-full items-center justify-center bg-white bg-opacity-10">
             <Fab
-              className="m-1 min-w-min bg-indigo-500 p-2 text-white"
+              className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
               onClick={handleAddToCart}
             >
               <AddShoppingCartIcon />
             </Fab>
             <Fab
-              className="m-1 min-w-min bg-amber-300 p-2 text-black"
+              className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
               onClick={handleProductClick}
             >
               <VisibilityIcon />

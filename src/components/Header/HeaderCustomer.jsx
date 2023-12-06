@@ -15,22 +15,21 @@ import { useNavigate, Link } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { useStore } from "../../zustand/store";
 
-export function HeaderCustomer({ onSelectCategory, onSearch }) {
+export function HeaderCustomer() {
   const cart = useStore((state) => state.cartState.data);
   const categories = useStore((state) => state.activeProductCategoryState.data);
 
   const [style, setStyle] = useState(false);
   const [style2, setStyle2] = useState(false);
   const [style3, setStyle3] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchKey, setSearchKey] = useState("");
   const navigate = useNavigate();
 
-  const handleCategorySelect = (categoryCode, section) => {
-    navigate("/product");
-    onSelectCategory(categoryCode, section);
+  const handleCategorySelect = (categoryCode) => {
+    navigate(`/product?category=${categoryCode}`);
   };
   const handleSearch = () => {
-    onSearch(searchValue);
+    navigate(`/product?search=${searchKey}`);
   };
 
   return (
@@ -88,7 +87,7 @@ export function HeaderCustomer({ onSelectCategory, onSearch }) {
                       <Button
                         className="text-black"
                         onClick={() => {
-                          handleCategorySelect(category.purrPetCode, null);
+                          handleCategorySelect(category.purrPetCode);
                         }}
                       >
                         {category.categoryName}
@@ -197,8 +196,8 @@ export function HeaderCustomer({ onSelectCategory, onSearch }) {
                 size="small"
                 placeholder="Tìm kiếm"
                 className=" w-[150px]"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                value={searchKey}
+                onChange={(e) => setSearchKey(e.target.value)}
               />
               <SearchOutlinedIcon onClick={handleSearch} />
               <Badge

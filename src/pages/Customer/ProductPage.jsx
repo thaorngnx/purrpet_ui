@@ -2,34 +2,37 @@ import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
 import { ProductGrid } from "../../components/Product/ProductGrid";
 import { SideNavCategoryCustomer } from "../../components/Nav/SideNavCategoryCustomer";
-import { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
+import { useStore } from "../../zustand/store";
 
 export const ProductPage = () => {
-  const [selectedCategoryCode, setSelectedCategoryCode] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const handleCategorySelect = (categoryCode, section) => {
-    setSelectedCategoryCode(categoryCode);
-    setSelectedSection(section);
-  };
-  const handleSearch = (value) => {
-    setSearchValue(value);
-    // Xử lý logic tìm kiếm dựa trên giá trị `value` ở đây
-    // Ví dụ: Gọi API để lấy dữ liệu sản phẩm phù hợp với giá trị tìm kiếm
-  };
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryCode = searchParams.get("category");
+
+  const categories = useStore((state) => state.activeProductCategoryState.data);
+
+  const selectedCategory = categories.find(
+    (category) => category.purrPetCode === categoryCode,
+  );
 
   return (
     <>
-      <HeaderCustomer onSelectCategory={handleCategorySelect}  onSearch={handleSearch}/>
-      <Box sx={{ display: "flex", marginTop: "10px" }}>
-        <SideNavCategoryCustomer onSelect={handleCategorySelect} />
-        <ProductGrid
-          categoryCode={selectedCategoryCode}
-          section={selectedSection}
-          searchValue={searchValue}
-        />
+      <HeaderCustomer />
+      <Box className="mt-4 flex flex-row">
+        <SideNavCategoryCustomer />
+        <Box className="w-4/5 flex-col">
+          <Typography variant="h6" className="text-center font-sans font-bold">
+            Sản phẩm
+          </Typography>
+          <Typography variant="h6" className="text-center font-sans font-bold">
+            {selectedCategory?.categoryName || "Tất cả"}
+          </Typography>
+          <ProductGrid />
+        </Box>
       </Box>
+
       <FooterCustomer />
     </>
   );

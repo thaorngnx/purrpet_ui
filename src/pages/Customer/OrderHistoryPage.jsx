@@ -1,7 +1,7 @@
 import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
 import { SideNavCustomerInfo } from "../../components/Nav/SideNavCustomerInfo";
-import { OrderHistory } from "../../components/Customer/OrderHistory";
+import { History } from "../../components/Customer/History";
 import { Box } from "@mui/material";
 
 export const OrderHistoryPage = () => {
@@ -10,7 +10,7 @@ export const OrderHistoryPage = () => {
       <HeaderCustomer />
       <Box className="flex flex-row">
         <SideNavCustomerInfo />
-        <OrderHistory />
+        <History />
       </Box>
       <FooterCustomer />
     </>

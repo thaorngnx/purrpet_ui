@@ -125,7 +125,10 @@ export const BookingHomeDetail = () => {
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã phòng
               </Typography>
-              <Typography variant="body1" className="w-1/6 p-2 font-bold">
+              <Typography
+                variant="body1"
+                className="w-1/6 p-2 text-center font-bold"
+              >
                 Loại thú cưng
               </Typography>
               <Typography
