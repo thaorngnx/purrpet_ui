@@ -20,10 +20,13 @@ export const LoginAdmin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
-      const decode = jwtDecode(
-        Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN),
-      );
+    const accessToken = Cookie.get(
+      import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
+      { path: "/admin" },
+    );
+    console.log(accessToken);
+    if (accessToken) {
+      const decode = jwtDecode(accessToken);
       console.log(decode);
       if (decode.role === CONST.ROLE.ADMIN) {
         navigate("/admin");

@@ -22,10 +22,14 @@ export const LookUpOrderForm = () => {
   const { customer } = useStore();
 
   useEffect(() => {
-    if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
-      const decode = jwtDecode(
-        Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN),
-      );
+    const accessToken = Cookie.get(
+      import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
+      {
+        path: "/",
+      },
+    );
+    if (accessToken != null) {
+      const decode = jwtDecode(accessToken);
       console.log(decode);
       if (decode.role === CONST.ROLE.CUSTOMER) {
         navigate("/order");
@@ -60,6 +64,7 @@ export const LookUpOrderForm = () => {
     if (customer != [] && customer != null) {
       navigate("/order");
     } else {
+      alert("Email này chưa có đơn hàng nào");
       //message error
       console.log("error");
     }

@@ -129,8 +129,10 @@ export const BookingSpaForm = () => {
       bookingDate: bookingInfo.bookingDate,
       bookingTime: bookingInfo.bookingTime,
     }).then((res) => {
-      console.log(res.data);
-      navigate("/");
+      console.log(res);
+      if (res.err === 0) {
+        navigate(`/booking-spa/${res.data.purrPetCode}`);
+      }
       setMessage(res.message);
     });
   };

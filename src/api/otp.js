@@ -13,7 +13,11 @@ export async function sendOtp(body) {
 export async function verifyOtp(body) {
   try {
     const response = await api.post("otp/verify", body);
-    if (response.data.err === 0) {
+    if (
+      response.data.err === 0 &&
+      response.data.access_token !== null &&
+      response.data.refresh_token !== null
+    ) {
       const path = "/";
 
       Cookie.set(

@@ -195,9 +195,9 @@ export const BookingHomeForm = () => {
       dateCheckIn: bookingInfo.dateCheckIn,
       dateCheckOut: bookingInfo.dateCheckOut,
     }).then((res) => {
-      console.log(res.data);
-      // navigate("/bookingHome/" + res.data.bookingHomeCode);
-      navigate("/");
+      if (res.err === 0) {
+        navigate(`/bookingHome/${res.data.purrPetCode}`);
+      }
       setMessage(res.message);
     });
   };

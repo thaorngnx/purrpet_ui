@@ -36,9 +36,14 @@ export const HeaderAdmin = () => {
 
   const handleLogout = () => {
     logout().then((res) => {
+      console.log(res);
       if (res.err === 0) {
-        Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-        Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, {
+          path: "/admin",
+        });
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN, {
+          path: "/admin",
+        });
         navigate("/admin/login");
       }
     });
