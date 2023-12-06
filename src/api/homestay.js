@@ -61,3 +61,12 @@ export async function updateStatusHomestay(purrPetCode) {
     console.error(error);
   }
 }
+
+export async function getTypeHomeStay(date){
+  try{
+    const response = await api.post(`homestay/report-homestay`,date );
+    return response.data;
+  }catch(error){
+    console.error(error);
+  }
+}

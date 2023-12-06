@@ -58,3 +58,12 @@ export async function updateStatusSpa(purrPetCode) {
     console.error(error);
   }
 }
+
+export async function getreportSpa(date){
+  try {
+    const response = await api.post(`spa/spa-report`, date );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

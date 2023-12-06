@@ -65,3 +65,12 @@ export async function updateStatusProduct(purrPetCode) {
     console.error(error);
   }
 }
+
+export async function reportPruduct(date){
+  try {
+    const response = await api.post(`product/report-product`, date );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
