@@ -28,15 +28,15 @@ export const STATUS_ORDER = {
   WAITING_FOR_PAY: "Chờ thanh toán",
   PAID: "Đã thanh toán",
   DELIVERING: "Đang giao hàng",
-  CANCEL: "Đã hủy",
   DONE: "Đã hoàn thành",
+  CANCEL: "Đã hủy",
 };
 
 export const STATUS_BOOKING = {
   WAITING_FOR_PAY: "Chờ thanh toán",
   PAID: "Đã thanh toán",
-  CHECKIN: "Đã checkin",
-  CHECKOUT: "Đã checkout",
+  CHECKIN: "Đã check-in",
+  EXPIRED: "Đã hết hạn",
   CANCEL: "Đã hủy",
 };
 
