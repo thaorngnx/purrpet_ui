@@ -148,7 +148,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   const [otpClick, setOtpClick] = useState(false);
   const [otpValid, setOtpValid] = useState(false);
   const [existCustomer, setExistCustomer] = useState(false);
-  const [editInfo, setEditInfo] = useState(false);
+  const [editInfo, setEditInfo] = useState(true);
   const [customerInfo, setCustomerInfo] = useState({
     customerPhone: "",
     otp: "",
@@ -159,7 +159,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   });
 
   useEffect(() => {
-    if (customerState) {
+    if (customerState != null && customerState.length > 0) {
       customer({ ...customerInfo, customerCode: customerState.purrPetCode });
       setCustomerInfo({
         ...customerInfo,
@@ -194,7 +194,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       >
         Thông tin khách hàng
       </Typography>
-      {!customerState && (
+      {customerState != [] && customerState != null && (
         <>
           <FormControl>
             <FormLabel className="font-bold text-black">Email:</FormLabel>

@@ -57,7 +57,7 @@ export const LookUpOrderForm = () => {
   const handleVerifyOTP = () => {
     console.log("verify otp");
     verifyOtp({ email: email, otp: otp });
-    if (customer != [] || customer != null) {
+    if (customer != [] && customer != null) {
       navigate("/order");
     } else {
       //message error
