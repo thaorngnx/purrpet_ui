@@ -26,10 +26,10 @@ export const ProductDetail = () => {
     setDescriptionTab(true);
   };
 
-  const handleReviewTab = () => {
-    setDescriptionTab(false);
-    setReviewTab(true);
-  };
+  // const handleReviewTab = () => {
+  //   setDescriptionTab(false);
+  //   setReviewTab(true);
+  // };
 
   const handleAddQuantity = () => {
     if (quantity < product.inventory) {
@@ -50,7 +50,7 @@ export const ProductDetail = () => {
 
   const [product, setProduct] = useState({});
   const [descriptionTab, setDescriptionTab] = useState(true);
-  const [reviewTab, setReviewTab] = useState(false);
+  // const [reviewTab, setReviewTab] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -68,9 +68,7 @@ export const ProductDetail = () => {
             <img
               src={product.images?.[0]?.path}
               alt=""
-              style={{
-                objectFit: "contain",
-              }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
           <Box className="m-2">
@@ -137,7 +135,7 @@ export const ProductDetail = () => {
         <Box sx={{ width: "100%" }}>
           <Tabs value={0} textColor="primary" indicatorColor="primary">
             <Tab label="Mô tả" onClick={handleDescriptionTab} />
-            <Tab label="Đánh giá" onClick={handleReviewTab} />
+            {/* <Tab label="Đánh giá" onClick={handleReviewTab} /> */}
           </Tabs>
           <Box sx={{ p: 2 }}>
             {descriptionTab && (
