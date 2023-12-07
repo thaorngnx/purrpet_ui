@@ -370,7 +370,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         component="div"
         className="text-center font-bold"
       >
-        Thông tin khách hàng {customerState?.purrPetCode} {!otpValid && "✔️"}
+        Thông tin khách hàng
       </Typography>
       {customerState == null && (
         <>
