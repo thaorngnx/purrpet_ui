@@ -16,6 +16,7 @@ import { useStore } from "../../zustand/store";
 
 export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
+
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -70,10 +71,6 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
           setExistCustomer(true);
           setEditInfo(true);
           setHasAddress(false);
-          console.log(
-            "!res.data.address === undefined",
-            !res.data.address !== undefined,
-          );
           let address = {
             street: "",
             province: "",
@@ -170,8 +167,24 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
     confirmInfo(true);
   };
 
+  const handleChangeStreet = (e) => {
+    customer({
+      ...customerInfo,
+      customerAddress: {
+        ...customerInfo.customerAddress,
+        street: e.target.value,
+      },
+    });
+    setCustomerInfo({
+      ...customerInfo,
+      customerAddress: {
+        ...customerInfo.customerAddress,
+        street: e.target.value,
+      },
+    });
+  };
+
   const handleProvinceChange = (e) => {
-    console.log("customerInfo", customerInfo);
     const provinceName = e.target.value;
 
     if (provinceName) {
@@ -266,8 +279,8 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const [otpClick, setOtpClick] = useState(false);
   const [otpValid, setOtpValid] = useState(false);
   const [hasAddress, setHasAddress] = useState(false);
-  const [existCustomer, setExistCustomer] = useState();
-  const [editInfo, setEditInfo] = useState(false);
+  const [existCustomer, setExistCustomer] = useState(false);
+  const [editInfo, setEditInfo] = useState(true);
   const [customerInfo, setCustomerInfo] = useState({
     customerPhone: "",
     otp: "",
@@ -289,14 +302,18 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       );
       setProvinces(response.data);
-      if (customerState) {
+      if (customerState != null) {
         setExistCustomer(true);
         setOtpValid(true);
         if (customerState.address) {
+          customer({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerAddress: customerState.address,
+          });
           setCustomerInfo({
             ...customerInfo,
             customerCode: customerState.purrPetCode,
-            customerEmail: customerState.email,
             customerName: customerState.name,
             customerPhone: customerState.phoneNumber,
             customerAddress: customerState.address,
@@ -304,8 +321,6 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
           setEditInfo(false);
           setHasAddress(true);
           confirmInfo(true);
-          console.log("customerState", customerState);
-          console.log("provinces", response.data);
           const selectedProvince = response.data.find(
             (province) => province.Name === customerState.address.province,
           );
@@ -315,6 +330,10 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
           setDistricts(selectedProvince.Districts);
           setWards(selectedDistrict.Wards);
         } else {
+          customer({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+          });
           setCustomerInfo({
             ...customerInfo,
             customerCode: customerState.purrPetCode,
@@ -351,9 +370,9 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         component="div"
         className="text-center font-bold"
       >
-        Thông tin khách hàng
+        Thông tin khách hàng {customerState?.purrPetCode} {!otpValid && "✔️"}
       </Typography>
-      {!customerState && (
+      {customerState == null && (
         <>
           <FormControl>
             <FormLabel className="font-bold text-black">Email:</FormLabel>
@@ -436,13 +455,15 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
                 error.customerPhone && "Số điện thoại không được để trống"
               }
             />
-            <FormLabel className="font-bold text-black">Địa chỉ:</FormLabel>
+            <FormLabel className="font-bold text-black">
+              Số nhà, tên đường:
+            </FormLabel>
             <TextField
               required
               name="customerAddress"
               value={customerInfo.customerAddress?.street}
               disabled={!editInfo}
-              onChange={handleChangeCustomerInfo}
+              onChange={handleChangeStreet}
               variant="outlined"
               error={error.customerAddress}
               helperText={

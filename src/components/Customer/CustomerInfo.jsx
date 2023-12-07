@@ -19,12 +19,7 @@ import { useNavigate } from "react-router-dom";
 export const CustomerInfo = () => {
   const navigate = useNavigate();
   const customer = useStore((state) => state.customerState.data);
-  if (customer) {
-    console.log("customer", customer);
-  } else {
-    console.log("no customer");
-    navigate("/lookup");
-  }
+
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -139,14 +134,14 @@ export const CustomerInfo = () => {
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [customerInfo, setCustomerInfo] = useState({
-    purrPetCode: customer.purrPetCode,
-    name: customer.name,
-    phoneNumber: customer.phoneNumber,
+    purrPetCode: customer?.purrPetCode,
+    name: customer?.name,
+    phoneNumber: customer?.phoneNumber,
     address: {
-      province: customer.address?.province || "",
-      district: customer.address?.district || "",
-      ward: customer.address?.ward || "",
-      street: customer.address?.street || "",
+      province: customer?.address?.province || "",
+      district: customer?.address?.district || "",
+      ward: customer?.address?.ward || "",
+      street: customer?.address?.street || "",
     },
   });
 
@@ -156,7 +151,9 @@ export const CustomerInfo = () => {
         "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
       );
       setProvinces(response.data);
-      if (customer.address) {
+      if (!customer) {
+        navigate("/lookup");
+      } else if (customer.address) {
         const selectedProvince = response.data.find(
           (province) => province.Name === customer.address.province,
         );

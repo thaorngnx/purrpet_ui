@@ -156,7 +156,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   });
 
   useEffect(() => {
-    if (customerState != null && customerState.length > 0) {
+    if (customerState != null) {
       customer({ ...customerInfo, customerCode: customerState.purrPetCode });
       setCustomerInfo({
         ...customerInfo,
@@ -191,7 +191,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       >
         Thông tin khách hàng
       </Typography>
-      {customerState != [] && customerState != null && (
+      {customerState == null && (
         <>
           <FormControl>
             <FormLabel className="font-bold text-black">Email:</FormLabel>

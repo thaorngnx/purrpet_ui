@@ -6,10 +6,12 @@ import {
   Paper,
   TextField,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useEffect, useState } from "react";
 import { getProductByCode } from "../../api/product";
 import { formatCurrency } from "../../utils/formatData";
@@ -187,7 +189,7 @@ export const ListCart = () => {
     fetchData();
   }, [cart]);
   return (
-    <Box className="flex min-h-screen flex-col">
+    <Box className="mb-5 flex min-h-screen min-h-screen flex-col">
       <Typography variant="h4" className="m-3 text-center font-bold">
         Giỏ hàng
       </Typography>
@@ -201,112 +203,151 @@ export const ListCart = () => {
           position: "relative",
         }}
       >
-        <List>
-          <ListItem key="title" className="my-3 p-0">
+        {productCart.length === 0 && (
+          <Box className="my-10 flex flex-col">
             <Typography
-              variant="body1"
-              className="w-1/6 font-bold"
-            ></Typography>
-            <Typography variant="body1" className="w-1/3 p-2 font-bold">
-              Sản phẩm
-            </Typography>
-            <Typography
-              variant="body1"
-              className="m-2 w-1/6 text-center font-bold"
+              variant="h6"
+              className="flex items-center justify-center text-center text-lg italic"
             >
-              Đơn giá
+              Không có sản phẩm nào trong giỏ hàng!
             </Typography>
-            <Typography variant="body1" className="w-1/4 text-center font-bold">
-              Số lượng
-            </Typography>
-            <Typography
-              variant="body1"
-              className="m-2 w-1/6 text-center font-bold"
+            <Button
+              variant="contained"
+              className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
+              onClick={() => navigate("/product")}
             >
-              Thành tiền
-            </Typography>
-            <Typography
-              variant="body1"
-              className="m-2 w-1/12 text-center font-bold"
-            >
-              Xóa
-            </Typography>
-          </ListItem>
-          {productCart.map((item) => {
-            return (
-              <ListItem
-                key={item.purrPetCode}
-                className="my-3 min-h-[100px] p-0"
-              >
-                <Box className="w-1/6">
-                  <img
-                    src={item.images[0]?.path}
-                    alt=""
-                    className="h-[100px] w-[100px] object-cover"
-                  />
-                </Box>
-                <Typography variant="body1" className="w-1/3 p-2">
-                  {item.productName}
+              Tiếp tục mua hàng
+            </Button>
+          </Box>
+        )}
+        {productCart.length > 0 && (
+          <>
+            <List>
+              <ListItem key="title" className="my-3 p-0">
+                <Typography
+                  variant="body1"
+                  className="w-1/6 font-bold"
+                ></Typography>
+                <Typography variant="body1" className="w-1/3 p-2 font-bold">
+                  Sản phẩm
                 </Typography>
-                <Typography variant="body1" className="m-2 w-1/6 text-end">
-                  {formatCurrency(item.price)}
+                <Typography
+                  variant="body1"
+                  className="m-2 w-1/6 text-center font-bold"
+                >
+                  Đơn giá
                 </Typography>
-                <Box className="flex w-1/4 justify-center">
-                  <Button
-                    variant="contained"
-                    className="min-w-min bg-gray-300 p-2 text-black"
-                    onClick={() => handleSubtractQuantity(item)}
-                  >
-                    <RemoveIcon />
-                  </Button>
-                  <TextField
-                    type="number"
-                    variant="outlined"
-                    size="small"
-                    value={item.quantity}
-                    disabled
-                    sx={{ width: "70px" }}
-                    inputProps={{
-                      style: { textAlign: "center" },
-                    }}
-                  />
-                  <Button
-                    variant="contained"
-                    className="min-w-min bg-gray-300 p-2 text-black"
-                    onClick={() => handleAddQuantity(item)}
-                  >
-                    <AddIcon />
-                  </Button>
-                </Box>
-                <Typography variant="body1" className="m-2 w-1/6 text-end">
-                  {formatCurrency(item.totalPrice)}
+                <Typography
+                  variant="body1"
+                  className="w-1/4 text-center font-bold"
+                >
+                  Số lượng
                 </Typography>
-                <Box className="m-2 flex w-1/12 justify-center">
-                  <Button
-                    variant="contained"
-                    className="min-w-min bg-red-500 p-1 text-white"
-                    onClick={() => handleDeleteCart(item)}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </Box>
+                <Typography
+                  variant="body1"
+                  className="m-2 w-1/6 text-center font-bold"
+                >
+                  Thành tiền
+                </Typography>
+                <Typography
+                  variant="body1"
+                  className="m-2 w-1/12 text-center font-bold"
+                >
+                  Thao tác
+                </Typography>
               </ListItem>
-            );
-          })}
-        </List>
-        <Box className="text-end">
-          <Typography variant="h6" className="text-l text-base font-bold">
-            Tổng tiền:{" "}
-            {formatCurrency(productCart.reduce((a, b) => a + b.totalPrice, 0))}
-          </Typography>
-          <Button
-            variant="contained"
-            className="my-5 min-w-min bg-cyan-900 p-2 text-white"
-            onClick={handleOpenCustomerInfoForm}
-          >
-            Tiến hành đặt hàng
-          </Button>
-        </Box>
+              {productCart.map((item) => {
+                return (
+                  <ListItem
+                    key={item.purrPetCode}
+                    className="my-3 min-h-[100px] p-0"
+                  >
+                    <Box className="w-1/6">
+                      <img
+                        src={item.images[0]?.path}
+                        alt=""
+                        className="h-[100px] w-[100px] object-cover"
+                      />
+                    </Box>
+                    <Typography variant="body1" className="w-1/3 p-2">
+                      {item.productName}
+                    </Typography>
+                    <Typography variant="body1" className="m-2 w-1/6 text-end">
+                      {formatCurrency(item.price)}
+                    </Typography>
+                    <Box className="flex w-1/4 justify-center">
+                      <Button
+                        variant="contained"
+                        className="min-w-min bg-gray-300 p-2 text-black"
+                        onClick={() => handleSubtractQuantity(item)}
+                      >
+                        <RemoveIcon />
+                      </Button>
+                      <TextField
+                        type="number"
+                        variant="outlined"
+                        size="small"
+                        value={item.quantity}
+                        disabled
+                        sx={{ width: "70px" }}
+                        inputProps={{
+                          style: { textAlign: "center" },
+                        }}
+                      />
+                      <Button
+                        variant="contained"
+                        className="min-w-min bg-gray-300 p-2 text-black"
+                        onClick={() => handleAddQuantity(item)}
+                      >
+                        <AddIcon />
+                      </Button>
+                    </Box>
+                    <Typography variant="body1" className="m-2 w-1/6 text-end">
+                      {formatCurrency(item.totalPrice)}
+                    </Typography>
+                    <Box className="m-1 flex w-1/12 justify-center">
+                      <Tooltip title="Xem chi tiết">
+                        <Button
+                          variant="contained"
+                          className="mr-1 min-w-min bg-gray-300 p-1 text-black"
+                          onClick={() => {
+                            navigate(`/product/${item.purrPetCode}`);
+                          }}
+                        >
+                          <VisibilityIcon />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Xóa khỏi giỏ hàng">
+                        <Button
+                          variant="contained"
+                          className="ml-1 min-w-min bg-red-500 p-1 text-white"
+                          onClick={() => handleDeleteCart(item)}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </Tooltip>
+                    </Box>
+                  </ListItem>
+                );
+              })}
+            </List>
+            <Box className="text-end">
+              <Typography variant="h6" className="text-l text-base font-bold">
+                Tổng tiền:{" "}
+                {formatCurrency(
+                  productCart.reduce((a, b) => a + b.totalPrice, 0),
+                )}
+              </Typography>
+              <Button
+                variant="contained"
+                className="my-5 min-w-min bg-cyan-900 p-2 text-white"
+                onClick={handleOpenCustomerInfoForm}
+              >
+                Tiến hành đặt hàng
+              </Button>
+            </Box>
+          </>
+        )}
       </Paper>
       {openCustomerInfoForm && (
         <CustomerInfoFormForOrder

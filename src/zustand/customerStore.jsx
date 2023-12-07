@@ -10,7 +10,7 @@ import { logout } from "../api/auth";
 const customerState = {
   loading: false,
   error: undefined,
-  data: [],
+  data: null,
 };
 
 export const customerStore = (set, get) => ({
