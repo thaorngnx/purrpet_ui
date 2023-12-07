@@ -40,11 +40,11 @@ export const TableHomestay = () => {
     },
     {
       field: "masterDataCode",
-      headerName: "Kich thước phòng",
+      headerName: "Kich thước",
       flex: 3,
       headerAlign: "center",
       align: "left",
-      minWidth: 150,
+      minWidth: 100,
       valueGetter: (params) => getMasterDataName(params.row.masterDataCode),
     },
     {
@@ -52,8 +52,8 @@ export const TableHomestay = () => {
       headerName: "Loại phòng",
       flex: 3,
       headerAlign: "center",
-      align: "left",
-      minWidth: 150,
+      align: "center",
+      minWidth: 70,
     },
     {
       field: "description",
@@ -78,29 +78,29 @@ export const TableHomestay = () => {
       flex: 3,
       headerAlign: "center",
       align: "left",
-      minWidth: 150,
+      minWidth: 100,
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
     },
-    {
-      field: "images",
-      headerName: "Hình ảnh",
-      flex: 3,
-      headerAlign: "center",
-      align: "left",
-      minWidth: 150,
-      renderCell: (params) => (
-        <img
-          src={
-            params.value && params.value.length > 0
-              ? params.value[0].path
-              : null
-          }
-          alt={`Image ${params.row.purrPetCode}`}
-          width="100%"
-          height="100%"
-        />
-      ),
-    },
+    // {
+    //   field: "images",
+    //   headerName: "Hình ảnh",
+    //   flex: 3,
+    //   headerAlign: "center",
+    //   align: "left",
+    //   minWidth: 150,
+    //   renderCell: (params) => (
+    //     <img
+    //       src={
+    //         params.value && params.value.length > 0
+    //           ? params.value[0].path
+    //           : null
+    //       }
+    //       alt={`Image ${params.row.purrPetCode}`}
+    //       width="100%"
+    //       height="100%"
+    //     />
+    //   ),
+    // },
     {
       field: "status",
       headerName: "Trạng thái",
@@ -168,7 +168,7 @@ export const TableHomestay = () => {
       price: selectedHomestay.price,
       categoryCode: selectedHomestay.categoryCode,
       masterDataCode: selectedHomestay.masterDataCode,
-      images: selectedHomestay.images,
+      // images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -211,7 +211,7 @@ export const TableHomestay = () => {
       categoryName: "",
       masterDataCode: "",
       masterDataName: "",
-      images: [],
+      // images: [],
     });
   };
 
@@ -227,7 +227,7 @@ export const TableHomestay = () => {
       price: selectedHomestay.price,
       categoryCode: selectedHomestay.categoryCode,
       masterDataCode: selectedHomestay.masterDataCode,
-      images: selectedHomestay.images,
+      // images: selectedHomestay.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);

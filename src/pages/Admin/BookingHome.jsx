@@ -1,4 +1,4 @@
-import { HeaderAdmin } from "../../components/Admin/HeaderAdmin";
+import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
 export const BookingHome = () => {
   return (

@@ -40,11 +40,11 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
     return category ? category.categoryName : "";
   };
 
-  const handleUpdateImage = (updateData) => {
-    console.log("handleUpdateData", updateData);
-    setSpaUpdate(updateData);
-    updateSpa(updateData);
-  };
+  // const handleUpdateImage = (updateData) => {
+  //   console.log("handleUpdateData", updateData);
+  //   setSpaUpdate(updateData);
+  //   updateSpa(updateData);
+  // };
 
   const [spaUpdate, setSpaUpdate] = useState(spa);
   const [error, setError] = useState({});
@@ -131,7 +131,7 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
             </MenuItem>
           ))}
         </TextField>
-        <UploadImage product={spa} updateProduct={handleUpdateImage} />
+        {/* <UploadImage product={spa} updateProduct={handleUpdateImage} /> */}
       </div>
     </Box>
   );

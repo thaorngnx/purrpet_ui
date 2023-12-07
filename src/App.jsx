@@ -23,6 +23,9 @@ import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
 import { BookingSpaDetailPage } from "./pages/Customer/BookingSpaDetailPage";
 import { BookingHomeDetailPage } from "./pages/Customer/BookingHomeDetailPage";
+import { Order } from "./pages/Admin/Order";
+import { BookingSpa } from "./pages/Admin/BookingSpa";
+import { BookingHome } from "./pages/Admin/BookingHome";
 import { ProtectedAdminRoutes } from "./ProtectedAdminRoutes";
 import { ProtectedCustomerRoutes } from "./ProtectedCustomerRoutes";
 import { ProtectedStaffRoutes } from "./ProtectedStaffRoutes";
@@ -114,6 +117,9 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="homestay" element={<Homestay />} />
             <Route path="masterData" element={<MasterData />} />
+            <Route path="order" element={<Order />} />
+            <Route path="bookingSpa" element={<BookingSpa />} />
+            <Route path="bookingHome" element={<BookingHome />} />
           </Route>
         </Route>
         <Route path="/staff">

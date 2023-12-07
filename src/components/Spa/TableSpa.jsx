@@ -69,30 +69,30 @@ export const TableSpa = () => {
       headerName: "Danh mục",
       flex: 3,
       headerAlign: "center",
-      align: "left",
+      align: "center",
       minWidth: 150,
       valueGetter: (params) => getCategoryName(params.row.categoryCode),
     },
-    {
-      field: "images",
-      headerName: "Hình ảnh",
-      flex: 3,
-      headerAlign: "center",
-      align: "left",
-      minWidth: 150,
-      renderCell: (params) => (
-        <img
-          src={
-            params.value && params.value.length > 0
-              ? params.value[0].path
-              : null
-          }
-          alt={`Image ${params.row.purrPetCode}`}
-          width="100%"
-          height="100%"
-        />
-      ),
-    },
+    // {
+    //   field: "images",
+    //   headerName: "Hình ảnh",
+    //   flex: 3,
+    //   headerAlign: "center",
+    //   align: "left",
+    //   minWidth: 150,
+    //   renderCell: (params) => (
+    //     <img
+    //       src={
+    //         params.value && params.value.length > 0
+    //           ? params.value[0].path
+    //           : null
+    //       }
+    //       alt={`Image ${params.row.purrPetCode}`}
+    //       width="100%"
+    //       height="100%"
+    //     />
+    //   ),
+    // },
     {
       field: "status",
       headerName: "Trạng thái",
@@ -160,7 +160,7 @@ export const TableSpa = () => {
       description: selectedSpa.description,
       price: selectedSpa.price,
       categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+      // images: selectedSpa.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -201,7 +201,7 @@ export const TableSpa = () => {
       description: "",
       price: 0,
       categoryCode: "",
-      images: [],
+      // images: [],
     });
   };
 
@@ -218,7 +218,7 @@ export const TableSpa = () => {
       description: selectedSpa.description,
       price: selectedSpa.price,
       categoryCode: selectedSpa.categoryCode,
-      images: selectedSpa.images,
+      // images: selectedSpa.images,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);

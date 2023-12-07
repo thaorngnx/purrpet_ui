@@ -64,11 +64,11 @@ export const UpdateHomestay = ({
     return masterData ? masterData.name : "";
   };
 
-  const handleUpdateImage = (updateData) => {
-    console.log("handleUpdateData", updateData);
-    setHomestayUpdate(updateData);
-    updateHomestay(updateData);
-  };
+  // const handleUpdateImage = (updateData) => {
+  //   console.log("handleUpdateData", updateData);
+  //   setHomestayUpdate(updateData);
+  //   updateHomestay(updateData);
+  // };
 
   const [homestayUpdate, setHomestayUpdate] = useState(homestay);
   const [error, setError] = useState({});
@@ -170,7 +170,7 @@ export const UpdateHomestay = ({
             </MenuItem>
           ))}
         </TextField>
-        <UploadImage product={homestay} updateProduct={handleUpdateImage} />
+        {/* <UploadImage product={homestay} updateProduct={handleUpdateImage} /> */}
       </div>
     </Box>
   );
