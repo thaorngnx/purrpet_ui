@@ -39,76 +39,12 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // console.log("error", error);
-    // const originalRequest = error.config;
-    // console.log("orin", originalRequest);
-    // if (
-    //   error.response.status === 401 &&
-    //   originalRequest.url === import.meta.env.VITE_API_REFRESH_TOKEN_URL
-    // ) {
-    //   window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
-    //   return Promise.reject(error);
-    // }
-
-    // if (
-    //   error.response.status === 401 &&
-    //   !originalRequest._retry &&
-    //   originalRequest.url !== import.meta.env.VITE_API_REFRESH_TOKEN_URL
-    // ) {
-    //   originalRequest._retry = true;
-    //   try {
-    //     const refresh_token = Cookie.get(
-    //       import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN,
-    //     );
-    //     if (jwtDecode(refresh_token).exp < Date.now() / 1000) {
-    //       console.log("refresh token expired");
-    //       Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-    //       Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
-    //       window.location.pathname = import.meta.env.VITE_APP_ROUTE_LOGIN;
-    //       return Promise.reject(error);
-    //     }
-
-    //     console.log("refresh token not expired");
-    //     const response = await refreshToken();
-
-    //     console.log("after refresh", response);
-    //     const access_token = response.access_token;
-    //     const decodedAccessToken = jwtDecode(access_token);
-    //     Cookie.set(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, access_token, {
-    //       path: decodedAccessToken.path,
-    //     });
-    //     api.defaults.headers["Authorization"] =
-    //       "Bearer " + Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-    //     return api(originalRequest);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-    //if req is not refresh token, code 401 -> check refresh token expired -> if not expired -> refresh token -> set new access token -> set new header -> call api again
-    //if req is refresh token, code 401 -> redirect to login page
-    console.log("error", error);
-    console.log("error", error.response);
     const originalRequest = error.config;
-    console.log("orin", originalRequest);
-    console.log("url", originalRequest.url);
-    console.log("refresh", import.meta.env.VITE_API_REFRESH_TOKEN_URL);
-    console.log(
-      "check",
-      originalRequest.url === import.meta.env.VITE_API_REFRESH_TOKEN_URL,
-    );
-    console.log("retry", originalRequest._retry);
     if (
       error.response.status === 401 &&
-      originalRequest.url === import.meta.env.VITE_API_REFRESH_TOKEN_URL
-    ) {
-      window.location.href = import.meta.env.VITE_APP_ROUTE_LOGIN;
-      return Promise.reject(error);
-    }
-    if (
-      error.response.status === 401 &&
-      originalRequest._retry > 1 &&
       originalRequest.url !== import.meta.env.VITE_API_REFRESH_TOKEN_URL
     ) {
+      console.log("refresh token nè");
       originalRequest._retry++;
       try {
         const refresh_token = Cookie.get(
@@ -118,12 +54,22 @@ api.interceptors.response.use(
           console.log("refresh token expired");
           Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
           Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
-          window.location.pathname = import.meta.env.VITE_APP_ROUTE_LOGIN;
+          //reload page
+          window.location.reload();
           return Promise.reject(error);
         }
 
         console.log("refresh token not expired");
         const response = await refreshToken();
+
+        if (!response) {
+          console.log("refresh token vô dụng rồi!!!");
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+          //reload page
+          window.location.reload();
+          return Promise.reject(error);
+        }
 
         console.log("after refresh", response);
         const access_token = response.access_token;
