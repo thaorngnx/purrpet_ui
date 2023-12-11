@@ -19,6 +19,8 @@ import { CustomerInfoForm } from "./CustomerInfoForm";
 import { TimeSpaForm } from "./TimeSpaForm";
 import { createBookingSpa } from "../../api/bookingSpa";
 import { createPaymentUrl } from "../../api/pay";
+import { BigHoverTransformButton } from "../Button/StyledButton";
+import { formatCurrency } from "../../utils/formatData";
 
 export const BookingSpaForm = () => {
   const navigate = useNavigate();
@@ -298,18 +300,17 @@ export const BookingSpaForm = () => {
         <Typography
           variant="body1"
           name="bookingSpaPrice"
-          className="mt-3 justify-end font-bold"
+          className="mt-3 flex justify-end font-bold"
         >
-          Tổng tiền: {bookingInfo.bookingSpaPrice} VNĐ
+          Tổng tiền: {formatCurrency(bookingInfo.bookingSpaPrice)}
         </Typography>
         {!openTimeForm && (
-          <Button
-            variant="outlined"
-            className="w-fit"
+          <BigHoverTransformButton
             onClick={handleOpenTimeForm}
+            className="m-auto mt-5"
           >
             Tiếp tục
-          </Button>
+          </BigHoverTransformButton>
         )}
       </Paper>
       {openTimeForm && (
@@ -326,18 +327,12 @@ export const BookingSpaForm = () => {
         />
       )}
       {showBtnConfirmBook && (
-        <Button
-          variant="outlined"
-          sx={{
-            ml: "auto",
-            mr: "auto",
-            position: "relative",
-            width: "fit-content",
-          }}
+        <BigHoverTransformButton
           onClick={handleConfirmBooking}
+          className="m-auto my-3"
         >
           Xác nhận đặt lịch
-        </Button>
+        </BigHoverTransformButton>
       )}
     </Box>
   );

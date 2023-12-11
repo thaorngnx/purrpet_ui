@@ -18,6 +18,8 @@ export const ProductCard = ({ product }) => {
 
   const { addToCart } = useStore();
 
+  const [isHover, setIsHover] = useState(false);
+
   const handleProductClick = () => {
     navigate(`/product/${product.purrPetCode}`);
   };
@@ -37,7 +39,6 @@ export const ProductCard = ({ product }) => {
     setIsHover(false);
   };
 
-  const [isHover, setIsHover] = useState(false);
   return (
     <Card sx={{ width: "200px", m: 2 }}>
       <CardActionArea

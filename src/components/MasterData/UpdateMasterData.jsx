@@ -3,6 +3,9 @@ import { Box, TextField, TextareaAutosize } from "@mui/material";
 import { useState } from "react";
 import "../../api/masterData";
 export const UpdateMasterData = ({ masterData, updateMasterData }) => {
+  const [masterDataUpdate, setMasterDataUpdate] = useState(masterData);
+  const [error, setError] = useState({});
+
   const handleChangeMasterData = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -17,9 +20,6 @@ export const UpdateMasterData = ({ masterData, updateMasterData }) => {
       [event.target.name]: event.target.value,
     });
   };
-
-  const [masterDataUpdate, setMasterDataUpdate] = useState(masterData);
-  const [error, setError] = useState({});
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>

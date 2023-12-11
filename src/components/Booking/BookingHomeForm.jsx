@@ -10,7 +10,6 @@ import {
   Typography,
   Paper,
   Box,
-  Button,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
@@ -23,6 +22,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { createBookingHome, getUnavailableDay } from "../../api/bookingHome";
 import { createPaymentUrl } from "../../api/pay";
+import { BigHoverTransformButton } from "../Button/StyledButton";
+import { formatCurrency } from "../../utils/formatData";
 
 export const BookingHomeForm = () => {
   const navigate = useNavigate();
@@ -200,7 +201,7 @@ export const BookingHomeForm = () => {
         // navigate(`/bookingHome/${res.data.purrPetCode}`);
         // navigate("/");
         createPaymentUrl({
-          orderCode: res.data.purrPetCode
+          orderCode: res.data.purrPetCode,
         }).then((res) => {
           if (res.err === 0) {
             window.location.href = res.data.paymentUrl;
@@ -416,18 +417,17 @@ export const BookingHomeForm = () => {
         <Typography
           variant="body1"
           name="bookingHomePrice"
-          className="mt-3 justify-end font-bold"
+          className="mt-3 flex justify-end font-bold"
         >
-          Tổng tiền: {bookingInfo.bookingHomePrice} VNĐ
+          Tổng tiền: {formatCurrency(bookingInfo.bookingHomePrice)}
         </Typography>
         {!openCustomerInfoForm && (
-          <Button
-            variant="outlined"
-            className="w-fit"
+          <BigHoverTransformButton
             onClick={handleOpenCustomerForm}
+            className="m-auto mt-5"
           >
             Tiếp tục
-          </Button>
+          </BigHoverTransformButton>
         )}
       </Paper>
       {openCustomerInfoForm && (
@@ -437,18 +437,12 @@ export const BookingHomeForm = () => {
         />
       )}
       {showBtnConfirmBook && (
-        <Button
-          variant="outlined"
-          sx={{
-            ml: "auto",
-            mr: "auto",
-            position: "relative",
-            width: "fit-content",
-          }}
+        <BigHoverTransformButton
           onClick={handleConfirmBooking}
+          className="m-auto my-3"
         >
           Xác nhận đặt lịch
-        </Button>
+        </BigHoverTransformButton>
       )}
     </Box>
   );

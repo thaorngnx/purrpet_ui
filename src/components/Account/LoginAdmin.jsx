@@ -19,6 +19,20 @@ import { jwtDecode } from "jwt-decode";
 export const LoginAdmin = () => {
   const navigate = useNavigate();
 
+  const [account, setAccount] = useState({ username: "", password: "" });
+  const [error, setError] = useState({});
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [alert, setAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [togglePassword, setTogglePassword] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   useEffect(() => {
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
@@ -63,20 +77,6 @@ export const LoginAdmin = () => {
   const togglePasswordHide = () => {
     setTogglePassword(!togglePassword);
   };
-
-  const [account, setAccount] = useState({ username: "", password: "" });
-  const [error, setError] = useState({});
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [alert, setAlert] = useState(false);
-  const [message, setMessage] = useState("");
-  const [togglePassword, setTogglePassword] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

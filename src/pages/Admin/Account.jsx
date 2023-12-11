@@ -1,6 +1,6 @@
 import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { Box } from "@mui/material";
-import { ListAccount } from "../../components/Account/ListAccount";
+import { TableAccount } from "../../components/Account/TableAccount";
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 
 export const Account = () => {
@@ -18,7 +18,7 @@ export const Account = () => {
             marginBottom: "30px",
           }}
         >
-          <ListAccount />
+          <TableAccount />
         </Box>
       </Box>
     </>

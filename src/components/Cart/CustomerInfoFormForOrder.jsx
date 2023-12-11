@@ -6,16 +6,94 @@ import {
   FormLabel,
   Typography,
   Paper,
-  Button,
   Select,
   MenuItem,
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
 import { useStore } from "../../zustand/store";
+import { BigHoverFitContentButton } from "../Button/StyledButton";
 
 export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [otpClick, setOtpClick] = useState(false);
+  const [otpValid, setOtpValid] = useState(false);
+  const [hasAddress, setHasAddress] = useState(false);
+  const [existCustomer, setExistCustomer] = useState(false);
+  const [editInfo, setEditInfo] = useState(true);
+  const [error, setError] = useState({});
+  const [customerInfo, setCustomerInfo] = useState({
+    customerPhone: "",
+    otp: "",
+    customerName: "",
+    customerEmail: "",
+    customerAddress: {
+      street: "",
+      province: "",
+      district: "",
+      ward: "",
+    },
+    customerNote: "",
+    customerCode: "",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+      );
+      setProvinces(response.data);
+      if (customerState != null) {
+        setExistCustomer(true);
+        setOtpValid(true);
+        if (customerState.address) {
+          customer({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerAddress: customerState.address,
+          });
+          setCustomerInfo({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerName: customerState.name,
+            customerPhone: customerState.phoneNumber,
+            customerAddress: customerState.address,
+          });
+          setEditInfo(false);
+          setHasAddress(true);
+          confirmInfo(true);
+          const selectedProvince = response.data.find(
+            (province) => province.Name === customerState.address.province,
+          );
+          const selectedDistrict = selectedProvince.Districts.find(
+            (district) => district.Name === customerState.address.district,
+          );
+          setDistricts(selectedProvince.Districts);
+          setWards(selectedDistrict.Wards);
+        } else {
+          customer({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+          });
+          setCustomerInfo({
+            ...customerInfo,
+            customerCode: customerState.purrPetCode,
+            customerName: customerState.name,
+            customerPhone: customerState.phoneNumber,
+          });
+          setEditInfo(true);
+          setHasAddress(false);
+          confirmInfo(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [customerState]);
 
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
@@ -273,84 +351,6 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
     }
   };
 
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [otpClick, setOtpClick] = useState(false);
-  const [otpValid, setOtpValid] = useState(false);
-  const [hasAddress, setHasAddress] = useState(false);
-  const [existCustomer, setExistCustomer] = useState(false);
-  const [editInfo, setEditInfo] = useState(true);
-  const [customerInfo, setCustomerInfo] = useState({
-    customerPhone: "",
-    otp: "",
-    customerName: "",
-    customerEmail: "",
-    customerAddress: {
-      street: "",
-      province: "",
-      district: "",
-      ward: "",
-    },
-    customerNote: "",
-    customerCode: "",
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
-      );
-      setProvinces(response.data);
-      if (customerState != null) {
-        setExistCustomer(true);
-        setOtpValid(true);
-        if (customerState.address) {
-          customer({
-            ...customerInfo,
-            customerCode: customerState.purrPetCode,
-            customerAddress: customerState.address,
-          });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: customerState.purrPetCode,
-            customerName: customerState.name,
-            customerPhone: customerState.phoneNumber,
-            customerAddress: customerState.address,
-          });
-          setEditInfo(false);
-          setHasAddress(true);
-          confirmInfo(true);
-          const selectedProvince = response.data.find(
-            (province) => province.Name === customerState.address.province,
-          );
-          const selectedDistrict = selectedProvince.Districts.find(
-            (district) => district.Name === customerState.address.district,
-          );
-          setDistricts(selectedProvince.Districts);
-          setWards(selectedDistrict.Wards);
-        } else {
-          customer({
-            ...customerInfo,
-            customerCode: customerState.purrPetCode,
-          });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: customerState.purrPetCode,
-            customerName: customerState.name,
-            customerPhone: customerState.phoneNumber,
-          });
-          setEditInfo(true);
-          setHasAddress(false);
-          confirmInfo(false);
-        }
-      }
-    };
-
-    fetchData();
-  }, [customerState]);
-
-  const [error, setError] = useState({});
   return (
     <Paper
       sx={{
@@ -387,13 +387,12 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
               helperText={error.customerPhone && "Email không được để trống"}
             />
             {!otpValid && (
-              <Button
+              <BigHoverFitContentButton
                 variant="outlined"
-                className="w-fit"
                 onClick={handleSendOTPCLick}
               >
                 {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-              </Button>
+              </BigHoverFitContentButton>
             )}
           </FormControl>
 
@@ -410,13 +409,19 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
                 error={error.otp}
                 helperText={error.otp && "OTP không được để trống"}
               />
-              <Button
+              {/* <Button
                 variant="outlined"
                 className="w-fit"
                 onClick={handleValidOTPCLick}
               >
                 Xác thực
-              </Button>
+              </Button> */}
+              <BigHoverFitContentButton
+                variant="outlined"
+                onClick={handleValidOTPCLick}
+              >
+                Xác thực
+              </BigHoverFitContentButton>
             </FormControl>
           )}
         </>
@@ -522,21 +527,19 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
             </Select>
 
             {existCustomer && editInfo && hasAddress && (
-              <Button
+              <BigHoverFitContentButton
                 variant="outlined"
-                className="w-fit"
                 onClick={handleCancleEditInfo}
               >
                 Hủy
-              </Button>
+              </BigHoverFitContentButton>
             )}
-            <Button
+            <BigHoverFitContentButton
               variant="outlined"
-              className="w-fit"
               onClick={handleEditInfo}
             >
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
-            </Button>
+            </BigHoverFitContentButton>
           </FormControl>
           <FormControl>
             <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>

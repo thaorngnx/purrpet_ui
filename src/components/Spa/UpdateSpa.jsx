@@ -4,6 +4,13 @@ import { useState } from "react";
 import { UploadImage } from "../Image/UploadImage";
 
 export const UpdateSpa = ({ categories, spa, updateSpa }) => {
+  const [spaUpdate, setSpaUpdate] = useState(spa);
+  const [error, setError] = useState({});
+  const [categoryCode, setCategoryCode] = useState(spa?.categoryCode);
+  const [categoryName, setCategoryName] = useState(
+    getCategoryName(categoryCode),
+  );
+
   const handleChangeSpa = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -45,13 +52,6 @@ export const UpdateSpa = ({ categories, spa, updateSpa }) => {
   //   setSpaUpdate(updateData);
   //   updateSpa(updateData);
   // };
-
-  const [spaUpdate, setSpaUpdate] = useState(spa);
-  const [error, setError] = useState({});
-  const [categoryCode, setCategoryCode] = useState(spa?.categoryCode);
-  const [categoryName, setCategoryName] = useState(
-    getCategoryName(categoryCode),
-  );
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>

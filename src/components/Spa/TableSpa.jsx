@@ -22,6 +22,41 @@ import { UpdateSpa } from "./UpdateSpa";
 import * as CONST from "../../constants";
 
 export const TableSpa = () => {
+  const [rows, setRows] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [selectedSpa, setSelectedSpa] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getSpas().then((res) => {
+      console.log(res.data);
+      setRows(res.data);
+    });
+    const params = { categoryType: CONST.CATEGORY_TYPE.SPA };
+    getCategories(params).then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setActiveCategory(getActiveCategory(categories));
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   const columns = [
     {
       field: "purrPetCode",
@@ -244,41 +279,6 @@ export const TableSpa = () => {
       (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
     );
   };
-
-  const [rows, setRows] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [selectedSpa, setSelectedSpa] = useState(null);
-  const [alert, setAlert] = useState(false);
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getSpas().then((res) => {
-      console.log(res.data);
-      setRows(res.data);
-    });
-    const params = { categoryType: CONST.CATEGORY_TYPE.SPA };
-    getCategories(params).then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setActiveCategory(getActiveCategory(categories));
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

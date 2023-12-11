@@ -19,23 +19,17 @@ import * as CONST from "../../constants";
 export const LookUpOrderForm = () => {
   const navigate = useNavigate();
 
-  const { customer } = useStore();
+  const customer = useStore((state) => state.customerState.data);
+
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [sentOtp, setSentOtp] = useState(false);
 
   useEffect(() => {
-    const accessToken = Cookie.get(
-      import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
-      {
-        path: "/",
-      },
-    );
-    if (accessToken != null) {
-      const decode = jwtDecode(accessToken);
-      console.log(decode);
-      if (decode.role === CONST.ROLE.CUSTOMER) {
-        navigate("/order");
-      }
+    if (customer) {
+      navigate("/order");
     }
-  }, []);
+  }, [customer]);
 
   const { verifyOtp } = useStore();
 
@@ -61,7 +55,7 @@ export const LookUpOrderForm = () => {
   const handleVerifyOTP = () => {
     console.log("verify otp");
     verifyOtp({ email: email, otp: otp });
-    if (customer != [] && customer != null) {
+    if (!customer) {
       navigate("/order");
     } else {
       alert("Email này chưa có đơn hàng nào");
@@ -69,10 +63,6 @@ export const LookUpOrderForm = () => {
       console.log("error");
     }
   };
-
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [sentOtp, setSentOtp] = useState(false);
 
   return (
     <Box className="flex min-h-screen flex-col items-center justify-center">

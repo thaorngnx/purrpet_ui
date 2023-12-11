@@ -13,6 +13,7 @@ import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { getOrderByCode, updateStatusOrder } from "../../api/order";
 import { getProducts } from "../../api/product";
 import { createPaymentUrl } from "../../api/pay";
+import { MiniHoverButton } from "../Button/StyledButton";
 import * as CONST from "../../constants";
 
 export const OrderDetail = () => {
@@ -20,36 +21,30 @@ export const OrderDetail = () => {
 
   const { orderCode } = useParams();
 
-  const handlePaymentClick = () => {
-    console.log("payment");
-    createPaymentUrl({ orderCode: order.purrPetCode }).then((res) => {
-      console.log(res);
-      if (res.err === 0) {
-        window.location.href = res.data.paymentUrl;
-      }
-    });
-  };
-
-  const handleChangeStatus = () => {
-    console.log("cancel");
-    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.CANCEL).then(
-      (res) => {
-        console.log(res);
-        if (res.err === 0) {
-          window.location.reload();
-        }
-      },
-    );
-  };
-
-  const [order, setOrder] = useState({});
-  const [productOrder, setProductOrder] = useState([]);
+  const [order, setOrder] = useState({
+    purrPetCode: "",
+    createdAt: "",
+    status: "",
+    customerName: "",
+    customerPhone: "",
+    customerEmail: "",
+    customerAddress: {
+      street: "",
+      ward: "",
+      district: "",
+      province: "",
+    },
+    customerNote: "",
+    orderPrice: 0,
+    orderItems: [],
+    productOrder: [],
+  });
 
   useEffect(() => {
     getOrderByCode(orderCode).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        setOrder(res.data);
+        const order = res.data;
         const orderItems = res.data.orderItems;
         const productCodes = [];
         res.data.orderItems.forEach((item) => {
@@ -75,12 +70,49 @@ export const OrderDetail = () => {
                 }
               });
             });
-            setProductOrder(productOrder);
+            setOrder({
+              purrPetCode: order.purrPetCode,
+              createdAt: order.createdAt,
+              status: order.status,
+              customerName: order.customerName,
+              customerPhone: order.customerPhone,
+              customerEmail: order.customerEmail,
+              customerAddress: order.customerAddress,
+              customerNote: order.customerNote,
+              orderPrice: order.orderPrice,
+              orderItems: order.orderItems,
+              productOrder: productOrder,
+            });
           }
         });
       }
     });
-  }, [orderCode]);
+  }, []);
+
+  const productOrder = order?.productOrder;
+
+  const handlePaymentClick = () => {
+    console.log("payment");
+    createPaymentUrl({ orderCode: order.purrPetCode }).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        window.location.href = res.data.paymentUrl;
+      }
+    });
+  };
+
+  const handleChangeStatus = () => {
+    console.log("cancel");
+    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.CANCEL).then(
+      (res) => {
+        console.log(res);
+        if (res.err === 0) {
+          window.location.reload();
+        }
+      },
+    );
+  };
+
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
       <Typography variant="h5" className="font-bold">
@@ -187,26 +219,13 @@ export const OrderDetail = () => {
                     {formatCurrency(item.totalPrice)}
                   </Typography>
                   <Box className="flex w-1/6 justify-center">
-                    <Button
-                      size="small"
-                      sx={{
-                        color: "black",
-                        display: "block",
-                        fontWeight: "bold",
-                        border: "1px solid black",
-                        textTransform: "none",
-                        m: 2,
-                        ":hover": {
-                          backgroundColor: "black",
-                          color: "white",
-                        },
-                      }}
+                    <MiniHoverButton
                       onClick={() => {
                         navigate(`/product/${item.productCode}`);
                       }}
                     >
                       Chi tiết
-                    </Button>
+                    </MiniHoverButton>
                   </Box>
                 </ListItem>
               );

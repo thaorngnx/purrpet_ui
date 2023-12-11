@@ -7,18 +7,61 @@ import {
   TextField,
   Select,
   MenuItem,
-  Button,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import axios from "axios";
 import { updateCustomer } from "../../api/customer";
 import { useEffect, useState } from "react";
 import { useStore } from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
+import { BigHoverFitContentButton } from "../Button/StyledButton";
 
 export const CustomerInfo = () => {
   const navigate = useNavigate();
   const customer = useStore((state) => state.customerState.data);
+
+  const [error, setError] = useState({});
+  const [editInfo, setEditInfo] = useState(false);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [customerInfo, setCustomerInfo] = useState({
+    purrPetCode: customer?.purrPetCode,
+    name: customer?.name,
+    phoneNumber: customer?.phoneNumber,
+    address: {
+      province: customer?.address?.province || "",
+      district: customer?.address?.district || "",
+      ward: customer?.address?.ward || "",
+      street: customer?.address?.street || "",
+    },
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+      );
+      setProvinces(response.data);
+      if (!customer) {
+        navigate("/lookup");
+      } else if (customer.address) {
+        const selectedProvince = response.data.find(
+          (province) => province.Name === customer.address.province,
+        );
+        if (selectedProvince) {
+          setDistricts(selectedProvince.Districts);
+          const selectedDistrict = selectedProvince.Districts.find(
+            (district) => district.Name === customer.address.district,
+          );
+          if (selectedDistrict) {
+            setWards(selectedDistrict.Wards);
+          }
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
@@ -128,65 +171,22 @@ export const CustomerInfo = () => {
       }
     }
   };
-  const [error, setError] = useState({});
-  const [editInfo, setEditInfo] = useState(false);
-  const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [wards, setWards] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState({
-    purrPetCode: customer?.purrPetCode,
-    name: customer?.name,
-    phoneNumber: customer?.phoneNumber,
-    address: {
-      province: customer?.address?.province || "",
-      district: customer?.address?.district || "",
-      ward: customer?.address?.ward || "",
-      street: customer?.address?.street || "",
-    },
-  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
-      );
-      setProvinces(response.data);
-      if (!customer) {
-        navigate("/lookup");
-      } else if (customer.address) {
-        const selectedProvince = response.data.find(
-          (province) => province.Name === customer.address.province,
-        );
-        if (selectedProvince) {
-          setDistricts(selectedProvince.Districts);
-          const selectedDistrict = selectedProvince.Districts.find(
-            (district) => district.Name === customer.address.district,
-          );
-          if (selectedDistrict) {
-            setWards(selectedDistrict.Wards);
-          }
-        }
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  //styled button
-  const MyButton = styled(Button)({
-    fontSize: "16px",
-    color: "black",
-    display: "block",
-    width: "fit-content",
-    fontWeight: "bold",
-    border: "1px solid black",
-    padding: "6px 15px",
-    textTransform: "none",
-    ":hover": {
-      backgroundColor: "black",
-      color: "white",
-    },
-  });
+  // //styled button
+  // const MyButton = styled(Button)({
+  //   fontSize: "16px",
+  //   color: "black",
+  //   display: "block",
+  //   width: "fit-content",
+  //   fontWeight: "bold",
+  //   border: "1px solid black",
+  //   padding: "6px 15px",
+  //   textTransform: "none",
+  //   ":hover": {
+  //     backgroundColor: "black",
+  //     color: "white",
+  //   },
+  // });
 
   return (
     <Box className=" flex min-h-screen w-3/4 flex-col items-center">
@@ -298,11 +298,13 @@ export const CustomerInfo = () => {
           </Box>
           <FormControl className="mt-3 flex flex-row justify-end">
             {editInfo && (
-              <MyButton onClick={handleCancleEditInfo}>Hủy</MyButton>
+              <BigHoverFitContentButton onClick={handleCancleEditInfo}>
+                Hủy
+              </BigHoverFitContentButton>
             )}
-            <MyButton className="ml-5" onClick={handleEditInfo}>
+            <BigHoverFitContentButton className="ml-5" onClick={handleEditInfo}>
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
-            </MyButton>
+            </BigHoverFitContentButton>
           </FormControl>
         </Box>
       </Paper>

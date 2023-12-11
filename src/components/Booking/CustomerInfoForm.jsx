@@ -10,6 +10,7 @@ import {
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
 import { useStore } from "../../zustand/store";
+import { BigHoverFitContentButton } from "../Button/StyledButton";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
@@ -206,13 +207,16 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
               helperText={error.customerPhone && "Email không được để trống"}
             />
             {!otpValid && (
-              <Button
-                variant="outlined"
-                className="w-fit"
-                onClick={handleSendOTPCLick}
-              >
+              // <Button
+              //   variant="outlined"
+              //   className="w-fit"
+              //   onClick={handleSendOTPCLick}
+              // >
+              //   {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
+              // </Button>
+              <BigHoverFitContentButton onClick={handleSendOTPCLick}>
                 {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-              </Button>
+              </BigHoverFitContentButton>
             )}
           </FormControl>
 
@@ -229,13 +233,16 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
                 error={error.otp}
                 helperText={error.otp && "OTP không được để trống"}
               />
-              <Button
+              {/* <Button
                 variant="outlined"
                 className="w-fit"
                 onClick={handleValidOTPCLick}
               >
                 Xác thực
-              </Button>
+              </Button> */}
+              <BigHoverFitContentButton onClick={handleValidOTPCLick}>
+                Xác thực
+              </BigHoverFitContentButton>
             </FormControl>
           )}
         </>
@@ -272,17 +279,23 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             }
           />
           {existCustomer && editInfo && (
-            <Button
-              variant="outlined"
-              className="w-fit"
-              onClick={handleCancleEditInfo}
-            >
+            // <Button
+            //   variant="outlined"
+            //   className="w-fit"
+            //   onClick={handleCancleEditInfo}
+            // >
+            //   Hủy
+            // </Button>
+            <BigHoverFitContentButton onClick={handleCancleEditInfo}>
               Hủy
-            </Button>
+            </BigHoverFitContentButton>
           )}
-          <Button variant="outlined" className="w-fit" onClick={handleEditInfo}>
+          {/* <Button variant="outlined" className="w-fit" onClick={handleEditInfo}>
             {!editInfo ? "Sửa" : "Xác nhận thông tin"}
-          </Button>
+          </Button> */}
+          <BigHoverFitContentButton onClick={handleEditInfo}>
+            {!editInfo ? "Sửa" : "Xác nhận thông tin"}
+          </BigHoverFitContentButton>
           <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
           <TextField
             required

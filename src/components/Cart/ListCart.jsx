@@ -20,12 +20,51 @@ import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../api/order";
 import { useStore } from "../../zustand/store";
 import { createPaymentUrl } from "../../api/pay";
+import { BigHoverTransformButton } from "../Button/StyledButton";
 
 export const ListCart = () => {
   const navigate = useNavigate();
 
   const cart = useStore((state) => state.cartState.data);
   const { updateCart, deleteCart, deleteProductCart } = useStore();
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [productCart, setProductCart] = useState([]);
+  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
+  const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
+  const [orderInfo, setOrderInfo] = useState({
+    customerCode: "",
+    customerAddress: {
+      street: "",
+      province: "",
+      district: "",
+      ward: "",
+    },
+    customerNote: "",
+    orderItems: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const productList = [];
+        for (let i = 0; i < cart.length; i++) {
+          const productData = await getProductByCode(cart[i].productCode);
+          console.log("res", productData.data);
+          productList.push({
+            ...productData.data,
+            quantity: cart[i].quantity,
+            totalPrice: productData.data.price * cart[i].quantity,
+          });
+        }
+        setProductCart(productList);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleAddQuantity = (product) => {
     if (product.quantity < product.inventory) {
@@ -69,15 +108,6 @@ export const ListCart = () => {
         return item;
       });
       setProductCart(newProductCart);
-      setOrderInfo({
-        ...orderInfo,
-        orderItems: newProductCart.map((item) => {
-          return {
-            productCode: item.purrPetCode,
-            quantity: item.quantity,
-          };
-        }),
-      });
       updateCart({
         productCode: product.purrPetCode,
         quantity: product.quantity - 1,
@@ -86,22 +116,17 @@ export const ListCart = () => {
   };
 
   const handleDeleteCart = (product) => {
-    const newProductCart = productCart.filter(
-      (item) => item.purrPetCode !== product.purrPetCode,
-    );
-    setProductCart(newProductCart);
-    setOrderInfo({
-      ...orderInfo,
-      orderItems: newProductCart.map((item) => {
-        return {
-          productCode: item.purrPetCode,
-          quantity: item.quantity,
-          price: item.price,
-        };
-      }),
-    });
-    console.log(product.purrPetCode);
-    deleteProductCart({ productCode: product.purrPetCode });
+    if (productCart.length === 1) {
+      deleteCart();
+      openCustomerInfoForm && setOpenCustomerInfoForm(false);
+    } else {
+      const newProductCart = productCart.filter(
+        (item) => item.purrPetCode !== product.purrPetCode,
+      );
+      setProductCart(newProductCart);
+      console.log(product.purrPetCode);
+      deleteProductCart({ productCode: product.purrPetCode });
+    }
   };
 
   const handleOpenCustomerInfoForm = () => {
@@ -122,7 +147,13 @@ export const ListCart = () => {
   };
 
   const handleConfirmOrder = () => {
-    console.log("orderInfo", orderInfo);
+    setButtonDisabled(true);
+    orderInfo.orderItems = productCart.map((item) => {
+      return {
+        productCode: item.purrPetCode,
+        quantity: item.quantity,
+      };
+    });
     createOrder(orderInfo).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -142,54 +173,8 @@ export const ListCart = () => {
     });
   };
 
-  const [productCart, setProductCart] = useState([]);
-  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
-  const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
-  const [orderInfo, setOrderInfo] = useState({
-    customerCode: "",
-    customerAddress: {
-      street: "",
-      province: "",
-      district: "",
-      ward: "",
-    },
-    customerNote: "",
-    orderItems: [],
-  });
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productList = [];
-        for (let i = 0; i < cart.length; i++) {
-          const productData = await getProductByCode(cart[i].productCode);
-          console.log("res", productData.data);
-          productList.push({
-            ...productData.data,
-            quantity: cart[i].quantity,
-            totalPrice: productData.data.price * cart[i].quantity,
-          });
-        }
-        console.log("productList", productList);
-        setProductCart(productList);
-        console.log("productCart", productCart);
-        setOrderInfo({
-          ...orderInfo,
-          orderItems: productList.map((item) => {
-            return {
-              productCode: item.purrPetCode,
-              quantity: item.quantity,
-            };
-          }),
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [cart]);
   return (
-    <Box className="mb-5 flex min-h-screen min-h-screen flex-col">
+    <Box className="mb-5 flex min-h-screen flex-col">
       <Typography variant="h4" className="m-3 text-center font-bold">
         Giỏ hàng
       </Typography>
@@ -211,13 +196,12 @@ export const ListCart = () => {
             >
               Không có sản phẩm nào trong giỏ hàng!
             </Typography>
-            <Button
-              variant="contained"
-              className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
+            <BigHoverTransformButton
               onClick={() => navigate("/product")}
+              className="mx-auto my-3 justify-center"
             >
               Tiếp tục mua hàng
-            </Button>
+            </BigHoverTransformButton>
           </Box>
         )}
         {productCart.length > 0 && (
@@ -331,21 +315,25 @@ export const ListCart = () => {
                 );
               })}
             </List>
-            <Box className="text-end">
-              <Typography variant="h6" className="text-l text-base font-bold">
-                Tổng tiền:{" "}
-                {formatCurrency(
-                  productCart.reduce((a, b) => a + b.totalPrice, 0),
-                )}
-              </Typography>
-              <Button
-                variant="contained"
-                className="my-5 min-w-min bg-cyan-900 p-2 text-white"
-                onClick={handleOpenCustomerInfoForm}
-              >
-                Tiến hành đặt hàng
-              </Button>
-            </Box>
+            <Typography
+              variant="h6"
+              className="text-l mb-5 text-end text-base font-bold"
+            >
+              Tổng tiền:{" "}
+              {formatCurrency(
+                productCart.reduce((a, b) => a + b.totalPrice, 0),
+              )}
+            </Typography>
+            {!openCustomerInfoForm && (
+              <Box className="flex justify-end">
+                <BigHoverTransformButton
+                  onClick={handleOpenCustomerInfoForm}
+                  className="mb-5 justify-center"
+                >
+                  Tiến hành đặt hàng
+                </BigHoverTransformButton>
+              </Box>
+            )}
           </>
         )}
       </Paper>
@@ -356,13 +344,21 @@ export const ListCart = () => {
         />
       )}
       {showBtnConfirmOrder && (
-        <Button
-          variant="contained"
-          className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
+        // <Button
+        //   variant="contained"
+        //   className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
+        //   disabled={buttonDisabled}
+        //   onClick={handleConfirmOrder}
+        // >
+        //   Tiến hành thanh toán
+        // </Button>
+        <BigHoverTransformButton
           onClick={handleConfirmOrder}
+          className="mx-auto my-3 w-fit justify-center"
+          disabled={buttonDisabled}
         >
           Tiến hành thanh toán
-        </Button>
+        </BigHoverTransformButton>
       )}
     </Box>
   );

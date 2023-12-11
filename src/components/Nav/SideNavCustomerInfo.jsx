@@ -1,8 +1,10 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import { useStore } from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
+import { BigHoverButton } from "../Button/StyledButton";
 
 export const SideNavCustomerInfo = () => {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export const SideNavCustomerInfo = () => {
   return (
     <Box className="flex min-h-screen w-1/4 flex-col p-2 pt-5 shadow-md shadow-zinc-400">
       <Link
-        href="/customer"
+        to={"/customer"}
         underline="none"
         color={"inherit"}
         className="m-2 flex flex-row items-center"
@@ -32,7 +34,7 @@ export const SideNavCustomerInfo = () => {
         </Typography>
       </Link>
       <Link
-        href="/order"
+        to={"/order"}
         underline="none"
         color={"inherit"}
         className="m-2 flex flex-row"
@@ -47,25 +49,9 @@ export const SideNavCustomerInfo = () => {
           Đơn hàng của tôi
         </Typography>
       </Link>
-      <Button
-        size="small"
-        sx={{
-          color: "black",
-          display: "block",
-          fontWeight: "bold",
-          fontSize: "16px",
-          border: "1px solid black",
-          textTransform: "none",
-          m: 2,
-          ":hover": {
-            backgroundColor: "black",
-            color: "white",
-          },
-        }}
-        onClick={handleLogout}
-      >
+      <BigHoverButton onClick={handleLogout} className="my-5">
         Đăng xuất
-      </Button>
+      </BigHoverButton>
     </Box>
   );
 };

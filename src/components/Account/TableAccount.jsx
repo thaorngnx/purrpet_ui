@@ -29,7 +29,7 @@ import { CreateAccount } from "./CreateAccount";
 import { ChangePassword } from "./ChangePassword";
 import * as CONST from "../../constants";
 
-export const ListAccount = () => {
+export const TableAccount = () => {
   const columns = [
     {
       field: "purrPetCode",

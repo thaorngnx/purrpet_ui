@@ -21,6 +21,18 @@ export const ProductDetail = () => {
 
   const { addToCart } = useStore();
 
+  const [product, setProduct] = useState({});
+  const [descriptionTab, setDescriptionTab] = useState(true);
+  // const [reviewTab, setReviewTab] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    getProductByCode(productCode).then((res) => {
+      console.log(res.data);
+      setProduct(res.data);
+    });
+  }, [productCode]);
+
   const handleDescriptionTab = () => {
     setReviewTab(false);
     setDescriptionTab(true);
@@ -47,18 +59,6 @@ export const ProductDetail = () => {
     console.log(productCode, quantity);
     addToCart({ productCode: productCode, quantity: quantity });
   };
-
-  const [product, setProduct] = useState({});
-  const [descriptionTab, setDescriptionTab] = useState(true);
-  // const [reviewTab, setReviewTab] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-
-  useEffect(() => {
-    getProductByCode(productCode).then((res) => {
-      console.log(res.data);
-      setProduct(res.data);
-    });
-  }, [productCode]);
 
   return (
     <Box>

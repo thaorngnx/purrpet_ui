@@ -4,6 +4,13 @@ import "../../api/product";
 import { UploadImage } from "../Image/UploadImage";
 
 export const UpdateProduct = ({ categories, product, updateProduct }) => {
+  const [productUpdate, setProductUpdate] = useState(product);
+  const [error, setError] = useState({});
+  const [categoryCode, setCategoryCode] = useState(product?.categoryCode);
+  const [categoryName, setCategoryName] = useState(
+    getCategoryName(categoryCode),
+  );
+
   const handleChangeProduct = (event) => {
     console.log("handleChangeProduct", event.target);
     setError({ ...error, [event.target.name]: false });
@@ -46,13 +53,6 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
     );
     return category ? category.categoryName : "";
   };
-
-  const [productUpdate, setProductUpdate] = useState(product);
-  const [error, setError] = useState({});
-  const [categoryCode, setCategoryCode] = useState(product?.categoryCode);
-  const [categoryName, setCategoryName] = useState(
-    getCategoryName(categoryCode),
-  );
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>

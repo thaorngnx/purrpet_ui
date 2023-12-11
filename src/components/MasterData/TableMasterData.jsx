@@ -25,6 +25,28 @@ import { UpdateMasterData } from "./UpdateMasterData";
 import * as CONST from "../../constants";
 
 export const TableMasterData = () => {
+  const [rows, setRows] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [selectedMasterData, setSelectedMasterData] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getMasterDatas().then((res) => {
+      console.log(res.data);
+      setRows(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   const columns = [
     {
       field: "purrPetCode",
@@ -162,28 +184,6 @@ export const TableMasterData = () => {
       });
     });
   };
-
-  const [rows, setRows] = useState([]);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [selectedMasterData, setSelectedMasterData] = useState(null);
-  const [alert, setAlert] = useState(false);
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getMasterDatas().then((res) => {
-      console.log(res.data);
-      setRows(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

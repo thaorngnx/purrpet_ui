@@ -18,6 +18,20 @@ import Cookie from "js-cookie";
 export const LoginStaff = () => {
   const navigate = useNavigate();
 
+  const [account, setAccount] = useState({ username: "", password: "" });
+  const [error, setError] = useState({});
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [alert, setAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [togglePassword, setTogglePassword] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   useEffect(() => {
     if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
       navigate("/staff/login");
@@ -52,20 +66,6 @@ export const LoginStaff = () => {
   const togglePasswordHide = () => {
     setTogglePassword(!togglePassword);
   };
-
-  const [account, setAccount] = useState({ username: "", password: "" });
-  const [error, setError] = useState({});
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [alert, setAlert] = useState(false);
-  const [message, setMessage] = useState("");
-  const [togglePassword, setTogglePassword] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

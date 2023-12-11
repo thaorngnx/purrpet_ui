@@ -29,6 +29,48 @@ import * as CONST from "../../constants";
 import { getMasterDatas } from "../../api/masterData";
 
 export const TableHomestay = () => {
+  const [rows, setRows] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [sizeHome, setSizeHome] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [selectedHomestay, setSelectedHomestay] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getHomestays().then((res) => {
+      console.log(res.data);
+      setRows(res.data);
+    });
+    const params = { categoryType: CONST.CATEGORY_TYPE.HOMESTAY };
+    getCategories(params).then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+    getMasterDatas({ groupCode: CONST.MASTERDATA_HOMESTAY.HOME_SIZE }).then(
+      (res) => {
+        console.log(res.data);
+        setSizeHome(res.data);
+      },
+    );
+  }, []);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setActiveCategory(getActiveCategory(categories));
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   const columns = [
     {
       field: "purrPetCode",
@@ -260,48 +302,6 @@ export const TableHomestay = () => {
     );
     return masterData ? masterData.name : "";
   };
-
-  const [rows, setRows] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [sizeHome, setSizeHome] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [selectedHomestay, setSelectedHomestay] = useState(null);
-  const [alert, setAlert] = useState(false);
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getHomestays().then((res) => {
-      console.log(res.data);
-      setRows(res.data);
-    });
-    const params = { categoryType: CONST.CATEGORY_TYPE.HOMESTAY };
-    getCategories(params).then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
-    });
-    getMasterDatas({ groupCode: CONST.MASTERDATA_HOMESTAY.HOME_SIZE }).then(
-      (res) => {
-        console.log(res.data);
-        setSizeHome(res.data);
-      },
-    );
-  }, []);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setActiveCategory(getActiveCategory(categories));
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

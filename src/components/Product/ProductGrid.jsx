@@ -22,6 +22,24 @@ export const ProductGrid = () => {
   const sort = searchParams.get("sort");
   const searchKey = searchParams.get("search");
 
+  const [selectedSort, setSelectedSort] = useState(sort || "");
+  const [resProducts, setResProducts] = useState({});
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const params = {
+      page: page,
+      key: categoryCode || searchKey,
+      order: sort,
+    };
+    getActiveProducts(params).then((res) => {
+      setResProducts(res);
+    });
+  }, [page, categoryCode, sort, searchKey]);
+
+  const products = resProducts.data || [];
+  const totalPage = resProducts.totalPage || 0;
+
   const handleChangeSort = (event) => {
     const value = event.target.value;
     console.log(value);
@@ -32,26 +50,10 @@ export const ProductGrid = () => {
     navigate(newUrl);
   };
 
-  const [selectedSort, setSelectedSort] = useState(sort || "");
-  const [products, setProducts] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    const params = {
-      page: page,
-      key: categoryCode || searchKey,
-      order: sort,
-    };
-    getActiveProducts(params).then((res) => {
-      setProducts(res.data);
-      setTotalPage(res.totalPage);
-    });
-  }, [page, categoryCode, sort, searchKey]);
-
   const handlePage = (event, value) => {
     setPage(value);
   };
+
   return (
     <Box className="min-h-screen w-[100%] flex-col">
       <Box className="mx-4 flex justify-end">

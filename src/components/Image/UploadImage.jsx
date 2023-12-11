@@ -2,6 +2,8 @@ import { Typography } from "@mui/material";
 import { useState } from "react";
 
 export const UploadImage = ({ product, updateProduct }) => {
+  const [selectedImage, setSelectedImage] = useState(product.images[0]?.path);
+
   const handleImageChange = (event) => {
     if (!event.target.files[0]) return;
     const file = event.target.files[0];
@@ -11,8 +13,6 @@ export const UploadImage = ({ product, updateProduct }) => {
       setSelectedImage(imageUrl);
     }
   };
-
-  const [selectedImage, setSelectedImage] = useState(product.images[0]?.path);
 
   return (
     <div>

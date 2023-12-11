@@ -7,6 +7,7 @@ import {
   Divider,
   Button,
 } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
@@ -20,6 +21,63 @@ import * as CONST from "../../constants";
 
 export const BookingSpaDetail = () => {
   const { bookingSpaCode } = useParams();
+
+  const [bookingSpa, setBookingSpa] = useState({
+    purrPetCode: "",
+    customerName: "",
+    customerPhone: "",
+    customerEmail: "",
+    customerNote: "",
+    petName: "",
+    bookingDate: "",
+    bookingTime: "",
+    bookingSpaPrice: 0,
+    status: "",
+    createdAt: "",
+    spa: {
+      purrPetCode: "",
+      spaName: "",
+      spaType: "",
+      description: "",
+      price: 0,
+      categoryCode: "",
+    },
+  });
+
+  useEffect(() => {
+    getBookingSpaByCode(bookingSpaCode).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        const bookingSpaInfo = res.data;
+        getSpaByCode(res.data.spaCode).then((res) => {
+          console.log(res);
+          if (res.err === 0) {
+            setBookingSpa({
+              purrPetCode: bookingSpaInfo.purrPetCode,
+              customerName: bookingSpaInfo.customerName,
+              customerPhone: bookingSpaInfo.customerPhone,
+              customerEmail: bookingSpaInfo.customerEmail,
+              customerNote: bookingSpaInfo.customerNote,
+              petName: bookingSpaInfo.petName,
+              bookingDate: bookingSpaInfo.bookingDate,
+              bookingTime: bookingSpaInfo.bookingTime,
+              bookingSpaPrice: bookingSpaInfo.bookingSpaPrice,
+              status: bookingSpaInfo.status,
+              createdAt: bookingSpaInfo.createdAt,
+              spa: {
+                purrPetCode: res.data.purrPetCode,
+                spaName: res.data.spaName,
+                spaType: res.data.spaType,
+                description: res.data.description,
+                price: res.data.price,
+                categoryCode: res.data.categoryCode,
+              },
+            });
+          }
+        });
+      }
+    });
+  }, []);
 
   const handlePaymentClick = () => {
     console.log("payment");
@@ -44,23 +102,6 @@ export const BookingSpaDetail = () => {
     });
   };
 
-  const [bookingSpa, setBookingSpa] = useState({});
-  const [spa, setSpa] = useState({});
-
-  useEffect(() => {
-    getBookingSpaByCode(bookingSpaCode).then((res) => {
-      console.log(res);
-      if (res.err === 0) {
-        setBookingSpa(res.data);
-        getSpaByCode(res.data.spaCode).then((res) => {
-          console.log(res);
-          if (res.err === 0) {
-            setSpa(res.data);
-          }
-        });
-      }
-    });
-  }, [bookingSpaCode]);
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
       <Typography variant="h5" className="font-bold">
@@ -147,18 +188,18 @@ export const BookingSpaDetail = () => {
                 Đơn giá
               </Typography>
             </ListItem>
-            <ListItem key={spa.purrPetCode} className="my-3 p-0">
+            <ListItem key={bookingSpa.purrPetCode} className="my-3 p-0">
               <Typography variant="body1" className="w-1/6">
-                {spa.purrPetCode}
+                {bookingSpa.spa.purrPetCode}
               </Typography>
               <Typography variant="body1" className="w-1/6 p-2">
-                {spa.spaName}
+                {bookingSpa.spa.spaName}
               </Typography>
               <Typography variant="body1" className="w-1/6 text-center">
-                {spa.spaType}
+                {bookingSpa.spa.spaType}
               </Typography>
               <Typography variant="body1" className="w-1/3 text-center">
-                {spa.description}
+                {bookingSpa.spa.description}
               </Typography>
               <Typography variant="body1" className="m-2 w-1/6 text-end">
                 {formatCurrency(bookingSpa.bookingSpaPrice)}

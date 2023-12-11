@@ -7,44 +7,31 @@ import {
   List,
   ListItem,
   Divider,
-  Button,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { useEffect, useState } from "react";
 import { getBookingHomeByCustomer } from "../../api/bookingHome";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
+import { MiniHoverButton } from "../Button/StyledButton";
 
 export const HomeHistory = () => {
-  const handleTabHomeClick = (event) => {
-    const status = event.target.innerText;
-    for (const [key, value] of Object.entries(CONST.STATUS_BOOKING)) {
-      if (value.toUpperCase() === status) {
-        const bHomeByStatus = bHomes.filter((bHome) => bHome.status === value);
-        setBHomeByStatus(bHomeByStatus);
-      }
-    }
-  };
-
   const [bHomes, setBHomes] = useState([]);
-  const [bHomeByStatus, setBHomeByStatus] = useState([]);
   const [tabHome, setTabHome] = useState(0);
 
   useEffect(() => {
-    //get status in constant by tab index
-    const status = Object.values(CONST.STATUS_BOOKING)[tabHome];
     //api get booking home by customer
     getBookingHomeByCustomer().then((res) => {
       console.log(res);
       if (res.err === 0) {
         setBHomes(res.data);
-        const waittingForPayBHome = res.data.filter(
-          (bHome) => bHome.status === status,
-        );
-        setBHomeByStatus(waittingForPayBHome);
       }
     });
   }, []);
+
+  const status = Object.values(CONST.STATUS_BOOKING)[tabHome];
+  const bHomeByStatus = bHomes.filter((bHome) => bHome.status === status);
+
   return (
     <Paper className="mb-10 w-[90%]">
       <Typography variant="h6" className="m-3 text-center text-lg font-bold">
@@ -61,9 +48,7 @@ export const HomeHistory = () => {
           }}
         >
           {Object.values(CONST.STATUS_BOOKING).map((value) => {
-            return (
-              <Tab label={value} key={value} onClick={handleTabHomeClick} />
-            );
+            return <Tab label={value} key={value} />;
           })}
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
@@ -151,26 +136,12 @@ export const HomeHistory = () => {
                         {formatCurrency(bookingHome.bookingHomePrice)}
                       </Typography>
                       <Box className="flex w-1/6 justify-center px-1 text-center">
-                        <Button
+                        <MiniHoverButton
                           component={Link}
                           to={`/bookingHome/${bookingHome.purrPetCode}`}
-                          size="small"
-                          sx={{
-                            color: "black",
-                            display: "block",
-                            fontWeight: "bold",
-                            border: "1px solid black",
-                            textTransform: "none",
-                            m: 1,
-                            ":hover": {
-                              backgroundColor: "black",
-                              color: "white",
-                            },
-                            width: "fit-content",
-                          }}
                         >
                           Chi tiết
-                        </Button>
+                        </MiniHoverButton>
                       </Box>
                     </Box>
                     <Divider />

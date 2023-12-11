@@ -7,44 +7,31 @@ import {
   List,
   ListItem,
   Divider,
-  Button,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { useEffect, useState } from "react";
 import { getOrdersByCustomer } from "../../api/order";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
+import { MiniHoverButton } from "../Button/StyledButton";
 
 export const OrderHistory = () => {
-  const handleTabOrderClick = (event) => {
-    const status = event.target.innerText;
-    for (const [key, value] of Object.entries(CONST.STATUS_ORDER)) {
-      if (value.toUpperCase() === status) {
-        const orderByStatus = orders.filter((order) => order.status === value);
-        setOrderByStatus(orderByStatus);
-      }
-    }
-  };
-
   const [orders, setOrders] = useState([]);
-  const [orderByStatus, setOrderByStatus] = useState([]);
   const [tabOrder, setTabOrder] = useState(0);
 
   useEffect(() => {
-    //api get status in constant by tab index
-    const status = Object.values(CONST.STATUS_ORDER)[tabOrder];
     //api get order by customer
     getOrdersByCustomer().then((res) => {
       console.log(res);
       if (res.err === 0) {
         setOrders(res.data);
-        const waittingForPayOrder = res.data.filter(
-          (order) => order.status === status,
-        );
-        setOrderByStatus(waittingForPayOrder);
       }
     });
   }, []);
+
+  const status = Object.values(CONST.STATUS_ORDER)[tabOrder];
+  const orderByStatus = orders.filter((order) => order.status === status);
+
   return (
     <Paper className="mb-10 w-[90%]">
       <Typography variant="h6" className="m-3 text-center text-lg font-bold">
@@ -61,9 +48,7 @@ export const OrderHistory = () => {
           }}
         >
           {Object.values(CONST.STATUS_ORDER).map((value) => {
-            return (
-              <Tab label={value} key={value} onClick={handleTabOrderClick} />
-            );
+            return <Tab label={value} key={value} />;
           })}
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
@@ -127,26 +112,12 @@ export const OrderHistory = () => {
                         {formatCurrency(order.orderPrice)}
                       </Typography>
                       <Box className="flex w-1/5 justify-center px-1 text-center">
-                        <Button
+                        <MiniHoverButton
                           component={Link}
                           to={`/order/${order.purrPetCode}`}
-                          size="small"
-                          sx={{
-                            color: "black",
-                            display: "block",
-                            fontWeight: "bold",
-                            border: "1px solid black",
-                            textTransform: "none",
-                            m: 1,
-                            ":hover": {
-                              backgroundColor: "black",
-                              color: "white",
-                            },
-                            width: "fit-content",
-                          }}
                         >
                           Chi tiết
-                        </Button>
+                        </MiniHoverButton>
                       </Box>
                     </Box>
                     <Divider />

@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import {
   getBookingHomeByCode,
@@ -20,6 +20,64 @@ import * as CONST from "../../constants";
 
 export const BookingHomeDetail = () => {
   const { bookingHomeCode } = useParams();
+
+  const [bookingHome, setBookingHome] = useState({
+    purrPetCode: "",
+    customerName: "",
+    customerPhone: "",
+    customerEmail: "",
+    customerNote: "",
+    petName: "",
+    dateCheckIn: "",
+    dateCheckOut: "",
+    numberOfDay: 0,
+    bookingHomePrice: 0,
+    status: "",
+    createdAt: "",
+    homestay: {
+      purrPetCode: "",
+      homeType: "",
+      categoryName: "",
+      masterDataName: "",
+      price: 0,
+    },
+  });
+  const [homestay, setHomestay] = useState({});
+
+  useEffect(() => {
+    getBookingHomeByCode(bookingHomeCode).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        const bookingHomeInfo = res.data;
+        getHomestayByCode(res.data.homeCode).then((res) => {
+          console.log(res);
+          if (res.err === 0) {
+            setBookingHome({
+              purrPetCode: bookingHomeInfo.purrPetCode,
+              customerName: bookingHomeInfo.customerName,
+              customerPhone: bookingHomeInfo.customerPhone,
+              customerEmail: bookingHomeInfo.customerEmail,
+              customerNote: bookingHomeInfo.customerNote,
+              petName: bookingHomeInfo.petName,
+              dateCheckIn: bookingHomeInfo.dateCheckIn,
+              dateCheckOut: bookingHomeInfo.dateCheckOut,
+              numberOfDay: bookingHomeInfo.numberOfDay,
+              bookingHomePrice: bookingHomeInfo.bookingHomePrice,
+              status: bookingHomeInfo.status,
+              createdAt: bookingHomeInfo.createdAt,
+              homestay: {
+                purrPetCode: res.data.purrPetCode,
+                homeType: res.data.homeType,
+                categoryName: res.data.categoryName,
+                masterDataName: res.data.masterDataName,
+                price: res.data.price,
+              },
+            });
+          }
+        });
+      }
+    });
+  }, [bookingHomeCode]);
 
   const handlePaymentClick = () => {
     console.log("payment");
@@ -44,23 +102,6 @@ export const BookingHomeDetail = () => {
     });
   };
 
-  const [bookingHome, setBookingHome] = useState({});
-  const [homestay, setHomestay] = useState({});
-
-  useEffect(() => {
-    getBookingHomeByCode(bookingHomeCode).then((res) => {
-      console.log(res);
-      if (res.err === 0) {
-        setBookingHome(res.data);
-        getHomestayByCode(res.data.homeCode).then((res) => {
-          console.log(res);
-          if (res.err === 0) {
-            setHomestay(res.data);
-          }
-        });
-      }
-    });
-  }, [bookingHomeCode]);
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
       <Typography variant="h5" className="font-bold">
@@ -162,24 +203,27 @@ export const BookingHomeDetail = () => {
                 Thành tiền
               </Typography>
             </ListItem>
-            <ListItem key={homestay.purrPetCode} className="my-3 p-0">
+            <ListItem
+              key={bookingHome.homestay.purrPetCode}
+              className="my-3 p-0"
+            >
               <Typography variant="body1" className="w-1/6">
-                {homestay.purrPetCode}
+                {bookingHome.homestay.purrPetCode}
               </Typography>
               <Typography variant="body1" className="w-1/6 p-2">
-                {homestay.homeType}
+                {bookingHome.homestay.homeType}
               </Typography>
               <Typography variant="body1" className="w-1/6 text-center">
-                {homestay.categoryName}
+                {bookingHome.homestay.categoryName}
               </Typography>
               <Typography variant="body1" className="w-1/6 text-center">
-                {homestay.masterDataName}
+                {bookingHome.homestay.masterDataName}
               </Typography>
               <Typography variant="body1" className="w-1/6 text-center">
                 {bookingHome.numberOfDay}
               </Typography>
               <Typography variant="body1" className="m-2 w-1/6 text-end">
-                {formatCurrency(homestay.price)}
+                {formatCurrency(bookingHome.homestay.price)}
               </Typography>
               <Typography variant="body1" className="m-2 w-1/6 text-end">
                 {formatCurrency(bookingHome.bookingHomePrice)}

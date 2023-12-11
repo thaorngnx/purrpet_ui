@@ -19,6 +19,10 @@ export const TimeSpaForm = ({
   setOpenCustomerInfoForm,
   updateBookingInfo,
 }) => {
+  const [validTime, setValidTime] = useState([]);
+  const [openTimePicker, setOpenTimePicker] = useState(false);
+  const [openCustomerInfoForm, OpenCustomerInfoForm] = useState(false);
+
   const handleBookingDateChange = (event) => {
     setOpenTimePicker(true);
     const newDate = dayjs(event).startOf("day");
@@ -50,9 +54,7 @@ export const TimeSpaForm = ({
     setOpenCustomerInfoForm(true);
     OpenCustomerInfoForm(true);
   };
-  const [validTime, setValidTime] = useState([]);
-  const [openTimePicker, setOpenTimePicker] = useState(false);
-  const [openCustomerInfoForm, OpenCustomerInfoForm] = useState(false);
+
   return (
     <Paper
       sx={{

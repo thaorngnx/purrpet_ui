@@ -10,6 +10,19 @@ export const UpdateHomestay = ({
   homestay,
   updateHomestay,
 }) => {
+  const [homestayUpdate, setHomestayUpdate] = useState(homestay);
+  const [error, setError] = useState({});
+  const [categoryCode, setCategoryCode] = useState(homestay?.categoryCode);
+  const [categoryName, setCategoryName] = useState(
+    getCategoryName(categoryCode),
+  );
+  const [masterDataCode, setMasterDataCode] = useState(
+    homestay?.masterDataCode,
+  );
+  const [masterDataName, setMasterDataName] = useState(
+    getMasterDataName(masterDataCode),
+  );
+
   const handleChangeHomestay = (event) => {
     console.log(event.target);
     setError({ ...error, [event.target.name]: false });
@@ -69,19 +82,6 @@ export const UpdateHomestay = ({
   //   setHomestayUpdate(updateData);
   //   updateHomestay(updateData);
   // };
-
-  const [homestayUpdate, setHomestayUpdate] = useState(homestay);
-  const [error, setError] = useState({});
-  const [categoryCode, setCategoryCode] = useState(homestay?.categoryCode);
-  const [categoryName, setCategoryName] = useState(
-    getCategoryName(categoryCode),
-  );
-  const [masterDataCode, setMasterDataCode] = useState(
-    homestay?.masterDataCode,
-  );
-  const [masterDataName, setMasterDataName] = useState(
-    getMasterDataName(masterDataCode),
-  );
 
   return (
     <Box component="form" sx={{ width: "90%", margin: "auto" }}>
