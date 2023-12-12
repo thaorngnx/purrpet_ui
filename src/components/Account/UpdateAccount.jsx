@@ -51,7 +51,7 @@ export const UpdateAccount = ({ account, updateAccount }) => {
           error={error.role}
           helperText={error.role && "Quyền không được để trống"}
         >
-          {Object.values(CONST.ROLE).map((value) => (
+          {Object.values(CONST.ROLE_ACCOUNT).map((value) => (
             <MenuItem key={value} value={value}>
               {value}
             </MenuItem>

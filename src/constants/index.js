@@ -9,6 +9,11 @@ export const ROLE = {
   CUSTOMER: "Khách hàng",
 };
 
+export const ROLE_ACCOUNT = {
+  ADMIN: "Quản trị viên",
+  STAFF: "Nhân viên",
+};
+
 export const STATUS_PRODUCT = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",

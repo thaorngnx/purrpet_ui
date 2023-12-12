@@ -110,7 +110,7 @@ export const BookingSpaDetail = () => {
       <Typography variant="h5" className="font-bold">
         Chi tiết đơn đặt lịch spa
       </Typography>
-      <Paper className="mb-10 flex w-[90%] flex-col justify-center p-8">
+      <Paper className="mb-10 flex w-[97%] flex-col justify-center p-8">
         <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">

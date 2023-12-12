@@ -209,7 +209,7 @@ export const HomeHistory = () => {
           Không có dữ liệu
         </Typography>
       )}
-      {totalPage > 1 && (
+      {totalPage > 0 && (
         <Box className="m-2 flex justify-end">
           <Pagination count={totalPage} onChange={handleChangePage} />
         </Box>
