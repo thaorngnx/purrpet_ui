@@ -4,24 +4,20 @@ import { SideNavStaff } from "../../components/Nav/SideNavStaff";
 import { GridProductOrder } from "./GridProductOrder";
 import { Button, Input } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getCustomers } from "../../api/customer";
+import { getCustomerByEmail } from "../../api/customer";
 
 export const CreateOrder = () => {
-  const [inputValue, setInputValue] = React.useState('');
-  const [customer, setCustomer] = React.useState('CUS_1');
+  const [inputValue, setInputValue] = React.useState('khachle@gmail.com');
+  const [customer, setCustomer] = React.useState({});
   
   useEffect(() => {
-    const params = { key: inputValue || customer };
-    getCustomers(params)
-      .then((res) => {
-        res.data.forEach((element) => {
-          setCustomer(element);
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-      console.log(customer);
+    getCustomerByEmail({email: inputValue}).then((res) => {
+      if (res.err === 0) {
+        setCustomer(res.data);
+      }else{
+      setInputValue('khachle@gmail.com');
+      }
+    });
   }, [inputValue]);
   const handleOnchange = (e) => {
     setInputValue(e.target.value);

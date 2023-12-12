@@ -32,6 +32,7 @@ import { ProtectedCustomerRoutes } from "./ProtectedCustomerRoutes";
 import { ProtectedStaffRoutes } from "./ProtectedStaffRoutes";
 import { CreateOrder } from "./pages/Staff/CreateOrder";
 import { DetailOrder } from "./pages/Staff/DetailOrder";
+import { CreateBookingHome } from "./pages/Staff/CreateBookingHome";
 import { useEffect } from "react";
 import { useStore } from "./zustand/store";
 import Cookie from "js-cookie";
@@ -132,6 +133,7 @@ function App() {
           <Route path="createOrder" element={<CreateOrder />}/>
           <Route path="order" element={<ManageOrder/>} />
           <Route path="order/:orderCode" element={<DetailOrder/>} />
+          <Route path="createBookingHome" element={< CreateBookingHome/>} />
         </Route>
       </Routes>
     </BrowserRouter>

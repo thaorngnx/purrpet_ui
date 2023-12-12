@@ -16,6 +16,7 @@ import * as CONST from "../../constants";
 
 
 export const GridProductOrder = ({customer}) => {
+  console.log('khach hang mua', customer);
   const [productlist, setProductlist] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
   const [selectedProducts, setSelectedProducts] = React.useState([]);
@@ -149,7 +150,7 @@ export const GridProductOrder = ({customer}) => {
       productCode: productCode,
       quantity: quantities[index],
     }));
-  
+ 
     const orderData = {
       orderItems: orderItems,
       customerCode: customer.purrPetCode,
