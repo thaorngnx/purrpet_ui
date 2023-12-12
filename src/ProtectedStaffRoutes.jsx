@@ -10,6 +10,8 @@ export const ProtectedStaffRoutes = () => {
     path: "/staff",
   });
 
+  console.log(window.location.pathname);
+
   if (accessToken) {
     const decoded = jwtDecode(accessToken);
     if (decoded.role === CONST.ROLE.STAFF) {

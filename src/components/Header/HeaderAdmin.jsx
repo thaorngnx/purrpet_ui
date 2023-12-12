@@ -97,7 +97,7 @@ export const HeaderAdmin = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

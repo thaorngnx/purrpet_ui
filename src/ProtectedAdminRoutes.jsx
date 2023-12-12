@@ -11,6 +11,8 @@ export const ProtectedAdminRoutes = () => {
   });
   console.log(accessToken);
 
+  console.log(window.location.pathname);
+
   if (accessToken) {
     const decoded = jwtDecode(accessToken);
     if (decoded.role === CONST.ROLE.ADMIN) {

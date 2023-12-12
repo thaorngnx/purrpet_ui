@@ -44,14 +44,13 @@ export const HeaderStaff = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ background: "#d9d9d9" }}>
+    <AppBar
+      position="static"
+      className="sticky top-0 z-[100] flex-none bg-[#d9d9d9]"
+    >
       <Toolbar>
-        <Typography sx={{ flexGrow: 1 }}>
-          <img
-            src={logo}
-            alt="logo"
-            style={{ width: "20%", marginRight: "25%", marginLeft: "auto" }}
-          />
+        <Typography className="ml-[48%] w-fit">
+          <img src={logo} alt="logo" className=" w-28" />
         </Typography>
         <Typography
           variant="inherit"
@@ -92,7 +91,7 @@ export const HeaderStaff = () => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

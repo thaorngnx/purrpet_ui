@@ -23,18 +23,19 @@ import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
 import { BookingSpaDetailPage } from "./pages/Customer/BookingSpaDetailPage";
 import { BookingHomeDetailPage } from "./pages/Customer/BookingHomeDetailPage";
-import { ManageOrder } from "./pages/Staff/ManageOrder";
-import { Order } from "./pages/Admin/Order";
+import { OrderAdmin } from "./pages/Admin/OrderAdmin";
 import { OrderDetailAdmin } from "./pages/Admin/OrderDetailAdmin";
-import { BookingSpa } from "./pages/Admin/BookingSpa";
+import { BookingSpaAdmin } from "./pages/Admin/BookingSpaAdmin";
 import { BookingSpaDetailAdmin } from "./pages/Admin/BookingSpaDetailAdmin";
-import { BookingHome } from "./pages/Admin/BookingHome";
+import { BookingHomeAdmin } from "./pages/Admin/BookingHomeAdmin";
 import { BookingHomeDetailAdmin } from "./pages/Admin/BookingHomeDetailAdmin";
+import { OrderStaff } from "./pages/Staff/OrderStaff";
+import { BookingSpaStaff } from "./pages/Staff/BookingSpaStaff";
+import { BookingHomeStaff } from "./pages/Staff/BookingHomeStaff";
 import { ProtectedAdminRoutes } from "./ProtectedAdminRoutes";
 import { ProtectedCustomerRoutes } from "./ProtectedCustomerRoutes";
 import { ProtectedStaffRoutes } from "./ProtectedStaffRoutes";
 import { CreateOrder } from "./pages/Staff/CreateOrder";
-import { DetailOrder } from "./pages/Staff/DetailOrder";
 import { CreateBookingHome } from "./pages/Staff/CreateBookingHome";
 import { CreateBookingSpa } from "./pages/Staff/CreateBookingSpa";
 import { useEffect } from "react";
@@ -111,7 +112,6 @@ function App() {
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}
-              
             />
           </Route>
         </Route>
@@ -126,14 +126,14 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="homestay" element={<Homestay />} />
             <Route path="masterData" element={<MasterData />} />
-            <Route path="order" element={<Order />} />
+            <Route path="order" element={<OrderAdmin />} />
             <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
-            <Route path="bookingSpa" element={<BookingSpa />} />
+            <Route path="bookingSpa" element={<BookingSpaAdmin />} />
             <Route
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailAdmin />}
             />
-            <Route path="bookingHome" element={<BookingHome />} />
+            <Route path="bookingHome" element={<BookingHomeAdmin />} />
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailAdmin />}
@@ -142,12 +142,24 @@ function App() {
         </Route>
         <Route path="/staff">
           <Route path="login" element={<LoginStaff />} />
-          <Route element={<ProtectedStaffRoutes />}></Route>
-          <Route path="createOrder" element={<CreateOrder />}/>
-          <Route path="order" element={<ManageOrder/>} />
-          <Route path="order/:orderCode" element={<DetailOrder/>} />
-          <Route path="createBookingHome" element={< CreateBookingHome/>} />
-          <Route path="createBookingSpa" element={< CreateBookingSpa />} />
+          <Route element={<ProtectedStaffRoutes />}>
+            <Route index element={<CreateOrder />} />
+            <Route path="create/order" element={<CreateOrder />} />
+            <Route path="create/bookingSpa" element={<CreateBookingSpa />} />
+            <Route path="create/bookingHome" element={<CreateBookingHome />} />
+            <Route path="order" element={<OrderStaff />} />
+            <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
+            <Route path="bookingSpa" element={<BookingSpaStaff />} />
+            <Route
+              path="bookingSpa/:bookingSpaCode"
+              element={<BookingSpaDetailAdmin />}
+            />
+            <Route path="bookingHome" element={<BookingHomeStaff />} />
+            <Route
+              path="bookingHome/:bookingHomeCode"
+              element={<BookingHomeDetailAdmin />}
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

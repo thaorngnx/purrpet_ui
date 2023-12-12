@@ -4,13 +4,12 @@ import { SideNavStaff } from "../../components/Nav/SideNavStaff";
 import { BookingHome } from "./BookingHome";
 
 export const CreateBookingHome = () => {
-  
   return (
     <>
       <HeaderStaff />
-      <div style={{ display: 'flex'}}>
+      <div style={{ display: "flex" }}>
         <SideNavStaff />
-       <BookingHome/>
+        <BookingHome />
       </div>
     </>
   );

@@ -22,8 +22,10 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import CategoryIcon from "@mui/icons-material/Category";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
+import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +57,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+  padding: theme.spacing(0, 1.5),
   ...theme.mixins.toolbar,
 }));
 
@@ -101,12 +103,12 @@ const NavListData = [
 const NavListManage = [
   { icon: <ListAltIcon />, text: "Quản lý đơn hàng", href: "/admin/order" },
   {
-    icon: <LibraryBooksIcon />,
+    icon: <CalendarMonthIcon />,
     text: "Quản lý lịch đặt spa",
     href: "/admin/bookingSpa",
   },
   {
-    icon: <StickyNote2Icon />,
+    icon: <HolidayVillageIcon />,
     text: "Quản lý đặt phòng",
     href: "/admin/bookingHome",
   },

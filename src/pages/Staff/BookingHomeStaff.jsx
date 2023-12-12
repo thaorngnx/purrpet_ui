@@ -1,14 +1,14 @@
-import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
-import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
-import { OrderHistory } from "../../components/Admin/OrderHistory";
+import { HeaderStaff } from "../../components/Header/HeaderStaff";
+import { SideNavStaff } from "../../components/Nav/SideNavStaff";
+import { HomeHistory } from "../../components/Admin/HomeHistory";
 import { Box } from "@mui/material";
 
-export const Order = () => {
+export const BookingHomeStaff = () => {
   return (
     <>
-      <HeaderAdmin />
+      <HeaderStaff />
       <Box sx={{ display: "flex" }}>
-        <SideNavAdmin />
+        <SideNavStaff />
         <Box
           sx={{
             display: "block",
@@ -18,7 +18,7 @@ export const Order = () => {
             marginBottom: "30px",
           }}
         >
-          <OrderHistory />
+          <HomeHistory />
         </Box>
       </Box>
     </>

@@ -239,7 +239,9 @@ export const BookingSpaForm = () => {
           />
         </FormControl>
         <FormControl>
-          <FormLabel className="font-bold text-black">Thú cưng là:</FormLabel>
+          <FormLabel className="mt-2 font-bold text-black">
+            Thú cưng là:
+          </FormLabel>
           <RadioGroup
             name="petType"
             value={bookingInfo.petType}

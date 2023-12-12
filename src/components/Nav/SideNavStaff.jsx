@@ -14,13 +14,14 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import MuiDrawer from "@mui/material/Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import HomeIcon from "@mui/icons-material/Home";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import BedroomChildIcon from "@mui/icons-material/BedroomChild";
-import DatasetIcon from "@mui/icons-material/Dataset";
 import PetsIcon from "@mui/icons-material/Pets";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import CategoryIcon from "@mui/icons-material/Category";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
+import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -51,7 +52,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+  padding: theme.spacing(0, 1.5),
   ...theme.mixins.toolbar,
 }));
 
@@ -72,26 +73,36 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const NavList = [
+const NavListCreate = [
   {
-    icon: <SupervisorAccountIcon />,
+    icon: <AddShoppingCartIcon />,
     text: "Tạo đơn hàng",
-    href: "/staff/createOrder",
+    href: "/staff/create/order",
   },
-  { icon: <CategoryIcon />, text: "Quản lý đơn hàng", href: "/staff/order" },
-  { icon: <InventoryIcon />, text: "Tạo đơn đặt phòng", href: "/staff/createBookingHome" },
   {
-    icon: <DatasetIcon />,
-    text: "Quản lý đơn đặt phòng",
-    href: "/staff/bookingHome",
+    icon: <PetsIcon />,
+    text: "Tạo đơn đặt lịch spa",
+    href: "/staff/create/bookingSpa",
   },
-  { icon: <PetsIcon />, text: "Tạo đơn đặt lịch spa", href: "/staff/createBookingSpa"  },
   {
     icon: <BedroomChildIcon />,
-    text: "Quản lý đơn đặt lịch spa",
+    text: "Tạo đơn đặt phòng",
+    href: "/staff/create/bookingHome",
+  },
+];
+
+const NavListManage = [
+  { icon: <ListAltIcon />, text: "Quản lý đơn hàng", href: "/staff/order" },
+  {
+    icon: <CalendarMonthIcon />,
+    text: "Quản lý lịch đặt spa",
     href: "/staff/bookingSpa",
   },
-  
+  {
+    icon: <HolidayVillageIcon />,
+    text: "Quản lý đặt phòng",
+    href: "/staff/bookingHome",
+  },
 ];
 
 export const SideNavStaff = () => {
@@ -110,10 +121,10 @@ export const SideNavStaff = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {NavList.map((nav) => (
+          {NavListCreate.map((nav) => (
             <ListItem
               key={nav.text}
-              sx={{ display: "block" }}
+              sx={{ display: "block", p: 0 }}
               onClick={() => {
                 navigate(nav.href);
               }}
@@ -145,6 +156,41 @@ export const SideNavStaff = () => {
           ))}
         </List>
         <Divider />
+        <List>
+          {NavListManage.map((nav) => (
+            <ListItem
+              key={nav.text}
+              sx={{ display: "block", p: 0 }}
+              onClick={() => {
+                navigate(nav.href);
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tooltip title={nav.text} placement="right">
+                    {nav.icon}
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText
+                  primary={nav.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       </Drawer>
     </Box>
   );

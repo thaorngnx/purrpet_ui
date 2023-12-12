@@ -20,9 +20,9 @@ import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
 import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
-import { Modal } from '@mui/base/Modal';
-import {StyledBackdrop} from '../../components/Modal/StyledBackdrop';
-import { ModalContent } from '../../components/Modal/ModalContent';
+import { Modal } from "@mui/base/Modal";
+import { StyledBackdrop } from "../../components/Modal/StyledBackdrop";
+import { ModalContent } from "../../components/Modal/ModalContent";
 
 export const BookingSpa = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export const BookingSpa = () => {
   const [validSize, setValidSize] = useState([]);
   const [openTimeForm, setOpenTimeForm] = useState(false);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
-  const [inputCus, setInputCus] = useState('');
+  const [inputCus, setInputCus] = useState("");
   const [customer, setCustomer] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [order, setOrder] = useState({});
@@ -66,13 +66,13 @@ export const BookingSpa = () => {
       console.log(res.data);
       setAllSpas(res.data);
     });
-    getCustomerByEmail({email: inputCus}).then((res) => {
-        if (res.err === 0) {
-          setCustomer(res.data);
-        }else{
-        setInputCus('khachle@gmail.com');
-        }
-      });
+    getCustomerByEmail({ email: inputCus }).then((res) => {
+      if (res.err === 0) {
+        setCustomer(res.data);
+      } else {
+        setInputCus("khachle@gmail.com");
+      }
+    });
   }, [inputCus]);
 
   const handleChangeBookingInfo = (event) => {
@@ -174,7 +174,7 @@ export const BookingSpa = () => {
       console.log(res);
       if (res.err === 0) {
         // navigate(`/bookingSpa/${res.data.purrPetCode}`);
-        setOrder(res.data); 
+        setOrder(res.data);
         setOpenModal(true);
       }
       setMessage(res.message);
@@ -183,59 +183,63 @@ export const BookingSpa = () => {
   const handleChangeCustomerInfo = (event) => {
     setInputCus(event.target.value);
   };
-    const  handleCancelOrder = () => {
-    updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.CANCEL).then((res) => {
+  const handleCancelOrder = () => {
+    updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.CANCEL).then(
+      (res) => {
         if (res.err === 0) {
-            console.log(res);
-            setOpenModal(false);
-            setBookingInfo({
-              petName: "",
-              spaCode: "",
-              bookingSpaPrice: 0,
-              customerCode: "",
-              customerNote: "",
-              bookingDate: null,
-              bookingTime: "",
-              spaName: "",
-              size: "",
-              petType: "",
-            });
-            setInputCus('');
-            setOpenCustomerInfoForm(false);
-            setOpenTimeForm(false);
+          console.log(res);
+          setOpenModal(false);
+          setBookingInfo({
+            petName: "",
+            spaCode: "",
+            bookingSpaPrice: 0,
+            customerCode: "",
+            customerNote: "",
+            bookingDate: null,
+            bookingTime: "",
+            spaName: "",
+            size: "",
+            petType: "",
+          });
+          setInputCus("");
+          setOpenCustomerInfoForm(false);
+          setOpenTimeForm(false);
         }
         setMessage(res.message);
-     });
-    };  
-    const handlePayOrder = () => {
-        updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then((res) => {
-            if (res.err === 0) {
-                console.log(res);
-                setOpenModal(false);
-                setOpenModal(false);
-                setBookingInfo({
-                  petName: "",
-                  spaCode: "",
-                  bookingSpaPrice: 0,
-                  customerCode: "",
-                  customerNote: "",
-                  bookingDate: null,
-                  bookingTime: "",
-                  spaName: "",
-                  size: "",
-                  petType: "",
-                });
-                setInputCus('');
-                setOpenCustomerInfoForm(false);
-                setOpenTimeForm(false);
-            }
-            setMessage(res.message);
-         });
+      },
+    );
+  };
+  const handlePayOrder = () => {
+    updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then(
+      (res) => {
+        if (res.err === 0) {
+          console.log(res);
+          setOpenModal(false);
+          setOpenModal(false);
+          setBookingInfo({
+            petName: "",
+            spaCode: "",
+            bookingSpaPrice: 0,
+            customerCode: "",
+            customerNote: "",
+            bookingDate: null,
+            bookingTime: "",
+            spaName: "",
+            size: "",
+            petType: "",
+          });
+          setInputCus("");
+          setOpenCustomerInfoForm(false);
+          setOpenTimeForm(false);
         }
+        setMessage(res.message);
+      },
+    );
+  };
 
-    const handleClose = () => {
-        setOpenModal(false);
-    }
+  const handleClose = () => {
+    setOpenModal(false);
+  };
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -289,7 +293,9 @@ export const BookingSpa = () => {
           />
         </FormControl>
         <FormControl>
-          <FormLabel className="font-bold text-black">Thú cưng là:</FormLabel>
+          <FormLabel className="mt-2 font-bold text-black">
+            Thú cưng là:
+          </FormLabel>
           <RadioGroup
             name="petType"
             value={bookingInfo.petType}
@@ -382,57 +388,66 @@ export const BookingSpa = () => {
         />
       )}
       {openCustomerInfoForm && (
-       <FormControl  sx={{
-        width: "85%",
-        ml: "auto",
-        mr: "auto",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        p: 5,
-      }} >
-      <FormLabel className="font-bold text-black">Email Khách hàng:</FormLabel>
-      <TextField
-        required
-        name="email"
-        onChange={handleChangeCustomerInfo}
-        variant="outlined"
-      />
-     <BigHoverTransformButton
-          onClick={handleConfirmBooking}
-          className="m-auto my-3"
+        <FormControl
+          sx={{
+            width: "85%",
+            ml: "auto",
+            mr: "auto",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            p: 5,
+          }}
         >
-          Xác nhận đặt lịch
-        </BigHoverTransformButton>
-    </FormControl>
+          <FormLabel className="font-bold text-black">
+            Email Khách hàng:
+          </FormLabel>
+          <TextField
+            required
+            name="email"
+            onChange={handleChangeCustomerInfo}
+            variant="outlined"
+          />
+          <BigHoverTransformButton
+            onClick={handleConfirmBooking}
+            className="m-auto my-3"
+          >
+            Xác nhận đặt lịch
+          </BigHoverTransformButton>
+        </FormControl>
       )}
-       <Modal
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        margin: 'auto',
-        alignItems: 'center',
-      }}
-      aria-labelledby="unstyled-modal-title"
-      aria-describedby="unstyled-modal-description"
-      open={openModal}
-      onClose={handleClose}
-      slots={{ backdrop: StyledBackdrop }}
-    >
-      <ModalContent sx={{ width: 600, display: 'flex', justifyContent: 'center' }}>
-        <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-        <p id="unstyled-modal-description">
-          Mã đơn hàng của bạn là: {order.purrPetCode}
-        </p>
-        <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-        <p id="unstyled-modal-description">
-          Tổng tiền: {order.bookingHomePrice}
-        </p>
-        <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
-        <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
-      </ModalContent>
-    </Modal>
-  
+      <Modal
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: "auto",
+          alignItems: "center",
+        }}
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={openModal}
+        onClose={handleClose}
+        slots={{ backdrop: StyledBackdrop }}
+      >
+        <ModalContent
+          sx={{ width: 600, display: "flex", justifyContent: "center" }}
+        >
+          <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
+          <p id="unstyled-modal-description">
+            Mã đơn hàng của bạn là: {order.purrPetCode}
+          </p>
+          <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
+          <p id="unstyled-modal-description">
+            Tổng tiền: {order.bookingHomePrice}
+          </p>
+          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+            Huỷ đơn hàng
+          </Button>
+          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
+            Thanh toán
+          </Button>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

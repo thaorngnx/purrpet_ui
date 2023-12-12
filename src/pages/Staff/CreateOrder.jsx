@@ -7,34 +7,32 @@ import { useEffect, useState } from "react";
 import { getCustomerByEmail } from "../../api/customer";
 
 export const CreateOrder = () => {
-  const [inputValue, setInputValue] = React.useState('khachle@gmail.com');
+  const [inputValue, setInputValue] = React.useState("khachle@gmail.com");
   const [customer, setCustomer] = React.useState({});
-  
+
   useEffect(() => {
-    getCustomerByEmail({email: inputValue}).then((res) => {
+    getCustomerByEmail({ email: inputValue }).then((res) => {
       if (res.err === 0) {
         setCustomer(res.data);
-      }else{
-      setInputValue('khachle@gmail.com');
+      } else {
+        setInputValue("khachle@gmail.com");
       }
     });
   }, [inputValue]);
   const handleOnchange = (e) => {
     setInputValue(e.target.value);
-  }
+  };
 
   return (
     <>
       <HeaderStaff />
-      <div style={{ display: 'flex', justifyContent: 'space-around'}}>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
         <SideNavStaff />
-        <Input placeholder="Enter email" onChange={handleOnchange}/>
+        <Input placeholder="Enter email" onChange={handleOnchange} />
       </div>
-      <div style={{ flex: '1', marginLeft: "6%" }}>
-      <GridProductOrder customer={customer}/>
+      <div style={{ flex: "1", marginLeft: "6%" }}>
+        <GridProductOrder customer={customer} />
       </div>
-     
-      
     </>
   );
 };
