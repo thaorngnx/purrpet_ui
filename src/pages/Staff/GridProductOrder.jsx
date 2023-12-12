@@ -16,6 +16,7 @@ import * as CONST from "../../constants";
 
 
 export const GridProductOrder = ({customer}) => {
+  console.log("khách mua hàng la: ",customer);
   const [productlist, setProductlist] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
   const [selectedProducts, setSelectedProducts] = React.useState([]);
@@ -43,7 +44,6 @@ export const GridProductOrder = ({customer}) => {
       return total + product.quantity;
     }, 0);
     setQuantity(quantity);
-    console.log(selectedProducts);
     fetchProducts();
   }, [inputValue, selectedProducts]);
 
@@ -149,10 +149,20 @@ export const GridProductOrder = ({customer}) => {
       productCode: productCode,
       quantity: quantities[index],
     }));
+    if(customer.address === undefined){
+      customer.address = {
+      street: "Số 1 Võ Văn Ngân" ,
+      ward: "Linh Chiểu",
+      district: "Thủ Đức",
+      province:"TP Hồ Chí Minh" ,
+      }
+    }
     const orderData = {
       orderItems: orderItems,
       customerCode: customer.purrPetCode,
+      customerAddress: customer.address,
     };
+    console.log("order data: ", orderData);
     createOrder(orderData)
       .then((res) => {
         setOrder(res.data);
@@ -161,6 +171,7 @@ export const GridProductOrder = ({customer}) => {
       .catch((err) => {
         console.log(err);
       }); 
+   
   };
   const handleCancelOrder = (purrPetCode) => {
     updateStatusOrder( purrPetCode, CONST.STATUS_ORDER.CANCEL
@@ -192,7 +203,7 @@ export const GridProductOrder = ({customer}) => {
         }}
         id="controllable-states-demo"
         options={productlist.map((product) => product.productName)}
-        sx={{ width: 600 }}
+        sx={{ width: 600, marginLeft: '5%' }}
         renderInput={(params) => (
           <TextField
             {...params}

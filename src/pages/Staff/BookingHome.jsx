@@ -10,13 +10,18 @@ import {
   Typography,
   Paper,
   Box,
-  Button
+  Button,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
 import { getHomestays } from "../../api/homestay";
 import { getMasterDatas } from "../../api/masterData";
-import { getCustomerByEmail } from "../../api/customer";
+import { getCustomerByEmail, createCustomer } from "../../api/customer";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -45,6 +50,8 @@ export const BookingHome = () => {
   const [customer, setCustomer] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [order, setOrder] = useState({});
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [nameValue, setNameValue] = useState("");
   const [maxDateCheckOut, setMaxDateCheckOut] = useState(
     dayjs().add(2, "year"),
   );
@@ -84,7 +91,7 @@ export const BookingHome = () => {
         if (res.err === 0) {
           setCustomer(res.data);
         }else{
-        setInputCus('khachle@gmail.com');
+          setShowNameInput(true);
         }
       });
     });
@@ -259,9 +266,12 @@ export const BookingHome = () => {
     });
   };
 
-  const handleChangeCustomerInfo = (event) => {
-    setInputCus(event.target.value);
+  const handleChangeCustomerInfo = (e) => {
+    if (e.key === "Enter") {
+      setInputCus(e.target.value);
+    }
   };
+
     const  handleCancelOrder = () => {
     updateStatusBookingHome(order.purrPetCode, CONST.STATUS_BOOKING.CANCEL).then((res) => {
         if (res.err === 0) {
@@ -281,7 +291,7 @@ export const BookingHome = () => {
               dateCheckOut: null,
               homePrice: 0,
             });
-            setInputCus('')
+            setInputCus("khachle@gmail.com");
             setOpenCustomerInfoForm(false);
         }
         setMessage(res.message);
@@ -307,7 +317,7 @@ export const BookingHome = () => {
                   dateCheckOut: null,
                   homePrice: 0,
                 });
-                setInputCus('')
+                setInputCus("khachle@gmail.com");
                 setOpenCustomerInfoForm(false);
                 
             }
@@ -318,7 +328,31 @@ export const BookingHome = () => {
     const handleClose = () => {
         setOpenModal(false);
     }
-
+    const handleNameChange = (e) => { 
+      setNameValue(e.target.value);
+    };
+  
+    const handleCloseDialog = () => {
+      setShowNameInput(false);
+    };
+  
+    const handleSubscribe = () => {
+      createCustomer({
+        name: nameValue,
+        email: inputCus,
+      }).then((res) => {
+        if (res.err === 0) {
+          setCustomer(res.data);
+        } else {
+          setInputCus("CUS_1");
+        }
+        setShowNameInput(false);
+  
+      });
+      setShowNameInput(false);
+    
+     
+    }
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%"}}
@@ -519,7 +553,7 @@ export const BookingHome = () => {
         <TextField
           required
           name="email"
-          onChange={handleChangeCustomerInfo}
+          onKeyDown={handleChangeCustomerInfo}
           variant="outlined"
         />
        <BigHoverTransformButton
@@ -560,7 +594,27 @@ export const BookingHome = () => {
         <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
       </ModalContent>
     </Modal>
-  
+    <Dialog open={showNameInput} onClose={handleCloseDialog}>
+           <DialogTitle>Subscribe</DialogTitle>
+           <DialogContent>
+             <DialogContentText>
+               Tên của khách là: 
+             </DialogContentText>
+             <TextField
+               autoFocus
+               margin="dense"
+               id="name"
+               label="name"
+               fullWidth
+               variant="standard"
+                onChange={handleNameChange}
+             />
+           </DialogContent>
+           <DialogActions>
+             <Button onClick={handleCloseDialog}>Cancel</Button>
+             <Button onClick={handleSubscribe}>Subscribe</Button>
+           </DialogActions>
+         </Dialog>
     </Box>
   );
 };

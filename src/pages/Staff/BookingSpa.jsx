@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -11,11 +12,16 @@ import {
   Paper,
   Box,
   Button,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
 import { getSpas } from "../../api/spa";
-import { getCustomerByEmail } from "../../api/customer";
+import { getCustomerByEmail, createCustomer } from "../../api/customer";
 import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
 import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
@@ -35,10 +41,13 @@ export const BookingSpa = () => {
   const [validSize, setValidSize] = useState([]);
   const [openTimeForm, setOpenTimeForm] = useState(false);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
-  const [inputCus, setInputCus] = useState("");
+  const [inputCus, setInputCus] = useState("khachle@gmail.com");
   const [customer, setCustomer] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [order, setOrder] = useState({});
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  
   const [bookingInfo, setBookingInfo] = useState({
     petName: "",
     spaCode: "",
@@ -70,7 +79,7 @@ export const BookingSpa = () => {
       if (res.err === 0) {
         setCustomer(res.data);
       } else {
-        setInputCus("khachle@gmail.com");
+        setShowNameInput(true);
       }
     });
   }, [inputCus]);
@@ -180,8 +189,10 @@ export const BookingSpa = () => {
       setMessage(res.message);
     });
   };
-  const handleChangeCustomerInfo = (event) => {
-    setInputCus(event.target.value);
+  const handleChangeCustomerInfo = (e) => {
+    if (e.key === "Enter") {
+      setInputCus(e.target.value);
+    }
   };
   const handleCancelOrder = () => {
     updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.CANCEL).then(
@@ -201,7 +212,7 @@ export const BookingSpa = () => {
             size: "",
             petType: "",
           });
-          setInputCus("");
+          setInputCus("khachle@gmail.com");
           setOpenCustomerInfoForm(false);
           setOpenTimeForm(false);
         }
@@ -228,7 +239,7 @@ export const BookingSpa = () => {
             size: "",
             petType: "",
           });
-          setInputCus("");
+          setInputCus("khachle@gmail.com");
           setOpenCustomerInfoForm(false);
           setOpenTimeForm(false);
         }
@@ -240,6 +251,32 @@ export const BookingSpa = () => {
   const handleClose = () => {
     setOpenModal(false);
   };
+
+  const handleNameChange = (e) => { 
+    setNameValue(e.target.value);
+  };
+
+  const handleCloseDialog = () => {
+    setShowNameInput(false);
+  };
+
+  const handleSubscribe = () => {
+    createCustomer({
+      name: nameValue,
+      email: inputCus,
+    }).then((res) => {
+      if (res.err === 0) {
+        setCustomer(res.data);
+      } else {
+        setInputCus("CUS_1");
+      }
+      setShowNameInput(false);
+
+    });
+    setShowNameInput(false);
+  
+   
+  }
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -405,15 +442,15 @@ export const BookingSpa = () => {
           <TextField
             required
             name="email"
-            onChange={handleChangeCustomerInfo}
+            onKeyDown={handleChangeCustomerInfo}
             variant="outlined"
           />
           <BigHoverTransformButton
-            onClick={handleConfirmBooking}
-            className="m-auto my-3"
-          >
-            Xác nhận đặt lịch
-          </BigHoverTransformButton>
+          onClick={handleConfirmBooking}
+          className="m-auto my-3" >
+          Xác nhận đặt lịch
+        </BigHoverTransformButton>
+
         </FormControl>
       )}
        <Modal
@@ -440,12 +477,33 @@ export const BookingSpa = () => {
         </p>
         <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
         <p id="unstyled-modal-description">
-          Tổng tiền: {order.bookingHomePrice}
+          Tổng tiền: {order.bookingSpaPrice}
         </p>
         <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
         <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
       </ModalContent>
     </Modal>
+    <Dialog open={showNameInput} onClose={handleCloseDialog}>
+           <DialogTitle>Subscribe</DialogTitle>
+           <DialogContent>
+             <DialogContentText>
+               Tên của khách là: 
+             </DialogContentText>
+             <TextField
+               autoFocus
+               margin="dense"
+               id="name"
+               label="name"
+               fullWidth
+               variant="standard"
+                onChange={handleNameChange}
+             />
+           </DialogContent>
+           <DialogActions>
+             <Button onClick={handleCloseDialog}>Cancel</Button>
+             <Button onClick={handleSubscribe}>Subscribe</Button>
+           </DialogActions>
+         </Dialog>
     </Box>
   );
 };
