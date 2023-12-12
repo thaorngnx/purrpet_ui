@@ -23,12 +23,16 @@ import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
 import { BookingSpaDetailPage } from "./pages/Customer/BookingSpaDetailPage";
 import { BookingHomeDetailPage } from "./pages/Customer/BookingHomeDetailPage";
+import { ManageOrder } from "./pages/Staff/ManageOrder";
 import { Order } from "./pages/Admin/Order";
 import { BookingSpa } from "./pages/Admin/BookingSpa";
 import { BookingHome } from "./pages/Admin/BookingHome";
 import { ProtectedAdminRoutes } from "./ProtectedAdminRoutes";
 import { ProtectedCustomerRoutes } from "./ProtectedCustomerRoutes";
 import { ProtectedStaffRoutes } from "./ProtectedStaffRoutes";
+import { CreateOrder } from "./pages/Staff/CreateOrder";
+import { DetailOrder } from "./pages/Staff/DetailOrder";
+import { CreateBookingHome } from "./pages/Staff/CreateBookingHome";
 import { useEffect } from "react";
 import { useStore } from "./zustand/store";
 import Cookie from "js-cookie";
@@ -103,6 +107,7 @@ function App() {
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}
+              
             />
           </Route>
         </Route>
@@ -125,6 +130,10 @@ function App() {
         <Route path="/staff">
           <Route path="login" element={<LoginStaff />} />
           <Route element={<ProtectedStaffRoutes />}></Route>
+          <Route path="createOrder" element={<CreateOrder />}/>
+          <Route path="order" element={<ManageOrder/>} />
+          <Route path="order/:orderCode" element={<DetailOrder/>} />
+          <Route path="createBookingHome" element={< CreateBookingHome/>} />
         </Route>
       </Routes>
     </BrowserRouter>

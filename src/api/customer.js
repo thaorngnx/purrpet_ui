@@ -57,3 +57,12 @@ export async function lookUpOrder(customer) {
     console.error(error);
   }
 }
+
+export async function getCustomerByEmail(email) {
+  try {
+    const response = await api.post(`customer/getbyEmail/`, email);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
