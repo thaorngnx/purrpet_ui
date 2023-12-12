@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { TiDeleteOutline } from "react-icons/ti";
 import { VscDiffAdded } from "react-icons/vsc";
-import { createOrder,updateStatusOrder } from '../../api/order';
+import { createOrder, updateStatusOrder } from '../../api/order';
 import { Modal } from '@mui/base/Modal';
 import {StyledBackdrop} from '../../components/Modal/StyledBackdrop';
 import { ModalContent } from '../../components/Modal/ModalContent';
@@ -16,7 +16,6 @@ import * as CONST from "../../constants";
 
 
 export const GridProductOrder = ({customer}) => {
-  console.log('khach hang mua', customer);
   const [productlist, setProductlist] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
   const [selectedProducts, setSelectedProducts] = React.useState([]);
@@ -150,12 +149,10 @@ export const GridProductOrder = ({customer}) => {
       productCode: productCode,
       quantity: quantities[index],
     }));
- 
     const orderData = {
       orderItems: orderItems,
       customerCode: customer.purrPetCode,
     };
-  
     createOrder(orderData)
       .then((res) => {
         setOrder(res.data);
@@ -163,20 +160,22 @@ export const GridProductOrder = ({customer}) => {
       })
       .catch((err) => {
         console.log(err);
-      });
-      
+      }); 
   };
   const handleCancelOrder = (purrPetCode) => {
     updateStatusOrder( purrPetCode, CONST.STATUS_ORDER.CANCEL
     ).then((res) => {
       setOpen(false);
+      setSelectedProducts([]);
+      setDisabled(true);
     })
   }
   const handlePayOrder = () => {
-    console.log(order.purrPetCode);
       updateStatusOrder( order.purrPetCode, CONST.STATUS_ORDER.PAID
       ).then((res) => {
         setOpen(false);
+        setSelectedProducts([]);
+        setDisabled(true);
       })
     }
   return (
@@ -233,7 +232,8 @@ export const GridProductOrder = ({customer}) => {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        margin: 'auto',
+        alignItems: 'center',
+        zIndex: 9999, // Set a higher z-index value
       }}
       aria-labelledby="unstyled-modal-title"
       aria-describedby="unstyled-modal-description"

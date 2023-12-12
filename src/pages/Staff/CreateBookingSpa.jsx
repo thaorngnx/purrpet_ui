@@ -1,16 +1,17 @@
 import * as React from "react";
 import { HeaderStaff } from "../../components/Header/HeaderStaff";
 import { SideNavStaff } from "../../components/Nav/SideNavStaff";
-import { BookingHome } from "./BookingHome";
+import { BookingSpa } from "./BookingSpa";
 
-export const CreateBookingHome = () => {
+export const CreateBookingSpa = () => {
   
+
   return (
     <>
       <HeaderStaff />
       <div style={{ display: 'flex'}}>
         <SideNavStaff />
-       <BookingHome/>
+       <BookingSpa/>
       </div>
     </>
   );
