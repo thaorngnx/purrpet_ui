@@ -71,7 +71,6 @@ export const ProductGrid = () => {
             inputProps={{
               className: "px-3 text-sm",
             }}
-            in
           >
             <MenuItem value={"price.asc"}>Giá tăng dần</MenuItem>
             <MenuItem value={"price.desc"}>Giá giảm dần</MenuItem>

@@ -8,25 +8,43 @@ import {
   ListItem,
   Divider,
   Pagination,
+  TextField,
+  FormControl,
+  FormLabel,
+  Tooltip,
 } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import * as CONST from "../../constants";
 import { useEffect, useState } from "react";
 import { getOrders } from "../../api/order";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
-import { MiniHoverButton } from "../Button/StyledButton";
+import {
+  MiniHoverButton,
+  MiniRemoveIconRoundXButton,
+} from "../Button/StyledButton";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 export const OrderHistory = () => {
   const [resOrders, setResOrders] = useState([]);
   const [tabOrder, setTabOrder] = useState(0);
   const [page, setPage] = useState(0);
+  const [searchKey, setSearchKey] = useState("");
+  const [rangeDate, setRangeDate] = useState({
+    fromDate: null,
+    toDate: null,
+  });
 
   useEffect(() => {
     const params = {
       limit: 10,
       page: page,
-      // key: categoryCode || searchKey,
-      // order: sort,
+      key: searchKey,
+      fromDate: rangeDate.fromDate,
+      toDate: rangeDate.toDate,
     };
     //api get order
     getOrders(params).then((res) => {
@@ -35,7 +53,7 @@ export const OrderHistory = () => {
         setResOrders(res);
       }
     });
-  }, [page]);
+  }, [page, searchKey, rangeDate]);
 
   const orders = resOrders.data;
   let totalPage = resOrders.totalPage;
@@ -53,11 +71,104 @@ export const OrderHistory = () => {
     setPage(value);
   };
 
+  const handleSearch = (event) => {
+    setSearchKey(event.target.value);
+  };
+
+  const handleFromDateChange = (date) => {
+    setRangeDate({
+      fromDate: date,
+      toDate: null,
+    });
+  };
+
+  const handleToDateChange = (date) => {
+    setRangeDate({
+      ...rangeDate,
+      toDate: date,
+    });
+  };
+
+  console.log("searchKey", searchKey);
+
   return (
     <>
       <Typography variant="h6" className="m-3 text-center text-lg font-bold">
         QUẢN LÝ ĐƠN HÀNG
       </Typography>
+      <Box className="mx-4 flex justify-between">
+        <FormControl className="flex w-1/2 flex-col pr-20">
+          <FormLabel className="mb-2 font-bold text-black">Tìm kiếm:</FormLabel>
+          <Box className="flex w-full flex-row items-center">
+            <TextField
+              id="outlined-basic"
+              placeholder="Nhập mã đơn hàng hoặc mã khách hàng"
+              variant="outlined"
+              value={searchKey}
+              onChange={handleSearch}
+              className="w-full"
+            />
+            {searchKey !== "" && (
+              <Tooltip title="Xóa từ khóa tìm kiếm" placement="top">
+                <MiniRemoveIconRoundXButton
+                  onClick={() => {
+                    setSearchKey("");
+                  }}
+                >
+                  <HighlightOffIcon />
+                </MiniRemoveIconRoundXButton>
+              </Tooltip>
+            )}
+          </Box>
+        </FormControl>
+        <FormControl className="flex w-1/2 flex-col pl-10">
+          <FormLabel className="mb-2 font-bold text-black">
+            Thời gian đặt hàng:
+          </FormLabel>
+          <Box className="flex flex-row items-center">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Từ ngày"
+                name="fromDate"
+                value={rangeDate.fromDate}
+                onChange={handleFromDateChange}
+                views={["year", "month", "day"]}
+                format="DD/MM/YYYY"
+                maxDate={dayjs()}
+                className="mr-5"
+              />
+              <DatePicker
+                label="Đến ngày"
+                name="toDate"
+                value={rangeDate.toDate}
+                onChange={handleToDateChange}
+                views={["year", "month", "day"]}
+                format="DD/MM/YYYY"
+                minDate={dayjs(rangeDate.fromDate)}
+                shouldDisableDate={(date) => {
+                  return dayjs(date).isBefore(dayjs(rangeDate.fromDate));
+                }}
+                maxDate={dayjs()}
+                disabled={rangeDate.fromDate === null}
+              />
+            </LocalizationProvider>
+            {rangeDate.toDate !== null && (
+              <Tooltip title="Xóa tìm kiếm theo ngày" placement="top">
+                <MiniRemoveIconRoundXButton
+                  onClick={() => {
+                    setRangeDate({
+                      fromDate: null,
+                      toDate: null,
+                    });
+                  }}
+                >
+                  <HighlightOffIcon />
+                </MiniRemoveIconRoundXButton>
+              </Tooltip>
+            )}
+          </Box>
+        </FormControl>
+      </Box>
       <Box className="flex flex-col">
         <Tabs
           value={tabOrder}

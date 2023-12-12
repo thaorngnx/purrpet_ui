@@ -59,3 +59,13 @@ export const BigHoverTransformButton = styled(Button)({
     color: "white",
   },
 });
+
+export const MiniRemoveIconRoundXButton = styled(Button)({
+  width: "20px",
+  height: "20px",
+  minWidth: "20px",
+  minHeight: "20px",
+  borderRadius: "50%",
+  marginLeft: "10px",
+  color: "black",
+});
