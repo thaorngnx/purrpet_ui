@@ -534,8 +534,12 @@ export const BookingHome = () => {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        margin: 'auto',
         alignItems: 'center',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 9999,
       }}
       aria-labelledby="unstyled-modal-title"
       aria-describedby="unstyled-modal-description"

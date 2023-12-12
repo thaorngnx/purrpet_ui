@@ -416,38 +416,36 @@ export const BookingSpa = () => {
           </BigHoverTransformButton>
         </FormControl>
       )}
-      <Modal
+       <Modal
         style={{
-          display: "flex",
-          justifyContent: "center",
-          margin: "auto",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 9999,
         }}
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
-        open={openModal}
-        onClose={handleClose}
-        slots={{ backdrop: StyledBackdrop }}
-      >
-        <ModalContent
-          sx={{ width: 600, display: "flex", justifyContent: "center" }}
-        >
-          <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-          <p id="unstyled-modal-description">
-            Mã đơn hàng của bạn là: {order.purrPetCode}
-          </p>
-          <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-          <p id="unstyled-modal-description">
-            Tổng tiền: {order.bookingHomePrice}
-          </p>
-          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
-            Huỷ đơn hàng
-          </Button>
-          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
-            Thanh toán
-          </Button>
-        </ModalContent>
-      </Modal>
+      aria-labelledby="unstyled-modal-title"
+      aria-describedby="unstyled-modal-description"
+      open={openModal}
+      onClose={handleClose}
+      slots={{ backdrop: StyledBackdrop }}
+    >
+      <ModalContent sx={{ width: 600, display: 'flex', justifyContent: 'center' }}>
+        <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
+        <p id="unstyled-modal-description">
+          Mã đơn hàng của bạn là: {order.purrPetCode}
+        </p>
+        <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
+        <p id="unstyled-modal-description">
+          Tổng tiền: {order.bookingHomePrice}
+        </p>
+        <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
+        <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
+      </ModalContent>
+    </Modal>
     </Box>
   );
 };
