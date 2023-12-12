@@ -1,7 +1,26 @@
+import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
+import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
+import { OrderHistory } from "../../components/Admin/OrderHistory";
+import { Box } from "@mui/material";
+
 export const Order = () => {
   return (
-    <div>
-      <h1>Order</h1>
-    </div>
+    <>
+      <HeaderAdmin />
+      <Box sx={{ display: "flex" }}>
+        <SideNavAdmin />
+        <Box
+          sx={{
+            display: "block",
+            flexDirection: "column",
+            justifyContent: "center",
+            width: "100%",
+            marginBottom: "30px",
+          }}
+        >
+          <OrderHistory />
+        </Box>
+      </Box>
+    </>
   );
 };

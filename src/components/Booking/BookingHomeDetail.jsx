@@ -93,7 +93,7 @@ export const BookingHomeDetail = () => {
     console.log("cancel");
     updateStatusBookingHome(
       bookingHome.purrPetCode,
-      CONST.STATUS_ORDER.CANCEL,
+      CONST.STATUS_BOOKING.CANCEL,
     ).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -150,11 +150,11 @@ export const BookingHomeDetail = () => {
           </Typography>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
-              <span className="font-bold">Ngày check-in: </span>
+              <span className="font-bold">Ngày vào: </span>
               {formatDateTime(bookingHome.dateCheckIn)}
             </Typography>
             <Typography variant="body1">
-              <span className="font-bold">Ngày check-out: </span>
+              <span className="font-bold">Ngày ra: </span>
               {formatDateTime(bookingHome.dateCheckOut)}
             </Typography>
           </Box>
@@ -233,19 +233,19 @@ export const BookingHomeDetail = () => {
           <Typography variant="body1" className="text-end text-lg font-bold">
             Tổng tiền: {formatCurrency(bookingHome.bookingHomePrice)}
           </Typography>
-          <Box className="flex flex-row justify-end">
-            {bookingHome.status === "Chờ thanh toán" && (
+          <Box className="mt-3 flex flex-row justify-end">
+            {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>
                 <Button
                   variant="contained"
-                  className="mr-3 mt-3 bg-black"
+                  className="mr-3 bg-black"
                   onClick={handleChangeStatus}
                 >
                   Hủy đơn
                 </Button>
                 <Button
                   variant="contained"
-                  className="ml-3 mt-3 bg-black"
+                  className="ml-3 bg-black"
                   onClick={handlePaymentClick}
                 >
                   Thanh toán

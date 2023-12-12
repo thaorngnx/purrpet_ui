@@ -79,12 +79,15 @@ export const BookingSpaDetail = () => {
     });
   }, []);
 
-  const handlePaymentClick = () => {
-    console.log("payment");
-    createPaymentUrl({ orderCode: bookingSpa.purrPetCode }).then((res) => {
+  const handleUseServiceClick = () => {
+    console.log("use service");
+    updateStatusBookingSpa(
+      bookingSpa.purrPetCode,
+      CONST.STATUS_BOOKING.CHECKIN,
+    ).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        window.location.href = res.data.paymentUrl;
+        window.location.reload();
       }
     });
   };
@@ -214,17 +217,21 @@ export const BookingSpaDetail = () => {
               <>
                 <Button
                   variant="contained"
-                  className="mr-3 bg-black"
+                  className="bg-black"
                   onClick={handleChangeStatus}
                 >
                   Hủy đơn
                 </Button>
+              </>
+            )}
+            {bookingSpa.status === CONST.STATUS_BOOKING.PAID && (
+              <>
                 <Button
                   variant="contained"
-                  className="ml-3 bg-black"
-                  onClick={handlePaymentClick}
+                  className="bg-black"
+                  onClick={handleUseServiceClick}
                 >
-                  Thanh toán
+                  Đã sử dụng dịch vụ
                 </Button>
               </>
             )}

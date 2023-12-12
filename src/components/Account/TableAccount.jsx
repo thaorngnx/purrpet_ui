@@ -30,6 +30,29 @@ import { ChangePassword } from "./ChangePassword";
 import * as CONST from "../../constants";
 
 export const TableAccount = () => {
+  const [rows, setRows] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    getAccounts().then((res) => {
+      console.log(res.data);
+      setRows(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   const columns = [
     {
       field: "purrPetCode",
@@ -221,29 +244,6 @@ export const TableAccount = () => {
       });
     });
   };
-
-  const [rows, setRows] = useState([]);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [openChangePassword, setOpenChangePassword] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState(null);
-  const [alert, setAlert] = useState(false);
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getAccounts().then((res) => {
-      console.log(res.data);
-      setRows(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>

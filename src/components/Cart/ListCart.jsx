@@ -250,7 +250,7 @@ export const ListCart = () => {
                       <img
                         src={item.images[0]?.path}
                         alt=""
-                        className="h-[100px] w-[100px] object-cover"
+                        className="h-[100px] w-[100px] object-contain"
                       />
                     </Box>
                     <Typography variant="body1" className="w-1/3 p-2">

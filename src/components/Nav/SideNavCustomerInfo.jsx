@@ -16,7 +16,7 @@ export const SideNavCustomerInfo = () => {
     navigate("/lookup");
   };
   return (
-    <Box className="flex min-h-screen w-1/4 flex-col p-2 pt-5 shadow-md shadow-zinc-400">
+    <Box className="flex min-h-screen w-1/6 min-w-[200px] flex-col p-2 pt-5 shadow-md shadow-zinc-400">
       <Link
         to={"/customer"}
         underline="none"

@@ -189,7 +189,7 @@ export const CustomerInfo = () => {
   // });
 
   return (
-    <Box className=" flex min-h-screen w-3/4 flex-col items-center">
+    <Box className=" flex min-h-screen w-5/6 flex-col items-center">
       <Typography variant="h6" className="m-3 ml-5 font-bold">
         Thông tin cá nhân
       </Typography>

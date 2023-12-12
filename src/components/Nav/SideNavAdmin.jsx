@@ -21,6 +21,10 @@ import PetsIcon from "@mui/icons-material/Pets";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CategoryIcon from "@mui/icons-material/Category";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -72,7 +76,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const NavList = [
+const NavListData = [
   { icon: <HomeIcon />, text: "Trang chủ", href: "/admin" },
   {
     icon: <SupervisorAccountIcon />,
@@ -94,6 +98,20 @@ const NavList = [
   },
 ];
 
+const NavListManage = [
+  { icon: <ListAltIcon />, text: "Quản lý đơn hàng", href: "/admin/order" },
+  {
+    icon: <LibraryBooksIcon />,
+    text: "Quản lý lịch đặt spa",
+    href: "/admin/bookingSpa",
+  },
+  {
+    icon: <StickyNote2Icon />,
+    text: "Quản lý đặt phòng",
+    href: "/admin/bookingHome",
+  },
+];
+
 export const SideNavAdmin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -110,10 +128,10 @@ export const SideNavAdmin = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {NavList.map((nav) => (
+          {NavListData.map((nav) => (
             <ListItem
               key={nav.text}
-              sx={{ display: "block" }}
+              sx={{ display: "block", p: 0 }}
               onClick={() => {
                 navigate(nav.href);
               }}
@@ -145,6 +163,41 @@ export const SideNavAdmin = () => {
           ))}
         </List>
         <Divider />
+        <List>
+          {NavListManage.map((nav) => (
+            <ListItem
+              key={nav.text}
+              sx={{ display: "block", p: 0 }}
+              onClick={() => {
+                navigate(nav.href);
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tooltip title={nav.text} placement="right">
+                    {nav.icon}
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText
+                  primary={nav.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
       </Drawer>
     </Box>
   );

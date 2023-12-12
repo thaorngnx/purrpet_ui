@@ -11,14 +11,14 @@ import {
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../api/order";
+import { getBookingHomes } from "../../api/bookingHome";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { MiniHoverButton } from "../Button/StyledButton";
 
-export const OrderHistory = () => {
-  const [resOrders, setResOrders] = useState([]);
-  const [tabOrder, setTabOrder] = useState(0);
+export const HomeHistory = () => {
+  const [resBHomes, setResBHomes] = useState([]);
+  const [tabHome, setTabHome] = useState(0);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
@@ -28,44 +28,44 @@ export const OrderHistory = () => {
       // key: categoryCode || searchKey,
       // order: sort,
     };
-    //api get order
-    getOrders(params).then((res) => {
+    //api get booking home
+    getBookingHomes(params).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        setResOrders(res);
+        setResBHomes(res);
       }
     });
   }, [page]);
 
-  const orders = resOrders.data;
-  let totalPage = resOrders.totalPage;
+  const bHomes = resBHomes.data;
+  let totalPage = resBHomes.totalPage;
 
-  let orderByStatus = [];
+  let bHomeByStatus = [];
 
-  if (tabOrder === 0) {
-    orderByStatus = orders;
+  if (tabHome === 0) {
+    bHomeByStatus = bHomes;
   } else {
-    const status = Object.values(CONST.STATUS_ORDER)[tabOrder - 1];
-    orderByStatus = orders?.filter((order) => order.status === status) || [];
+    const status = Object.values(CONST.STATUS_BOOKING)[tabHome - 1];
+    bHomeByStatus = bHomes?.filter((bHome) => bHome.status === status) || [];
   }
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
   return (
-    <Paper className="mb-10 w-[97%]">
+    <>
       <Typography variant="h6" className="m-3 text-center text-lg font-bold">
-        ĐƠN HÀNG
+        QUẢN LÝ ĐẶT PHÒNG
       </Typography>
       <Box className="flex flex-col">
         <Tabs
-          value={tabOrder}
+          value={tabHome}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
           onChange={(event, newValue) => {
-            setTabOrder(newValue);
+            setTabHome(newValue);
           }}
         >
           <Tab
@@ -74,7 +74,7 @@ export const OrderHistory = () => {
               fontSize: "13px",
             }}
           />
-          {Object.values(CONST.STATUS_ORDER).map((value) => {
+          {Object.values(CONST.STATUS_BOOKING).map((value) => {
             return (
               <Tab
                 label={value}
@@ -89,84 +89,108 @@ export const OrderHistory = () => {
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
             <ListItem key="title" className="flex">
-              <Typography variant="body1" className="w-1/5 font-bold">
-                Mã ĐH
+              <Typography variant="body1" className="w-1/6 font-bold">
+                Mã đặt phòng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
-                Ngày đặt
+                Ngày vào
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
-                SL sản phẩm
+                Ngày ra
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
+              >
+                Tên thú cưng
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
+                Mã phòng
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
               >
                 Tổng tiền
               </Typography>
-              {tabOrder === 0 && (
+              {tabHome === 0 && (
                 <Typography
                   variant="body1"
-                  className="w-1/5 text-center font-bold"
+                  className="w-1/6 text-center font-bold"
                 >
                   Trạng thái
                 </Typography>
               )}
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
                 Thao tác
               </Typography>
             </ListItem>
-            {orderByStatus?.length > 0 &&
-              orderByStatus.map((order) => {
+            {bHomeByStatus?.length > 0 &&
+              bHomeByStatus.map((bookingHome) => {
                 return (
                   <ListItem
-                    key={order.purrPetCode}
+                    key={bookingHome.purrPetCode}
                     className="flex justify-center"
                   >
                     <Box className="flex w-full flex-col">
                       <Box className="mb-2 flex flex-row items-center">
-                        <Typography variant="body1" className="w-1/5 px-1">
-                          {order.purrPetCode}
+                        <Typography variant="body1" className="w-1/6 px-1">
+                          {bookingHome.purrPetCode}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {formatDateTime(order.createdAt)}
+                          {formatDateTime(bookingHome.dateCheckIn)}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {order.orderItems.length}
+                          {formatDateTime(bookingHome.dateCheckOut)}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-right"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {formatCurrency(order.orderPrice)}
+                          {bookingHome.petName}
                         </Typography>
-                        {tabOrder === 0 && (
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-center"
+                        >
+                          {bookingHome.homeCode}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-right"
+                        >
+                          {formatCurrency(bookingHome.bookingHomePrice)}
+                        </Typography>
+                        {tabHome === 0 && (
                           <Typography
                             variant="body1"
-                            className="w-1/5 px-1 text-center"
+                            className="w-1/6 px-1 text-center"
                           >
-                            {order.status}
+                            {bookingHome.status}
                           </Typography>
                         )}
-                        <Box className="flex w-1/5 justify-center px-1 text-center">
+                        <Box className="flex w-1/6 justify-center px-1 text-center">
                           <MiniHoverButton
                             component={Link}
-                            to={`/order/${order.purrPetCode}`}
+                            to={`${bookingHome.purrPetCode}`}
                           >
                             Chi tiết
                           </MiniHoverButton>
@@ -180,16 +204,16 @@ export const OrderHistory = () => {
           </List>
         </Box>
       </Box>
-      {orderByStatus?.length === 0 && (
+      {bHomeByStatus?.length === 0 && (
         <Typography variant="h6" className="m-3 text-center text-base italic">
           Không có dữ liệu
         </Typography>
       )}
-      {totalPage > 0 && (
+      {totalPage > 1 && (
         <Box className="m-2 flex justify-end">
           <Pagination count={totalPage} onChange={handleChangePage} />
         </Box>
       )}
-    </Paper>
+    </>
   );
 };

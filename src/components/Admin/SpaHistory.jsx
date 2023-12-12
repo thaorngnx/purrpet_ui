@@ -1,26 +1,26 @@
 import {
   Box,
   Typography,
-  Paper,
   Tabs,
   Tab,
   List,
   ListItem,
   Divider,
+  Paper,
   Pagination,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { useEffect, useState } from "react";
-import { getOrders } from "../../api/order";
+import { getBookingSpas } from "../../api/bookingSpa";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { MiniHoverButton } from "../Button/StyledButton";
 
-export const OrderHistory = () => {
-  const [resOrders, setResOrders] = useState([]);
-  const [tabOrder, setTabOrder] = useState(0);
+export const SpaHistory = () => {
+  const [resBSpas, setResBSpas] = useState([]);
+  const [tabSpa, setTabSpa] = useState(0);
   const [page, setPage] = useState(0);
-
+  // const [sort, setSort] = useState("asc");
   useEffect(() => {
     const params = {
       limit: 10,
@@ -28,25 +28,25 @@ export const OrderHistory = () => {
       // key: categoryCode || searchKey,
       // order: sort,
     };
-    //api get order
-    getOrders(params).then((res) => {
+    //api get booking spa
+    getBookingSpas(params).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        setResOrders(res);
+        setResBSpas(res);
       }
     });
   }, [page]);
 
-  const orders = resOrders.data;
-  let totalPage = resOrders.totalPage;
+  const bSpas = resBSpas.data;
+  let totalPage = resBSpas.totalPage;
 
-  let orderByStatus = [];
+  let bSpaByStatus = [];
 
-  if (tabOrder === 0) {
-    orderByStatus = orders;
+  if (tabSpa === 0) {
+    bSpaByStatus = bSpas;
   } else {
-    const status = Object.values(CONST.STATUS_ORDER)[tabOrder - 1];
-    orderByStatus = orders?.filter((order) => order.status === status) || [];
+    const status = Object.values(CONST.STATUS_BOOKING)[tabSpa - 1];
+    bSpaByStatus = bSpas?.filter((bSpa) => bSpa.status === status) || [];
   }
 
   const handleChangePage = (event, value) => {
@@ -54,18 +54,18 @@ export const OrderHistory = () => {
   };
 
   return (
-    <Paper className="mb-10 w-[97%]">
-      <Typography variant="h6" className="m-3 text-center text-lg font-bold">
-        ĐƠN HÀNG
+    <>
+      <Typography variant="h6" className="m-3 text-center text-xl font-bold">
+        QUẢN LÝ ĐẶT LỊCH SPA
       </Typography>
       <Box className="flex flex-col">
         <Tabs
-          value={tabOrder}
+          value={tabSpa}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
           onChange={(event, newValue) => {
-            setTabOrder(newValue);
+            setTabSpa(newValue);
           }}
         >
           <Tab
@@ -74,7 +74,7 @@ export const OrderHistory = () => {
               fontSize: "13px",
             }}
           />
-          {Object.values(CONST.STATUS_ORDER).map((value) => {
+          {Object.values(CONST.STATUS_BOOKING).map((value) => {
             return (
               <Tab
                 label={value}
@@ -89,84 +89,97 @@ export const OrderHistory = () => {
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
             <ListItem key="title" className="flex">
-              <Typography variant="body1" className="w-1/5 font-bold">
-                Mã ĐH
+              <Typography variant="body1" className="w-1/6 font-bold">
+                Mã đặt lịch
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
-                Ngày đặt
+                Giờ hẹn
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
-                SL sản phẩm
+                Tên thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
+              >
+                Mã spa
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
               >
                 Tổng tiền
               </Typography>
-              {tabOrder === 0 && (
+              {tabSpa === 0 && (
                 <Typography
                   variant="body1"
-                  className="w-1/5 text-center font-bold"
+                  className="w-1/6 text-center font-bold"
                 >
                   Trạng thái
                 </Typography>
               )}
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
                 Thao tác
               </Typography>
             </ListItem>
-            {orderByStatus?.length > 0 &&
-              orderByStatus.map((order) => {
+            {bSpaByStatus?.length > 0 &&
+              bSpaByStatus.map((bookingSpa) => {
                 return (
                   <ListItem
-                    key={order.purrPetCode}
+                    key={bookingSpa.purrPetCode}
                     className="flex justify-center"
                   >
                     <Box className="flex w-full flex-col">
                       <Box className="mb-2 flex flex-row items-center">
-                        <Typography variant="body1" className="w-1/5 px-1">
-                          {order.purrPetCode}
+                        <Typography variant="body1" className="w-1/6 px-1">
+                          {bookingSpa.purrPetCode}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {formatDateTime(order.createdAt)}
+                          {bookingSpa.bookingTime}{" "}
+                          {formatDateTime(bookingSpa.bookingDate)}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {order.orderItems.length}
+                          {bookingSpa.petName}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-right"
+                          className="w-1/6 px-1 text-center"
                         >
-                          {formatCurrency(order.orderPrice)}
+                          {bookingSpa.spaCode}
                         </Typography>
-                        {tabOrder === 0 && (
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-right"
+                        >
+                          {formatCurrency(bookingSpa.bookingSpaPrice)}
+                        </Typography>
+                        {tabSpa === 0 && (
                           <Typography
                             variant="body1"
-                            className="w-1/5 px-1 text-center"
+                            className="w-1/6 text-center"
                           >
-                            {order.status}
+                            {bookingSpa.status}
                           </Typography>
                         )}
-                        <Box className="flex w-1/5 justify-center px-1 text-center">
+                        <Box className="flex w-1/6 justify-center px-1 text-center">
                           <MiniHoverButton
                             component={Link}
-                            to={`/order/${order.purrPetCode}`}
+                            to={`${bookingSpa.purrPetCode}`}
                           >
                             Chi tiết
                           </MiniHoverButton>
@@ -180,7 +193,7 @@ export const OrderHistory = () => {
           </List>
         </Box>
       </Box>
-      {orderByStatus?.length === 0 && (
+      {bSpaByStatus?.length === 0 && (
         <Typography variant="h6" className="m-3 text-center text-base italic">
           Không có dữ liệu
         </Typography>
@@ -190,6 +203,6 @@ export const OrderHistory = () => {
           <Pagination count={totalPage} onChange={handleChangePage} />
         </Box>
       )}
-    </Paper>
+    </>
   );
 };

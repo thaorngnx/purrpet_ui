@@ -20,7 +20,7 @@ export const ProductPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <Box className="mt-4 flex flex-row">
+      <Box className="mt-4 flex flex-row align-top">
         <SideNavCategoryCustomer />
         <Box className="w-4/5 flex-col">
           <Typography variant="h6" className="text-center font-sans font-bold">

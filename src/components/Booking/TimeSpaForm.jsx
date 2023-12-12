@@ -1,5 +1,5 @@
 import {
-  Button,
+  Box,
   FormControl,
   FormLabel,
   MenuItem,
@@ -13,6 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { getAvailableTime } from "../../api/bookingSpa";
+import { BigHoverTransformButton } from "../Button/StyledButton";
 
 export const TimeSpaForm = ({
   bookingInfo,
@@ -65,6 +66,7 @@ export const TimeSpaForm = ({
         display: "flex",
         flexDirection: "column",
         p: 5,
+        mb: 5,
       }}
     >
       <Typography
@@ -76,12 +78,13 @@ export const TimeSpaForm = ({
         Thời gian đặt lịch
       </Typography>
       <FormControl>
-        <FormLabel className="flex font-bold text-black">
+        <FormLabel className="mb-3 flex font-bold text-black">
           Chọn giờ đặt lịch:
         </FormLabel>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             name="bookingDate"
+            label="Ngày hẹn"
             value={bookingInfo.bookingDate}
             onChange={handleBookingDateChange}
             views={["year", "month", "day"]}
@@ -89,18 +92,20 @@ export const TimeSpaForm = ({
             minDate={dayjs()}
           />
         </LocalizationProvider>
-        {openTimePicker && validTime && validTime.length === 0 && (
-          <Typography variant="body1" className="text-red-500">
-            Hết chỗ
+        {bookingInfo.bookingDate && validTime && validTime.length === 0 && (
+          <Typography variant="body1" className="mt-3 text-red-500">
+            Đã hết giờ trống trong ngày này. Vui lòng chọn ngày khác.
           </Typography>
         )}
-        {openTimePicker && validTime && validTime.length > 0 && (
+        {bookingInfo.bookingDate && validTime && validTime.length > 0 && (
           <TextField
             select
             required
+            label="Giờ hẹn"
             name="bookingTime"
             value={bookingInfo.bookingTime}
             onChange={handleChangeBookingTime}
+            className="my-3"
           >
             {validTime &&
               validTime.map((time) => (
@@ -111,15 +116,15 @@ export const TimeSpaForm = ({
           </TextField>
         )}
       </FormControl>
-      {!openCustomerInfoForm && (
-        <Button
-          variant="outlined"
-          className="w-fit"
-          onClick={handleOpenCustomerInfoForm}
-        >
-          Tiếp tục
-        </Button>
-      )}
+      {!openCustomerInfoForm &&
+        bookingInfo.bookingDate &&
+        bookingInfo.bookingTime !== "" && (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <BigHoverTransformButton onClick={handleOpenCustomerInfoForm}>
+              Tiếp tục
+            </BigHoverTransformButton>
+          </Box>
+        )}
     </Paper>
   );
 };

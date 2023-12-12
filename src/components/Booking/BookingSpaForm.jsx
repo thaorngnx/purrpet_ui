@@ -10,7 +10,6 @@ import {
   Typography,
   Paper,
   Box,
-  Button,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
@@ -24,6 +23,45 @@ import { formatCurrency } from "../../utils/formatData";
 
 export const BookingSpaForm = () => {
   const navigate = useNavigate();
+
+  const [error, setError] = useState({});
+  const [message, setMessage] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [allSpas, setAllSpas] = useState([]);
+  const [validSpas, setValidSpas] = useState([]);
+  const [validSize, setValidSize] = useState([]);
+  const [openTimeForm, setOpenTimeForm] = useState(false);
+  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
+  const [showBtnConfirmBook, setShowBtnConfirmBook] = useState(false);
+  const [bookingInfo, setBookingInfo] = useState({
+    petName: "",
+    spaCode: "",
+    bookingSpaPrice: 0,
+    customerCode: "",
+    customerNote: "",
+    bookingDate: null,
+    bookingTime: "",
+    spaName: "",
+    size: "",
+    petType: "",
+  });
+
+  useEffect(() => {
+    getCategories({
+      categoryType: CONST.CATEGORY_TYPE.SPA,
+      status: CONST.STATUS.ACTIVE,
+    }).then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+    getSpas({
+      status: CONST.STATUS.ACTIVE,
+    }).then((res) => {
+      console.log(res.data);
+      setAllSpas(res.data);
+    });
+  }, []);
+
   const handleChangeBookingInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -65,7 +103,6 @@ export const BookingSpaForm = () => {
       }
       setValidSize(validSizes);
       setValidSpas(validSpas);
-      setSizeVisible(true);
       setBookingInfo({
         ...bookingInfo,
         petType: event.target.value,
@@ -77,7 +114,6 @@ export const BookingSpaForm = () => {
       const size = categories.find(
         (category) => category.categoryName === event.target.value,
       );
-      setPackageVisible(true);
       setValidSpas(
         allSpas.filter(
           (spa) =>
@@ -88,19 +124,21 @@ export const BookingSpaForm = () => {
       setBookingInfo({
         ...bookingInfo,
         [event.target.name]: event.target.value,
+        spaName: "",
       });
     } else {
       setBookingInfo({
         ...bookingInfo,
         [event.target.name]: event.target.value,
-        size: "",
-        spaName: "",
-        bookingSpaPrice: 0,
       });
     }
   };
 
   const handleOpenTimeForm = () => {
+    if (bookingInfo.petName === "") {
+      setError({ ...error, petName: true });
+      return;
+    }
     setOpenTimeForm(true);
   };
 
@@ -148,46 +186,6 @@ export const BookingSpaForm = () => {
     });
   };
 
-  const [error, setError] = useState({});
-  const [message, setMessage] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [allSpas, setAllSpas] = useState([]);
-  const [validSpas, setValidSpas] = useState([]);
-  const [validSize, setValidSize] = useState([]);
-  const [sizeVisible, setSizeVisible] = useState(false);
-  const [packageVisible, setPackageVisible] = useState(false);
-  const [openTimeForm, setOpenTimeForm] = useState(false);
-  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
-  const [showBtnConfirmBook, setShowBtnConfirmBook] = useState(false);
-  const [bookingInfo, setBookingInfo] = useState({
-    petName: "",
-    spaCode: "",
-    bookingSpaPrice: 0,
-    customerCode: "",
-    customerNote: "",
-    bookingDate: "",
-    bookingTime: "",
-    spaName: "",
-    size: "",
-    petType: "",
-  });
-
-  useEffect(() => {
-    getCategories({
-      categoryType: CONST.CATEGORY_TYPE.SPA,
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
-    });
-    getSpas({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
-      console.log(res.data);
-      setAllSpas(res.data);
-    });
-  }, []);
-
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column" }}
@@ -209,6 +207,7 @@ export const BookingSpaForm = () => {
           display: "flex",
           flexDirection: "column",
           p: 5,
+          mb: 5,
         }}
       >
         <Typography
@@ -220,7 +219,9 @@ export const BookingSpaForm = () => {
           Thông tin thú cưng
         </Typography>
         <FormControl>
-          <FormLabel className="font-bold text-black">Tên thú cưng:</FormLabel>
+          <FormLabel className="mb-2 font-bold text-black">
+            Tên thú cưng:
+          </FormLabel>
           <TextField
             required
             name="petName"
@@ -229,6 +230,12 @@ export const BookingSpaForm = () => {
             variant="outlined"
             error={error.petName}
             helperText={error.petName && "Tên thú cưng không được để trống"}
+            focused={error.petName}
+            onBlur={() => {
+              if (bookingInfo.petName === "") {
+                setError({ ...error, petName: true });
+              }
+            }}
           />
         </FormControl>
         <FormControl>
@@ -249,7 +256,7 @@ export const BookingSpaForm = () => {
             ))}
           </RadioGroup>
         </FormControl>
-        {sizeVisible && (
+        {bookingInfo.petType && (
           <FormControl>
             <FormLabel className="font-bold text-black">
               Cân nặng của thú cưng:
@@ -273,7 +280,7 @@ export const BookingSpaForm = () => {
           </FormControl>
         )}
 
-        {packageVisible && (
+        {bookingInfo.size && (
           <FormControl>
             <FormLabel className="font-bold text-black">
               Chọn gói dịch vụ:
@@ -297,20 +304,24 @@ export const BookingSpaForm = () => {
           </FormControl>
         )}
 
-        <Typography
-          variant="body1"
-          name="bookingSpaPrice"
-          className="mt-3 flex justify-end font-bold"
-        >
-          Tổng tiền: {formatCurrency(bookingInfo.bookingSpaPrice)}
-        </Typography>
-        {!openTimeForm && (
-          <BigHoverTransformButton
-            onClick={handleOpenTimeForm}
-            className="m-auto mt-5"
-          >
-            Tiếp tục
-          </BigHoverTransformButton>
+        {bookingInfo.spaName && (
+          <>
+            <Typography
+              variant="body1"
+              name="bookingSpaPrice"
+              className="mt-3 flex justify-end font-bold"
+            >
+              Tổng tiền: {formatCurrency(bookingInfo.bookingSpaPrice)}
+            </Typography>
+            {!openTimeForm && (
+              <BigHoverTransformButton
+                onClick={handleOpenTimeForm}
+                className="m-auto mt-5"
+              >
+                Tiếp tục
+              </BigHoverTransformButton>
+            )}
+          </>
         )}
       </Paper>
       {openTimeForm && (

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   TextField,
   FormControl,
   FormLabel,
   Typography,
   Paper,
-  Button,
+  Box,
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
@@ -14,6 +14,44 @@ import { BigHoverFitContentButton } from "../Button/StyledButton";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
+
+  const [error, setError] = useState({});
+  const [otpClick, setOtpClick] = useState(false);
+  const [otpValid, setOtpValid] = useState(false);
+  const [existCustomer, setExistCustomer] = useState(false);
+  const [editInfo, setEditInfo] = useState(true);
+  //backup customer info when cancel edit
+  const [backupCustomerInfo, setBackupCustomerInfo] = useState({});
+  const [customerInfo, setCustomerInfo] = useState({
+    customerPhone: "",
+    otp: "",
+    customerName: "",
+    customerEmail: "",
+    customerNote: "",
+    customerCode: "",
+  });
+
+  useEffect(() => {
+    if (customerState != null) {
+      customer({ ...customerInfo, customerCode: customerState.purrPetCode });
+      setCustomerInfo({
+        ...customerInfo,
+        customerName: customerState.name,
+        customerPhone: customerState.phoneNumber,
+        customerCode: customerState.purrPetCode,
+      });
+      setExistCustomer(true);
+      setEditInfo(false);
+      confirmInfo(true);
+      setOtpValid(true);
+    }
+  }, [customerState]);
+
+  useEffect(() => {
+    if (!editInfo) {
+      setBackupCustomerInfo({ ...customerInfo });
+    }
+  }, [editInfo]);
 
   const handleChangeCustomerInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
@@ -43,10 +81,13 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   const handleSendOTPCLick = () => {
     console.log("send otp");
+    if (!customerInfo.customerEmail) {
+      setError({ ...error, customerEmail: true });
+      return;
+    }
     //api send otp
     sendOtp({ email: customerInfo.customerEmail }).then((res) => {
       if (res.err === 0) {
-        console.log(res);
         setOtpClick(true);
       }
     });
@@ -54,6 +95,10 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   const handleValidOTPCLick = () => {
     console.log("send otp");
+    if (customerInfo.otp === "") {
+      setError({ ...error, otp: true });
+      return;
+    }
     //api check otp
     verifyOtp({
       email: customerInfo.customerEmail,
@@ -90,6 +135,14 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   };
 
   const handleEditInfo = () => {
+    if (customerInfo.customerName === "") {
+      setError({ ...error, customerName: true });
+      return;
+    }
+    if (customerInfo.customerPhone === "") {
+      setError({ ...error, customerPhone: true });
+      return;
+    }
     if (existCustomer && !editInfo) {
       setEditInfo(true);
       confirmInfo(false);
@@ -138,39 +191,11 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   };
 
   const handleCancleEditInfo = () => {
+    setError({});
+    setCustomerInfo({ ...backupCustomerInfo });
     setEditInfo(false);
     confirmInfo(true);
   };
-
-  const [error, setError] = useState({});
-  const [otpClick, setOtpClick] = useState(false);
-  const [otpValid, setOtpValid] = useState(false);
-  const [existCustomer, setExistCustomer] = useState(false);
-  const [editInfo, setEditInfo] = useState(true);
-  const [customerInfo, setCustomerInfo] = useState({
-    customerPhone: "",
-    otp: "",
-    customerName: "",
-    customerEmail: "",
-    customerNote: "",
-    customerCode: "",
-  });
-
-  useEffect(() => {
-    if (customerState != null) {
-      customer({ ...customerInfo, customerCode: customerState.purrPetCode });
-      setCustomerInfo({
-        ...customerInfo,
-        customerName: customerState.name,
-        customerPhone: customerState.phoneNumber,
-        customerCode: customerState.purrPetCode,
-      });
-      setExistCustomer(true);
-      setEditInfo(false);
-      confirmInfo(true);
-      setOtpValid(true);
-    }
-  }, [customerState]);
 
   return (
     <Paper
@@ -188,7 +213,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         variant="h6"
         gutterBottom
         component="div"
-        className="text-center font-bold"
+        className="mb-2 text-center font-bold"
       >
         Thông tin khách hàng
       </Typography>
@@ -203,26 +228,28 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
               disabled={otpValid}
               onChange={handleChangeCustomerInfo}
               variant="outlined"
+              className="my-3"
               error={error.customerEmail}
-              helperText={error.customerPhone && "Email không được để trống"}
+              helperText={error.customerEmail && "Email không được để trống"}
+              focused={error.customerEmail}
+              onBlur={() => {
+                if (customerInfo.customerEmail === "") {
+                  setError({ ...error, customerEmail: true });
+                }
+              }}
             />
             {!otpValid && (
-              // <Button
-              //   variant="outlined"
-              //   className="w-fit"
-              //   onClick={handleSendOTPCLick}
-              // >
-              //   {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-              // </Button>
-              <BigHoverFitContentButton onClick={handleSendOTPCLick}>
-                {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-              </BigHoverFitContentButton>
+              <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <BigHoverFitContentButton onClick={handleSendOTPCLick}>
+                  {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
+                </BigHoverFitContentButton>
+              </Box>
             )}
           </FormControl>
 
           {otpClick && !otpValid && (
             <FormControl>
-              <FormLabel className="font-bold text-black">OTP:</FormLabel>
+              <FormLabel className="my-2 font-bold text-black">OTP:</FormLabel>
               <TextField
                 required
                 name="otp"
@@ -230,19 +257,21 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
                 value={customerInfo.otp}
                 onChange={handleChangeCustomerInfo}
                 variant="outlined"
+                className="mb-3"
                 error={error.otp}
                 helperText={error.otp && "OTP không được để trống"}
+                focused={error.otp}
+                onBlur={() => {
+                  if (customerInfo.otp === "") {
+                    setError({ ...error, otp: true });
+                  }
+                }}
               />
-              {/* <Button
-                variant="outlined"
-                className="w-fit"
-                onClick={handleValidOTPCLick}
-              >
-                Xác thực
-              </Button> */}
-              <BigHoverFitContentButton onClick={handleValidOTPCLick}>
-                Xác thực
-              </BigHoverFitContentButton>
+              <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <BigHoverFitContentButton onClick={handleValidOTPCLick}>
+                  Xác thực
+                </BigHoverFitContentButton>
+              </Box>
             </FormControl>
           )}
         </>
@@ -261,6 +290,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             onChange={handleChangeCustomerInfo}
             variant="outlined"
             error={error.customerName}
+            className="my-3"
             helperText={
               error.customerName && "Tên khách hàng không được để trống"
             }
@@ -274,28 +304,30 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             onChange={handleChangeCustomerInfo}
             variant="outlined"
             error={error.customerPhone}
+            className="my-3"
             helperText={
               error.customerPhone && "Số điện thoại không được để trống"
             }
           />
-          {existCustomer && editInfo && (
-            // <Button
-            //   variant="outlined"
-            //   className="w-fit"
-            //   onClick={handleCancleEditInfo}
-            // >
-            //   Hủy
-            // </Button>
-            <BigHoverFitContentButton onClick={handleCancleEditInfo}>
-              Hủy
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "end",
+            }}
+          >
+            {existCustomer && editInfo && (
+              <BigHoverFitContentButton
+                onClick={handleCancleEditInfo}
+                className="mr-3"
+              >
+                Hủy
+              </BigHoverFitContentButton>
+            )}
+            <BigHoverFitContentButton onClick={handleEditInfo}>
+              {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
-          )}
-          {/* <Button variant="outlined" className="w-fit" onClick={handleEditInfo}>
-            {!editInfo ? "Sửa" : "Xác nhận thông tin"}
-          </Button> */}
-          <BigHoverFitContentButton onClick={handleEditInfo}>
-            {!editInfo ? "Sửa" : "Xác nhận thông tin"}
-          </BigHoverFitContentButton>
+          </Box>
           <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
           <TextField
             required

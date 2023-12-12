@@ -1,9 +1,9 @@
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
-import { SpaHistory } from "../../components/Admin/SpaHistory";
+import { OrderDetail } from "../../components/Admin/OrderDetail";
 import { Box } from "@mui/material";
 
-export const BookingSpa = () => {
+export const OrderDetailAdmin = () => {
   return (
     <>
       <HeaderAdmin />
@@ -18,7 +18,7 @@ export const BookingSpa = () => {
             marginBottom: "30px",
           }}
         >
-          <SpaHistory />
+          <OrderDetail />
         </Box>
       </Box>
     </>

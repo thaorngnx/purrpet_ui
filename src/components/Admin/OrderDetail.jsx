@@ -91,14 +91,28 @@ export const OrderDetail = () => {
 
   const productOrder = order?.productOrder;
 
-  const handlePaymentClick = () => {
-    console.log("payment");
-    createPaymentUrl({ orderCode: order.purrPetCode }).then((res) => {
-      console.log(res);
-      if (res.err === 0) {
-        window.location.href = res.data.paymentUrl;
-      }
-    });
+  const handleDeliveringClick = () => {
+    console.log("delivering");
+    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.DELIVERING).then(
+      (res) => {
+        console.log(res);
+        if (res.err === 0) {
+          window.location.reload();
+        }
+      },
+    );
+  };
+
+  const handleDeliveredClick = () => {
+    console.log("delivered");
+    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.DONE).then(
+      (res) => {
+        console.log(res);
+        if (res.err === 0) {
+          window.location.reload();
+        }
+      },
+    );
   };
 
   const handleChangeStatus = () => {
@@ -239,17 +253,32 @@ export const OrderDetail = () => {
               <>
                 <Button
                   variant="contained"
-                  className="mr-3 bg-black"
+                  className="bg-black"
                   onClick={handleChangeStatus}
                 >
                   Hủy đơn
                 </Button>
+              </>
+            )}
+            {order.status === CONST.STATUS_ORDER.PAID && (
+              <>
                 <Button
                   variant="contained"
-                  className="ml-3 bg-black"
-                  onClick={handlePaymentClick}
+                  className="bg-black"
+                  onClick={handleDeliveringClick}
                 >
-                  Thanh toán
+                  Đã giao cho nhà vận chuyển
+                </Button>
+              </>
+            )}
+            {order.status === CONST.STATUS_ORDER.DELIVERING && (
+              <>
+                <Button
+                  variant="contained"
+                  className="bg-black"
+                  onClick={handleDeliveredClick}
+                >
+                  Đã giao hàng
                 </Button>
               </>
             )}

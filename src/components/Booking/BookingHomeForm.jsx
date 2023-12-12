@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -27,6 +27,55 @@ import { formatCurrency } from "../../utils/formatData";
 
 export const BookingHomeForm = () => {
   const navigate = useNavigate();
+
+  const [error, setError] = useState({});
+  const [message, setMessage] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [allHomes, setAllHomes] = useState([]);
+  const [validHomes, setValidHomes] = useState([]);
+  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
+  const [showBtnConfirmBook, setShowBtnConfirmBook] = useState(false);
+  const [homeSizes, setHomeSizes] = useState([]);
+  const [validSizes, setValidSizes] = useState([]);
+  const [unavailableDays, setUnavailableDays] = useState([]);
+  const [maxDateCheckOut, setMaxDateCheckOut] = useState(
+    dayjs().add(2, "year"),
+  );
+  const [bookingInfo, setBookingInfo] = useState({
+    petName: "",
+    homeCode: "",
+    bookingHomePrice: 0,
+    customerCode: "",
+    customerNote: "",
+    homeSize: "",
+    petType: "",
+    categoryName: "",
+    categoryCode: "",
+    dateCheckIn: null,
+    dateCheckOut: null,
+    homePrice: 0,
+  });
+
+  useEffect(() => {
+    getCategories({
+      categoryType: CONST.CATEGORY_TYPE.HOMESTAY,
+      status: CONST.STATUS.ACTIVE,
+    }).then((res) => {
+      console.log(res.data);
+      setCategories(res.data);
+    });
+    getHomestays({
+      status: CONST.STATUS.ACTIVE,
+    }).then((res) => {
+      console.log(res.data);
+      setAllHomes(res.data);
+    });
+    getMasterDatas({ groupCode: CONST.GROUP_CODE.HOME_SIZE }).then((res) => {
+      console.log(res.data);
+      setHomeSizes(res.data);
+    });
+  }, []);
+
   const handleChangeBookingInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
@@ -84,7 +133,6 @@ export const BookingHomeForm = () => {
 
       setValidSizes(validSizes);
       setValidHomes(validHomes);
-      setSizeVisible(true);
       setBookingInfo({
         ...bookingInfo,
         petType: event.target.value,
@@ -101,7 +149,6 @@ export const BookingHomeForm = () => {
       const category = categories.find(
         (category) => category.categoryName === event.target.value,
       );
-      setPackageVisible(true);
       const validHomes = allHomes.filter(
         (home) =>
           home.categoryCode === category.purrPetCode &&
@@ -136,6 +183,10 @@ export const BookingHomeForm = () => {
   };
 
   const handleOpenCustomerForm = () => {
+    if (bookingInfo.petName === "") {
+      setError({ ...error, petName: true });
+      return;
+    }
     setOpenCustomerInfoForm(true);
   };
 
@@ -166,10 +217,11 @@ export const BookingHomeForm = () => {
       let diff = dateCheckOut.diff(dateCheckIn, "day");
       price = diff * bookingInfo.homePrice;
     }
+    console.log("checkout", dateCheckOut);
     setBookingInfo({
       ...bookingInfo,
       dateCheckIn: dateCheckIn,
-      dateCheckOut: dateCheckOut,
+      dateCheckOut: dayjs(dateCheckOut).isValid() ? dateCheckOut : null,
       bookingHomePrice: price,
     });
   };
@@ -212,56 +264,6 @@ export const BookingHomeForm = () => {
     });
   };
 
-  const [error, setError] = useState({});
-  const [message, setMessage] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [allHomes, setAllHomes] = useState([]);
-  const [validHomes, setValidHomes] = useState([]);
-  const [sizeVisible, setSizeVisible] = useState(false);
-  const [packageVisible, setPackageVisible] = useState(false);
-  const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
-  const [showBtnConfirmBook, setShowBtnConfirmBook] = useState(false);
-  const [homeSizes, setHomeSizes] = useState([]);
-  const [validSizes, setValidSizes] = useState([]);
-  const [unavailableDays, setUnavailableDays] = useState([]);
-  const [maxDateCheckOut, setMaxDateCheckOut] = useState(
-    dayjs().add(2, "year"),
-  );
-  const [bookingInfo, setBookingInfo] = useState({
-    petName: "",
-    homeCode: "",
-    bookingHomePrice: 0,
-    customerCode: "",
-    customerNote: "",
-    homeSize: "",
-    petType: "",
-    categoryName: "",
-    categoryCode: "",
-    dateCheckIn: null,
-    dateCheckOut: null,
-    homePrice: 0,
-  });
-
-  useEffect(() => {
-    getCategories({
-      categoryType: CONST.CATEGORY_TYPE.HOMESTAY,
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
-      console.log(res.data);
-      setCategories(res.data);
-    });
-    getHomestays({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
-      console.log(res.data);
-      setAllHomes(res.data);
-    });
-    getMasterDatas({ groupCode: CONST.GROUP_CODE.HOME_SIZE }).then((res) => {
-      console.log(res.data);
-      setHomeSizes(res.data);
-    });
-  }, []);
-
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column" }}
@@ -283,6 +285,7 @@ export const BookingHomeForm = () => {
           display: "flex",
           flexDirection: "column",
           p: 5,
+          mb: 5,
         }}
       >
         <Typography
@@ -294,7 +297,9 @@ export const BookingHomeForm = () => {
           Thông tin thú cưng
         </Typography>
         <FormControl>
-          <FormLabel className="font-bold text-black">Tên thú cưng:</FormLabel>
+          <FormLabel className="mb-2 font-bold text-black">
+            Tên thú cưng:
+          </FormLabel>
           <TextField
             required
             name="petName"
@@ -303,10 +308,18 @@ export const BookingHomeForm = () => {
             variant="outlined"
             error={error.petName}
             helperText={error.petName && "Tên thú cưng không được để trống"}
+            focused={error.petName}
+            onBlur={() => {
+              if (bookingInfo.petName === "") {
+                setError({ ...error, petName: true });
+              }
+            }}
           />
         </FormControl>
         <FormControl>
-          <FormLabel className="font-bold text-black">Thú cưng là:</FormLabel>
+          <FormLabel className="mt-2 font-bold text-black">
+            Thú cưng là:
+          </FormLabel>
           <RadioGroup
             name="petType"
             value={bookingInfo.petType}
@@ -323,7 +336,7 @@ export const BookingHomeForm = () => {
             ))}
           </RadioGroup>
         </FormControl>
-        {sizeVisible && (
+        {bookingInfo.petType && (
           <FormControl>
             <FormLabel className="font-bold text-black">
               Bạn muốn đặt phòng:
@@ -347,7 +360,7 @@ export const BookingHomeForm = () => {
           </FormControl>
         )}
 
-        {packageVisible && (
+        {bookingInfo.categoryCode && (
           <FormControl>
             <FormLabel className="font-bold text-black">
               Chọn loại phòng:
@@ -372,7 +385,7 @@ export const BookingHomeForm = () => {
         )}
         {bookingInfo.homeSize !== "" && (
           <FormControl>
-            <FormLabel className="flex font-bold text-black">
+            <FormLabel className="mb-3 flex font-bold text-black">
               Chọn ngày đặt phòng:
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -408,27 +421,34 @@ export const BookingHomeForm = () => {
                     );
                   }}
                   maxDate={maxDateCheckOut}
+                  className="mt-4"
                 />
               )}
             </LocalizationProvider>
           </FormControl>
         )}
 
-        <Typography
-          variant="body1"
-          name="bookingHomePrice"
-          className="mt-3 flex justify-end font-bold"
-        >
-          Tổng tiền: {formatCurrency(bookingInfo.bookingHomePrice)}
-        </Typography>
-        {!openCustomerInfoForm && (
-          <BigHoverTransformButton
-            onClick={handleOpenCustomerForm}
-            className="m-auto mt-5"
-          >
-            Tiếp tục
-          </BigHoverTransformButton>
+        {bookingInfo.dateCheckIn && bookingInfo.dateCheckOut && (
+          <>
+            <Typography
+              variant="body1"
+              name="bookingHomePrice"
+              className="mt-3 flex justify-end font-bold"
+            >
+              Tổng tiền: {formatCurrency(bookingInfo.bookingHomePrice)}
+            </Typography>
+          </>
         )}
+        {bookingInfo.dateCheckIn &&
+          bookingInfo.dateCheckOut &&
+          !openCustomerInfoForm && (
+            <BigHoverTransformButton
+              onClick={handleOpenCustomerForm}
+              className="m-auto my-3"
+            >
+              Tiếp tục
+            </BigHoverTransformButton>
+          )}
       </Paper>
       {openCustomerInfoForm && (
         <CustomerInfoForm

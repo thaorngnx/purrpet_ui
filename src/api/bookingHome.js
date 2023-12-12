@@ -1,8 +1,8 @@
 import api from "./token";
 
-export async function getBookingHomes() {
+export async function getBookingHomes(params) {
   try {
-    const response = await api.get("bookingHome/query");
+    const response = await api.get("bookingHome/query", { params });
     return response.data;
   } catch (error) {
     console.error(error);

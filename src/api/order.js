@@ -1,8 +1,8 @@
 import api from "./token";
 
-export async function getOrders() {
+export async function getOrders(params) {
   try {
-    const response = await api.get("order/query");
+    const response = await api.get("order/query", { params });
     return response.data;
   } catch (error) {
     console.error(error);

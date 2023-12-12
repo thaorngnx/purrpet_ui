@@ -7,92 +7,95 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import { CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import {
-  getBookingSpaByCode,
-  updateStatusBookingSpa,
-} from "../../api/bookingSpa";
-import { getSpaByCode } from "../../api/spa";
+  getBookingHomeByCode,
+  updateStatusBookingHome,
+} from "../../api/bookingHome";
+import { getHomestayByCode } from "../../api/homestay";
 import { createPaymentUrl } from "../../api/pay";
 import * as CONST from "../../constants";
 
-export const BookingSpaDetail = () => {
-  const { bookingSpaCode } = useParams();
+export const BookingHomeDetail = () => {
+  const { bookingHomeCode } = useParams();
 
-  const [bookingSpa, setBookingSpa] = useState({
+  const [bookingHome, setBookingHome] = useState({
     purrPetCode: "",
     customerName: "",
     customerPhone: "",
     customerEmail: "",
     customerNote: "",
     petName: "",
-    bookingDate: "",
-    bookingTime: "",
-    bookingSpaPrice: 0,
+    dateCheckIn: "",
+    dateCheckOut: "",
+    numberOfDay: 0,
+    bookingHomePrice: 0,
     status: "",
     createdAt: "",
-    spa: {
+    homestay: {
       purrPetCode: "",
-      spaName: "",
-      spaType: "",
-      description: "",
+      homeType: "",
+      categoryName: "",
+      masterDataName: "",
       price: 0,
-      categoryCode: "",
     },
   });
+  const [homestay, setHomestay] = useState({});
 
   useEffect(() => {
-    getBookingSpaByCode(bookingSpaCode).then((res) => {
+    getBookingHomeByCode(bookingHomeCode).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        const bookingSpaInfo = res.data;
-        getSpaByCode(res.data.spaCode).then((res) => {
+        const bookingHomeInfo = res.data;
+        getHomestayByCode(res.data.homeCode).then((res) => {
           console.log(res);
           if (res.err === 0) {
-            setBookingSpa({
-              purrPetCode: bookingSpaInfo.purrPetCode,
-              customerName: bookingSpaInfo.customerName,
-              customerPhone: bookingSpaInfo.customerPhone,
-              customerEmail: bookingSpaInfo.customerEmail,
-              customerNote: bookingSpaInfo.customerNote,
-              petName: bookingSpaInfo.petName,
-              bookingDate: bookingSpaInfo.bookingDate,
-              bookingTime: bookingSpaInfo.bookingTime,
-              bookingSpaPrice: bookingSpaInfo.bookingSpaPrice,
-              status: bookingSpaInfo.status,
-              createdAt: bookingSpaInfo.createdAt,
-              spa: {
+            setBookingHome({
+              purrPetCode: bookingHomeInfo.purrPetCode,
+              customerName: bookingHomeInfo.customerName,
+              customerPhone: bookingHomeInfo.customerPhone,
+              customerEmail: bookingHomeInfo.customerEmail,
+              customerNote: bookingHomeInfo.customerNote,
+              petName: bookingHomeInfo.petName,
+              dateCheckIn: bookingHomeInfo.dateCheckIn,
+              dateCheckOut: bookingHomeInfo.dateCheckOut,
+              numberOfDay: bookingHomeInfo.numberOfDay,
+              bookingHomePrice: bookingHomeInfo.bookingHomePrice,
+              status: bookingHomeInfo.status,
+              createdAt: bookingHomeInfo.createdAt,
+              homestay: {
                 purrPetCode: res.data.purrPetCode,
-                spaName: res.data.spaName,
-                spaType: res.data.spaType,
-                description: res.data.description,
+                homeType: res.data.homeType,
+                categoryName: res.data.categoryName,
+                masterDataName: res.data.masterDataName,
                 price: res.data.price,
-                categoryCode: res.data.categoryCode,
               },
             });
           }
         });
       }
     });
-  }, []);
+  }, [bookingHomeCode]);
 
-  const handlePaymentClick = () => {
-    console.log("payment");
-    createPaymentUrl({ orderCode: bookingSpa.purrPetCode }).then((res) => {
+  const handleUseServiceClick = () => {
+    console.log("use service");
+    updateStatusBookingHome(
+      bookingHome.purrPetCode,
+      CONST.STATUS_BOOKING.CHECKIN,
+    ).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        window.location.href = res.data.paymentUrl;
+        window.location.reload();
       }
     });
   };
 
   const handleChangeStatus = () => {
     console.log("cancel");
-    updateStatusBookingSpa(
-      bookingSpa.purrPetCode,
+    updateStatusBookingHome(
+      bookingHome.purrPetCode,
       CONST.STATUS_BOOKING.CANCEL,
     ).then((res) => {
       console.log(res);
@@ -105,40 +108,40 @@ export const BookingSpaDetail = () => {
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
       <Typography variant="h5" className="font-bold">
-        Chi tiết đơn đặt lịch spa
+        Chi tiết đơn đặt phòng
       </Typography>
       <Paper className="mb-10 flex w-[90%] flex-col justify-center p-8">
         <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Mã đơn: </span>
-              {bookingSpa.purrPetCode}
+              {bookingHome.purrPetCode}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt: </span>
-              {formatDateTime(bookingSpa.createdAt)}
+              {formatDateTime(bookingHome.createdAt)}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
-              {bookingSpa.status}
+              {bookingHome.status}
             </Typography>
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Họ tên: </span>
-              {bookingSpa.customerName}
+              {bookingHome.customerName}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Số điện thoại: </span>
-              {bookingSpa.customerPhone}
+              {bookingHome.customerPhone}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Email: </span>
-              {bookingSpa.customerEmail}
+              {bookingHome.customerEmail}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Ghi chú: </span>
-              {bookingSpa.customerNote}
+              {bookingHome.customerNote}
             </Typography>
           </Box>
         </Box>
@@ -146,16 +149,16 @@ export const BookingSpaDetail = () => {
         <Box className="flex flex-row items-start justify-start">
           <Typography variant="body1" className="flex-1">
             <span className="font-bold">Tên thú cưng: </span>
-            {bookingSpa.petName}
+            {bookingHome.petName}
           </Typography>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
-              <span className="font-bold">Ngày hẹn: </span>
-              {formatDateTime(bookingSpa.bookingDate)}
+              <span className="font-bold">Ngày vào: </span>
+              {formatDateTime(bookingHome.dateCheckIn)}
             </Typography>
             <Typography variant="body1">
-              <span className="font-bold">Giờ hẹn: </span>
-              {bookingSpa.bookingTime}
+              <span className="font-bold">Ngày ra: </span>
+              {formatDateTime(bookingHome.dateCheckOut)}
             </Typography>
           </Box>
         </Box>
@@ -164,22 +167,31 @@ export const BookingSpaDetail = () => {
           <List>
             <ListItem key="title" className="p-0">
               <Typography variant="body1" className="w-1/6 font-bold">
-                Mã spa
-              </Typography>
-              <Typography variant="body1" className="w-1/6 p-2 font-bold">
-                Spa
+                Mã phòng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 p-2 text-center font-bold"
               >
                 Loại thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/3 text-center font-bold"
+                className="w-1/6 text-center font-bold"
               >
-                Mô tả
+                Loại phòng
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
+                Kích thước
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
+                Số ngày
               </Typography>
               <Typography
                 variant="body1"
@@ -187,44 +199,63 @@ export const BookingSpaDetail = () => {
               >
                 Đơn giá
               </Typography>
+              <Typography
+                variant="body1"
+                className="m-2 w-1/6 text-center font-bold"
+              >
+                Thành tiền
+              </Typography>
             </ListItem>
-            <ListItem key={bookingSpa.purrPetCode} className="my-3 p-0">
+            <ListItem
+              key={bookingHome.homestay.purrPetCode}
+              className="my-3 p-0"
+            >
               <Typography variant="body1" className="w-1/6">
-                {bookingSpa.spa.purrPetCode}
+                {bookingHome.homestay.purrPetCode}
               </Typography>
               <Typography variant="body1" className="w-1/6 p-2">
-                {bookingSpa.spa.spaName}
+                {bookingHome.homestay.homeType}
               </Typography>
               <Typography variant="body1" className="w-1/6 text-center">
-                {bookingSpa.spa.spaType}
+                {bookingHome.homestay.categoryName}
               </Typography>
-              <Typography variant="body1" className="w-1/3 text-center">
-                {bookingSpa.spa.description}
+              <Typography variant="body1" className="w-1/6 text-center">
+                {bookingHome.homestay.masterDataName}
+              </Typography>
+              <Typography variant="body1" className="w-1/6 text-center">
+                {bookingHome.numberOfDay}
               </Typography>
               <Typography variant="body1" className="m-2 w-1/6 text-end">
-                {formatCurrency(bookingSpa.bookingSpaPrice)}
+                {formatCurrency(bookingHome.homestay.price)}
+              </Typography>
+              <Typography variant="body1" className="m-2 w-1/6 text-end">
+                {formatCurrency(bookingHome.bookingHomePrice)}
               </Typography>
             </ListItem>
           </List>
           <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(bookingSpa.bookingSpaPrice)}
+            Tổng tiền: {formatCurrency(bookingHome.bookingHomePrice)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
-            {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
+            {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>
                 <Button
                   variant="contained"
-                  className="mr-3 bg-black"
+                  className="bg-black"
                   onClick={handleChangeStatus}
                 >
                   Hủy đơn
                 </Button>
+              </>
+            )}
+            {bookingHome.status === CONST.STATUS_BOOKING.PAID && (
+              <>
                 <Button
                   variant="contained"
-                  className="ml-3 bg-black"
-                  onClick={handlePaymentClick}
+                  className="bg-black"
+                  onClick={handleUseServiceClick}
                 >
-                  Thanh toán
+                  Đã sử dụng dịch vụ
                 </Button>
               </>
             )}

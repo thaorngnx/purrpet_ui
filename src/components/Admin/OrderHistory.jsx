@@ -54,9 +54,9 @@ export const OrderHistory = () => {
   };
 
   return (
-    <Paper className="mb-10 w-[97%]">
+    <>
       <Typography variant="h6" className="m-3 text-center text-lg font-bold">
-        ĐƠN HÀNG
+        QUẢN LÝ ĐƠN HÀNG
       </Typography>
       <Box className="flex flex-col">
         <Tabs
@@ -166,7 +166,7 @@ export const OrderHistory = () => {
                         <Box className="flex w-1/5 justify-center px-1 text-center">
                           <MiniHoverButton
                             component={Link}
-                            to={`/order/${order.purrPetCode}`}
+                            to={`${order.purrPetCode}`}
                           >
                             Chi tiết
                           </MiniHoverButton>
@@ -190,6 +190,6 @@ export const OrderHistory = () => {
           <Pagination count={totalPage} onChange={handleChangePage} />
         </Box>
       )}
-    </Paper>
+    </>
   );
 };

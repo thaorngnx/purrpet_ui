@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { BigHoverTransformButton } from "../Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 
@@ -61,41 +62,47 @@ export const ProductDetail = () => {
   };
 
   return (
-    <Box>
-      <Paper sx={{ width: "80%", marginTop: "80px" }}>
+    <Box className="my-5 flex flex-col items-center">
+      <Typography variant="h3" className="mb-5 text-3xl font-bold">
+        Chi tiết sản phẩm
+      </Typography>
+      <Paper className="flex w-[97%] flex-col items-center justify-center p-5">
         <Box sx={{ display: "flex", flexDirection: "row", height: "300px" }}>
           <Box sx={{ width: "50%" }}>
             <img
               src={product.images?.[0]?.path}
               alt=""
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
             />
           </Box>
           <Box className="m-2">
-            <Typography variant="h4" className="text-2xl font-bold">
+            <Typography variant="h4" className="mb-2 text-2xl font-bold">
               {product.productName}
             </Typography>
-            <div className="flex flex-row">
-              <Typography variant="body1" className="font-bold">
+            <Box className="mb-2 flex flex-row">
+              <Typography variant="body1" className="text-lg font-bold">
                 Tình trạng: &nbsp;
               </Typography>
-              <Typography variant="body1">
+              <Typography variant="body1" className="text-lg">
                 {product.inventory > 0 ? "Còn hàng" : "Hết hàng"}
               </Typography>
-            </div>
-            <div className="flex flex-row">
-              <Typography variant="body1" className="font-bold">
+            </Box>
+            <Box className="mb-2 flex flex-row">
+              <Typography variant="body1" className="text-lg font-bold">
                 Giá: &nbsp;
               </Typography>
-              <Typography variant="body1" className="font-bold text-red-700">
+              <Typography
+                variant="body1"
+                className="text-lg font-bold text-red-700"
+              >
                 {formatCurrency(product.price)}
               </Typography>
-            </div>
-            <FormControl variant="outlined" sx={{ width: "100%" }}>
-              <Typography variant="body1" className="font-bold">
+            </Box>
+            <FormControl className="flex flex-row items-center">
+              <Typography variant="body1" className="text-lg font-bold">
                 Số lượng: &nbsp;
               </Typography>
-              <div>
+              <Box>
                 <Button
                   variant="contained"
                   className="min-w-min bg-gray-300 p-2 text-black"
@@ -121,15 +128,11 @@ export const ProductDetail = () => {
                 >
                   <AddIcon />
                 </Button>
-              </div>
-              <Button
-                variant="contained"
-                className=" bg-black"
-                onClick={handleAddToCart}
-              >
-                Thêm vào giỏ hàng
-              </Button>
+              </Box>
             </FormControl>
+            <BigHoverTransformButton onClick={handleAddToCart} className="mt-3">
+              Thêm vào giỏ hàng
+            </BigHoverTransformButton>
           </Box>
         </Box>
         <Box sx={{ width: "100%" }}>

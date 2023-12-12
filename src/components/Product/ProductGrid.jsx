@@ -107,7 +107,7 @@ export const ProductGrid = () => {
             page={page}
             count={totalPage}
             shape="rounded"
-            className="flex justify-end"
+            className="mb-2 flex justify-end"
           />
         </Stack>
       )}
