@@ -79,17 +79,9 @@ export const ProductGrid = () => {
           </Select>
         </FormControl>
       </Box>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="flex justify-center">
         {products.map((product) => (
-          <Grid
-            item
-            xs={3}
-            sm={3}
-            md={3}
-            lg={3}
-            key={product.purrPetCode}
-            className="flex justify-center"
-          >
+          <Grid item key={product.purrPetCode} className="flex justify-center">
             <ProductCard product={product} />
           </Grid>
         ))}

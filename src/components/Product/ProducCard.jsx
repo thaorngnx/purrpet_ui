@@ -7,6 +7,7 @@ import {
   CardMedia,
   Typography,
   Fab,
+  Box,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -60,19 +61,32 @@ export const ProductCard = ({ product }) => {
           >
             {product.productName}
           </Typography>
+          <Box className="flex flex-row justify-between">
+            {product.inventory > 0 ? (
+              <Typography variant="body2" className="text-green-600">
+                Còn hàng
+              </Typography>
+            ) : (
+              <Typography variant="body2" className="text-red-600">
+                Hết hàng
+              </Typography>
+            )}
 
-          <Typography variant="body2" className=" text-end font-bold">
-            {formatCurrency(product.price)}
-          </Typography>
+            <Typography variant="body2" className="font-bold">
+              {formatCurrency(product.price)}
+            </Typography>
+          </Box>
         </CardContent>
         {isHover && (
-          <div className="absolute flex h-full w-full items-center justify-center bg-white bg-opacity-10">
-            <Fab
-              className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
-              onClick={handleAddToCart}
-            >
-              <AddShoppingCartIcon />
-            </Fab>
+          <div className="absolute z-0 flex h-full w-full items-center justify-center bg-white bg-opacity-10">
+            {product.inventory > 0 && (
+              <Fab
+                className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
+                onClick={handleAddToCart}
+              >
+                <AddShoppingCartIcon />
+              </Fab>
+            )}
             <Fab
               className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
               onClick={handleProductClick}

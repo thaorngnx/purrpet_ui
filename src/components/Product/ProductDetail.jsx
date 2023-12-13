@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProductByCode } from "../../api/product";
 import {
   Box,
@@ -18,6 +18,8 @@ import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 
 export const ProductDetail = () => {
+  const navigate = useNavigate();
+
   const { productCode } = useParams();
 
   const { addToCart } = useStore();
@@ -98,41 +100,56 @@ export const ProductDetail = () => {
                 {formatCurrency(product.price)}
               </Typography>
             </Box>
-            <FormControl className="flex flex-row items-center">
-              <Typography variant="body1" className="text-lg font-bold">
-                Số lượng: &nbsp;
-              </Typography>
-              <Box>
-                <Button
-                  variant="contained"
-                  className="min-w-min bg-gray-300 p-2 text-black"
-                  onClick={handleSubtractQuantity}
+            {product.inventory > 0 && (
+              <>
+                <FormControl className="flex flex-row items-center">
+                  <Typography variant="body1" className="text-lg font-bold">
+                    Số lượng: &nbsp;
+                  </Typography>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      className="min-w-min bg-gray-300 p-2 text-black"
+                      onClick={handleSubtractQuantity}
+                    >
+                      <RemoveIcon />
+                    </Button>
+                    <TextField
+                      type="number"
+                      variant="outlined"
+                      size="small"
+                      value={quantity}
+                      disabled
+                      sx={{ width: "100px" }}
+                      inputProps={{
+                        style: { textAlign: "center" },
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      className="min-w-min bg-gray-300 p-2 text-black"
+                      onClick={handleAddQuantity}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </Box>
+                </FormControl>
+                <BigHoverTransformButton
+                  onClick={handleAddToCart}
+                  className="mt-3"
                 >
-                  <RemoveIcon />
-                </Button>
-                <TextField
-                  type="number"
-                  variant="outlined"
-                  size="small"
-                  value={quantity}
-                  disabled
-                  sx={{ width: "100px" }}
-                  inputProps={{
-                    style: { textAlign: "center" },
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  className="min-w-min bg-gray-300 p-2 text-black"
-                  onClick={handleAddQuantity}
-                >
-                  <AddIcon />
-                </Button>
-              </Box>
-            </FormControl>
-            <BigHoverTransformButton onClick={handleAddToCart} className="mt-3">
-              Thêm vào giỏ hàng
-            </BigHoverTransformButton>
+                  Thêm vào giỏ hàng
+                </BigHoverTransformButton>
+              </>
+            )}
+            {product.inventory <= 0 && (
+              <BigHoverTransformButton
+                className="mt-3"
+                onClick={() => navigate("/product")}
+              >
+                Tiếp tục mua hàng
+              </BigHoverTransformButton>
+            )}
           </Box>
         </Box>
         <Box sx={{ width: "100%" }}>
