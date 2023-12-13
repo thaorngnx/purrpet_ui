@@ -104,7 +104,7 @@ export const CustomerInfo = () => {
       console.log("edit customer");
       let err = {};
       if (!customerInfo.name) {
-        err = { ...error, name: true };
+        err = { ...err, name: true };
       }
       if (
         !customerInfo.phoneNumber ||

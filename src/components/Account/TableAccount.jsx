@@ -28,6 +28,7 @@ import { UpdateAccount } from "./UpdateAccount";
 import { CreateAccount } from "./CreateAccount";
 import { ChangePassword } from "./ChangePassword";
 import * as CONST from "../../constants";
+import { validatePassword } from "../../utils/validationData";
 
 export const TableAccount = () => {
   const [rows, setRows] = useState([]);
@@ -38,6 +39,7 @@ export const TableAccount = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
 
   useEffect(() => {
     getAccounts().then((res) => {
@@ -139,10 +141,22 @@ export const TableAccount = () => {
   };
 
   const handleCloseEditDialog = () => {
+    setError({});
     setOpenEdit(false);
   };
 
   const handleUpdateAccount = () => {
+    let err = {};
+    if (!selectedAccount.username) {
+      err = { ...err, username: true };
+    }
+    if (!selectedAccount.role) {
+      err = { ...err, role: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
     updateAccount({
       purrPetCode: selectedAccount.purrPetCode,
@@ -195,14 +209,40 @@ export const TableAccount = () => {
   };
 
   const handleCloseAddDialog = () => {
+    setError({});
     setOpenAdd(false);
   };
 
   const handleCloseChangePasswordDialog = () => {
+    setError({});
     setOpenChangePassword(false);
   };
 
   const handleCreateAccount = () => {
+    let err = {};
+    if (!selectedAccount.username) {
+      err = { ...err, username: true };
+    }
+    if (!selectedAccount.role) {
+      err = { ...err, role: true };
+    }
+    if (
+      !selectedAccount.password ||
+      !validatePassword(selectedAccount.password)
+    ) {
+      err = { ...err, password: true };
+    }
+    if (
+      selectedAccount.password &&
+      selectedAccount.passwordConfirm &&
+      selectedAccount.password !== selectedAccount.passwordConfirm
+    ) {
+      err = { ...err, passwordConfirm: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createAccount({
       purrPetCode: selectedAccount.purrPetCode,
@@ -228,6 +268,26 @@ export const TableAccount = () => {
   };
 
   const handleChangePasswordAccount = () => {
+    console.log(selectedAccount);
+    let err = {};
+    if (
+      !selectedAccount.password ||
+      !validatePassword(selectedAccount.password)
+    ) {
+      console.log("password");
+      err = { ...err, password: true };
+    }
+    if (
+      selectedAccount.password &&
+      selectedAccount.passwordConfirm &&
+      selectedAccount.password !== selectedAccount.passwordConfirm
+    ) {
+      err = { ...err, passwordConfirm: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenChangePassword(false);
     updateAccount({
       purrPetCode: selectedAccount.purrPetCode,
@@ -301,10 +361,11 @@ export const TableAccount = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA TÀI KHOẢN
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateAccount
               account={selectedAccount}
               updateAccount={handleDataUpdateAccount}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -316,10 +377,11 @@ export const TableAccount = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM TÀI KHOẢN
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <CreateAccount
               account={selectedAccount}
               createAccount={handleDataUpdateAccount}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -332,12 +394,13 @@ export const TableAccount = () => {
           onClose={handleCloseChangePasswordDialog}
         >
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
-            Đổi mật khẩu
+            ĐỔI MẬT KHẨU
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <ChangePassword
               account={selectedAccount}
               updateAccount={handleDataUpdateAccount}
+              err={error}
             />
           </DialogContent>
           <DialogActions>

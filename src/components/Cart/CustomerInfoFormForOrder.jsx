@@ -221,7 +221,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       confirmInfo(false);
     } else if (existCustomer && editInfo) {
       console.log("edit customer");
-      let err = { ...error };
+      let err = {};
       if (!customerInfo.customerName) {
         err = { ...err, customerName: true };
       }

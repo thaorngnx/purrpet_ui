@@ -138,7 +138,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       console.log("edit customer");
       let err = {};
       if (!customerInfo.customerName) {
-        err = { ...error, customerName: true };
+        err = { ...err, customerName: true };
       }
       if (
         !customerInfo.customerPhone ||

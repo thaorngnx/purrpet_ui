@@ -14,7 +14,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+import { validatePassword } from "../../utils/validationData";
 
 export const LoginAdmin = () => {
   const navigate = useNavigate();
@@ -34,23 +34,25 @@ export const LoginAdmin = () => {
   }, [alert]);
 
   useEffect(() => {
-    const accessToken = Cookie.get(
-      import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
-      { path: "/admin" },
-    );
-    console.log(accessToken);
-    if (accessToken) {
-      const decode = jwtDecode(accessToken);
-      console.log(decode);
-      if (decode.role === CONST.ROLE.ADMIN) {
-        navigate("/admin");
-      }
+    if (Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN)) {
+      navigate("/admin/login");
     }
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(account);
+    let err = {};
+    if (!account.username) {
+      err = { ...err, username: true };
+    }
+    if (!account.password || !validatePassword(account.password)) {
+      err = { ...err, password: true };
+    }
+    if (Object.keys(err).length > 0) {
+      console.log(err);
+      setError(err);
+      return;
+    }
     loginAdmin(account).then((res) => {
       console.log(res);
       setAlert(true);
@@ -85,7 +87,11 @@ export const LoginAdmin = () => {
         onSubmit={handleSubmit}
         sx={{ width: "50%", margin: "auto" }}
       >
-        <Typography variant="h5" component="div" className="m-5 text-center">
+        <Typography
+          variant="h5"
+          component="div"
+          className="m-5 text-center font-bold"
+        >
           Đăng nhập
         </Typography>
         <TextField
@@ -113,18 +119,18 @@ export const LoginAdmin = () => {
           autoComplete="current-password"
           onChange={handleChangeAccount}
           error={error.password}
-          helperText={error.password && "Mật khẩu không được để trống"}
+          helperText={error.password && "Mật khẩu không hợp lệ"}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 {" "}
                 {togglePassword ? (
+                  <VisibilityOff onClick={togglePasswordHide} />
+                ) : (
                   <Visibility
                     className="cursor_pointer"
                     onClick={togglePasswordHide}
                   />
-                ) : (
-                  <VisibilityOff onClick={togglePasswordHide} />
                 )}
               </InputAdornment>
             ),

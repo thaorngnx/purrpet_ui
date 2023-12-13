@@ -14,6 +14,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { loginStaff } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
+import { validatePassword } from "../../utils/validationData";
 
 export const LoginStaff = () => {
   const navigate = useNavigate();
@@ -40,7 +41,17 @@ export const LoginStaff = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(account);
+    let err = {};
+    if (!account.username) {
+      err = { ...err, username: true };
+    }
+    if (!account.password || !validatePassword(account.password)) {
+      err = { ...err, password: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     loginStaff(account).then((res) => {
       console.log(res);
       setAlert(true);
@@ -74,7 +85,11 @@ export const LoginStaff = () => {
         onSubmit={handleSubmit}
         sx={{ width: "50%", margin: "auto" }}
       >
-        <Typography variant="h5" component="div" className="m-5 text-center">
+        <Typography
+          variant="h5"
+          component="div"
+          className="m-5 text-center font-bold"
+        >
           Đăng nhập
         </Typography>
         <TextField
@@ -102,18 +117,18 @@ export const LoginStaff = () => {
           autoComplete="current-password"
           onChange={handleChangeAccount}
           error={error.password}
-          helperText={error.password && "Mật khẩu không được để trống"}
+          helperText={error.password && "Mật khẩu không hợp lệ"}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 {" "}
                 {togglePassword ? (
+                  <VisibilityOff onClick={togglePasswordHide} />
+                ) : (
                   <Visibility
                     className="cursor_pointer"
                     onClick={togglePasswordHide}
                   />
-                ) : (
-                  <VisibilityOff onClick={togglePasswordHide} />
                 )}
               </InputAdornment>
             ),
