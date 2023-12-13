@@ -7,6 +7,7 @@ import {
   TextField,
   Select,
   MenuItem,
+  FormHelperText,
 } from "@mui/material";
 import axios from "axios";
 import { updateCustomer } from "../../api/customer";
@@ -14,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useStore } from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 import { BigHoverFitContentButton } from "../Button/StyledButton";
+import { validatePhone } from "../../utils/validationData";
 
 export const CustomerInfo = () => {
   const navigate = useNavigate();
@@ -24,6 +26,8 @@ export const CustomerInfo = () => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  //backup customer info when cancel edit
+  const [backupCustomerInfo, setBackupCustomerInfo] = useState({});
   const [customerInfo, setCustomerInfo] = useState({
     purrPetCode: customer?.purrPetCode,
     name: customer?.name,
@@ -63,12 +67,20 @@ export const CustomerInfo = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!editInfo) {
+      console.log("cancel edit");
+      console.log("cus", customerInfo);
+      setBackupCustomerInfo({ ...customerInfo });
+    }
+  }, [editInfo]);
+
   const handleChangeCustomerInfo = (event) => {
-    setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    } else {
+      setError({ ...error, [event.target.name]: false });
     }
-    console.log("event.target.name", event.target.name);
     if (event.target.name === "street") {
       setCustomerInfo({
         ...customerInfo,
@@ -90,8 +102,33 @@ export const CustomerInfo = () => {
       setEditInfo(true);
     } else if (editInfo) {
       console.log("edit customer");
+      let err = {};
+      if (!customerInfo.name) {
+        err = { ...error, name: true };
+      }
+      if (
+        !customerInfo.phoneNumber ||
+        !validatePhone(customerInfo.phoneNumber)
+      ) {
+        err = { ...err, phoneNumber: true };
+      }
+      if (!customerInfo.address.street) {
+        err = { ...err, street: true };
+      }
+      if (!customerInfo.address.province) {
+        err = { ...err, province: true };
+      }
+      if (!customerInfo.address.district) {
+        err = { ...err, district: true };
+      }
+      if (!customerInfo.address.ward) {
+        err = { ...err, ward: true };
+      }
+      if (Object.keys(err).length > 0) {
+        setError(err);
+        return;
+      }
       //api update customer
-      console.log("customerInfo", customerInfo);
       updateCustomer(customerInfo).then((res) => {
         if (res.err === 0) {
           console.log(res);
@@ -103,12 +140,26 @@ export const CustomerInfo = () => {
 
   const handleCancleEditInfo = () => {
     setEditInfo(false);
+    setError({});
+    if (provinces.length > 0) {
+      const selectedProvince = provinces.find(
+        (province) => province.Name === customer.address.province,
+      );
+      if (selectedProvince) {
+        setDistricts(selectedProvince.Districts);
+        const selectedDistrict = selectedProvince.Districts.find(
+          (district) => district.Name === customer.address.district,
+        );
+        if (selectedDistrict) {
+          setWards(selectedDistrict.Wards);
+        }
+      }
+    }
+    setCustomerInfo({ ...backupCustomerInfo });
   };
 
   const handleProvinceChange = (e) => {
-    console.log("customerInfo", customerInfo);
     const provinceName = e.target.value;
-
     if (provinceName) {
       const selectedProvince = provinces.find(
         (province) => province.Name === provinceName,
@@ -125,8 +176,10 @@ export const CustomerInfo = () => {
           },
         });
         setDistricts(selectedProvince.Districts);
+        setWards([]);
       }
     } else {
+      setError({ ...error, province: true });
       setDistricts([]);
       setWards([]);
     }
@@ -151,6 +204,7 @@ export const CustomerInfo = () => {
         setWards(selectedDistrict.Wards);
       }
     } else {
+      setError({ ...error, district: true });
       setWards([]);
     }
   };
@@ -169,24 +223,10 @@ export const CustomerInfo = () => {
           },
         });
       }
+    } else {
+      setError({ ...error, ward: true });
     }
   };
-
-  // //styled button
-  // const MyButton = styled(Button)({
-  //   fontSize: "16px",
-  //   color: "black",
-  //   display: "block",
-  //   width: "fit-content",
-  //   fontWeight: "bold",
-  //   border: "1px solid black",
-  //   padding: "6px 15px",
-  //   textTransform: "none",
-  //   ":hover": {
-  //     backgroundColor: "black",
-  //     color: "white",
-  //   },
-  // });
 
   return (
     <Box className=" flex min-h-screen w-5/6 flex-col items-center">
@@ -196,7 +236,15 @@ export const CustomerInfo = () => {
       <Paper className="mb-10 w-[90%]">
         <Box className="m-10 flex flex-col">
           <FormControl>
-            <FormLabel className="my-1 font-bold text-black">
+            <FormLabel className="my-2 font-bold text-black">Email:</FormLabel>
+            <TextField
+              required
+              name="name"
+              value={customer?.email}
+              disabled={true}
+              variant="outlined"
+            />
+            <FormLabel className="my-2 font-bold text-black">
               Tên khách hàng:
             </FormLabel>
             <TextField
@@ -209,7 +257,7 @@ export const CustomerInfo = () => {
               error={error.name}
               helperText={error.name && "Tên khách hàng không được để trống"}
             />
-            <FormLabel className="my-1 font-bold text-black">
+            <FormLabel className="my-2 font-bold text-black">
               Số điện thoại:
             </FormLabel>
             <TextField
@@ -220,11 +268,9 @@ export const CustomerInfo = () => {
               onChange={handleChangeCustomerInfo}
               variant="outlined"
               error={error.phoneNumber}
-              helperText={
-                error.phoneNumber && "Số điện thoại không được để trống"
-              }
+              helperText={error.phoneNumber && "Số điện thoại không hợp lệ"}
             />
-            <FormLabel className="my-1 font-bold text-black">
+            <FormLabel className="my-2 font-bold text-black">
               Số nhà, tên đường:
             </FormLabel>
             <TextField
@@ -234,23 +280,25 @@ export const CustomerInfo = () => {
               disabled={!editInfo}
               onChange={handleChangeCustomerInfo}
               variant="outlined"
-              error={error.address}
+              error={error.street}
               helperText={
-                error.address && "Số nhà, tên đường không được để trống"
+                error.street && "Số nhà, tên đường không được để trống"
               }
             />
           </FormControl>
           <Box className="flex flex-row justify-between">
             <FormControl className="w-1/3 pr-1">
-              <FormLabel className="my-1 font-bold text-black">
+              <FormLabel className="my-2 font-bold text-black">
                 Tỉnh/thành phố:
               </FormLabel>
               <Select
                 className="w-full"
+                name="province"
                 value={customerInfo.address?.province}
                 onChange={handleProvinceChange}
                 variant="outlined"
                 disabled={!editInfo}
+                error={error.province}
               >
                 {provinces.map((province) => (
                   <MenuItem key={province.Name} value={province.Name}>
@@ -258,17 +306,22 @@ export const CustomerInfo = () => {
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText className="text-red-600">
+                {error.province && "Tỉnh/thành phố không được để trống"}
+              </FormHelperText>
             </FormControl>
             <FormControl className="w-1/3 px-1">
-              <FormLabel className="my-1 font-bold text-black">
+              <FormLabel className="my-2 font-bold text-black">
                 Quận/huyện:
               </FormLabel>
               <Select
                 className="w-full"
+                name="district"
                 value={customerInfo.address?.district}
                 onChange={handleDistrictChange}
                 variant="outlined"
-                disabled={!editInfo}
+                disabled={!editInfo || districts.length === 0}
+                error={error.district}
               >
                 {districts.map((district) => (
                   <MenuItem key={district.Name} value={district.Name}>
@@ -276,17 +329,22 @@ export const CustomerInfo = () => {
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText className="text-red-600">
+                {error.district && "Quận/huyện không được để trống"}
+              </FormHelperText>
             </FormControl>
             <FormControl className="w-1/3 pl-1">
-              <FormLabel className="my-1 font-bold text-black">
+              <FormLabel className="my-2 font-bold text-black">
                 Phường/xã:
               </FormLabel>
               <Select
                 className="w-full"
+                name="ward"
                 value={customerInfo.address?.ward}
                 onChange={handleWardChange}
                 variant="outlined"
-                disabled={!editInfo}
+                disabled={!editInfo || wards.length === 0}
+                error={error.ward}
               >
                 {wards.map((ward) => (
                   <MenuItem key={ward.Name} value={ward.Name}>
@@ -294,6 +352,9 @@ export const CustomerInfo = () => {
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText className="text-red-600">
+                {error.ward && "Phường/xã không được để trống"}
+              </FormHelperText>
             </FormControl>
           </Box>
           <FormControl className="mt-3 flex flex-row justify-end">
