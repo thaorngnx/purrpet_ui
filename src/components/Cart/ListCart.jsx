@@ -50,7 +50,11 @@ export const ListCart = () => {
         const productList = [];
         for (let i = 0; i < cart.length; i++) {
           const productData = await getProductByCode(cart[i].productCode);
-          console.log("res", productData.data);
+          if (productData.data.inventory <= 0) {
+            deleteProductCart({ productCode: cart[i].productCode });
+            continue;
+          }
+
           productList.push({
             ...productData.data,
             quantity: cart[i].quantity,
