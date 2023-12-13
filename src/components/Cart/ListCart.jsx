@@ -21,6 +21,7 @@ import { createOrder } from "../../api/order";
 import { useStore } from "../../zustand/store";
 import { createPaymentUrl } from "../../api/pay";
 import { BigHoverTransformButton } from "../Button/StyledButton";
+import { validateObject } from "../../utils/validationData";
 
 export const ListCart = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ export const ListCart = () => {
         const productList = [];
         for (let i = 0; i < cart.length; i++) {
           const productData = await getProductByCode(cart[i].productCode);
-          if (productData.data.inventory <= 0) {
+          if (productData.data.inventory < cart[i].quantity) {
             deleteProductCart({ productCode: cart[i].productCode });
             continue;
           }
@@ -69,6 +70,16 @@ export const ListCart = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (cart.length === 0) {
+      setProductCart([]);
+      setShowBtnConfirmOrder(false);
+      if (openCustomerInfoForm) {
+        setOpenCustomerInfoForm(false);
+      }
+    }
+  }, [cart]);
 
   const handleAddQuantity = (product) => {
     if (product.quantity < product.inventory) {
@@ -122,7 +133,6 @@ export const ListCart = () => {
   const handleDeleteCart = (product) => {
     if (productCart.length === 1) {
       deleteCart();
-      openCustomerInfoForm && setOpenCustomerInfoForm(false);
     } else {
       const newProductCart = productCart.filter(
         (item) => item.purrPetCode !== product.purrPetCode,
@@ -341,29 +351,23 @@ export const ListCart = () => {
           </>
         )}
       </Paper>
-      {openCustomerInfoForm && (
+      {productCart.length > 0 && openCustomerInfoForm && (
         <CustomerInfoFormForOrder
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
         />
       )}
-      {showBtnConfirmOrder && (
-        // <Button
-        //   variant="contained"
-        //   className="mx-auto my-3 w-fit justify-center bg-cyan-900 p-2 text-center text-white"
-        //   disabled={buttonDisabled}
-        //   onClick={handleConfirmOrder}
-        // >
-        //   Tiến hành thanh toán
-        // </Button>
-        <BigHoverTransformButton
-          onClick={handleConfirmOrder}
-          className="mx-auto my-3 w-fit justify-center"
-          disabled={buttonDisabled}
-        >
-          Tiến hành thanh toán
-        </BigHoverTransformButton>
-      )}
+      {productCart.length > 0 &&
+        validateObject(orderInfo) &&
+        showBtnConfirmOrder && (
+          <BigHoverTransformButton
+            onClick={handleConfirmOrder}
+            className="mx-auto my-3 w-fit justify-center"
+            disabled={buttonDisabled}
+          >
+            Tiến hành thanh toán
+          </BigHoverTransformButton>
+        )}
     </Box>
   );
 };

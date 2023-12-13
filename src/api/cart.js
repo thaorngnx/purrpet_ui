@@ -34,11 +34,9 @@ export async function updateCart(cart) {
   }
 }
 
-export async function deleteCart(product) {
+export async function deleteCart() {
   try {
-    console.log(product);
     const response = await api.delete("cart/delete", {
-      data: product,
       withCredentials: true,
     });
     return response.data;

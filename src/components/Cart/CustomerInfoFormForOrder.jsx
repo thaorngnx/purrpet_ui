@@ -8,14 +8,23 @@ import {
   Paper,
   Select,
   MenuItem,
+  FormHelperText,
+  Box,
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
 import { useStore } from "../../zustand/store";
 import { BigHoverFitContentButton } from "../Button/StyledButton";
+import {
+  validateEmail,
+  validateOtp,
+  validatePhone,
+} from "../../utils/validationData";
 
 export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
+
+  const { setCustomerState } = useStore();
 
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -26,6 +35,8 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
   const [existCustomer, setExistCustomer] = useState(false);
   const [editInfo, setEditInfo] = useState(true);
   const [error, setError] = useState({});
+  //backup customer info when cancel edit
+  const [backupCustomerInfo, setBackupCustomerInfo] = useState({});
   const [customerInfo, setCustomerInfo] = useState({
     customerPhone: "",
     otp: "",
@@ -95,26 +106,22 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
     fetchData();
   }, [customerState]);
 
+  useEffect(() => {
+    if (!editInfo) {
+      setBackupCustomerInfo({ ...customerInfo });
+    }
+  }, [editInfo]);
+
   const handleChangeCustomerInfo = (event) => {
-    setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    } else {
+      setError({ ...error, [event.target.name]: false });
     }
-    if (event.target.name === "customerPhone") {
-      customer({ ...customerInfo, customerPhone: event.target.value });
-      setCustomerInfo({
-        ...customerInfo,
-        [event.target.name]: event.target.value,
-      });
-    }
-    if (event.target.name === "customerNote") {
-      // customerNote(event.target.value);
-      customer({ ...customerInfo, customerNote: event.target.value });
-      setCustomerInfo({
-        ...customerInfo,
-        [event.target.name]: event.target.value,
-      });
-    }
+    customer({
+      ...customerInfo,
+      [event.target.name]: event.target.value,
+    });
     setCustomerInfo({
       ...customerInfo,
       [event.target.name]: event.target.value,
@@ -123,6 +130,13 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
 
   const handleSendOTPCLick = () => {
     console.log("send otp");
+    if (
+      !customerInfo.customerEmail ||
+      !validateEmail(customerInfo.customerEmail)
+    ) {
+      setError({ ...error, customerEmail: true });
+      return;
+    }
     //api send otp
     sendOtp({ email: customerInfo.customerEmail }).then((res) => {
       if (res.err === 0) {
@@ -134,6 +148,10 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
 
   const handleValidOTPCLick = () => {
     console.log("send otp");
+    if (!customerInfo.otp || !validateOtp(customerInfo.otp)) {
+      setError({ ...error, otp: true });
+      return;
+    }
     //api check otp
     verifyOtp({
       email: customerInfo.customerEmail,
@@ -142,56 +160,57 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       console.log(res);
       if (res.err === 0) {
         setOtpValid(true);
-        if (res.data === null) {
-          setExistCustomer(false);
-          setEditInfo(true);
-        } else {
-          setExistCustomer(true);
-          setEditInfo(true);
-          setHasAddress(false);
-          let address = {
-            street: "",
-            province: "",
-            district: "",
-            ward: "",
-          };
-          if (res.data.address) {
-            setEditInfo(false);
-            setHasAddress(true);
-            confirmInfo(true);
-            const selectedProvince = provinces.find(
-              (province) => province.Name === res.data.address.province,
-            );
-            const selectedDistrict = selectedProvince.Districts.find(
-              (district) => district.Name === res.data.address.district,
-            );
-            setDistricts(selectedProvince.Districts);
-            setWards(selectedDistrict.Wards);
-            address = {
-              street: res.data.address.street,
-              province: res.data.address.province,
-              district: res.data.address.district,
-              ward: res.data.address.ward,
-            };
-          }
-          customer({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
-            customerAddress: address,
-          });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
-            customerAddress: address,
-          });
-        }
+        setCustomerState({ data: res.data, error: null, loading: false });
+        // if (res.data === null) {
+        //   setExistCustomer(false);
+        //   setEditInfo(true);
+        // } else {
+        //   setExistCustomer(true);
+        //   setEditInfo(true);
+        //   setHasAddress(false);
+        //   let address = {
+        //     street: "",
+        //     province: "",
+        //     district: "",
+        //     ward: "",
+        //   };
+        //   if (res.data.address) {
+        //     setEditInfo(false);
+        //     setHasAddress(true);
+        //     confirmInfo(true);
+        //     const selectedProvince = provinces.find(
+        //       (province) => province.Name === res.data.address.province,
+        //     );
+        //     const selectedDistrict = selectedProvince.Districts.find(
+        //       (district) => district.Name === res.data.address.district,
+        //     );
+        //     setDistricts(selectedProvince.Districts);
+        //     setWards(selectedDistrict.Wards);
+        //     address = {
+        //       street: res.data.address.street,
+        //       province: res.data.address.province,
+        //       district: res.data.address.district,
+        //       ward: res.data.address.ward,
+        //     };
+        //   }
+        //   customer({
+        //     ...customerInfo,
+        //     customerCode: res.data.purrPetCode,
+        //     customerName: res.data.name,
+        //     customerPhone: res.data.phoneNumber,
+        //     customerAddress: address,
+        //   });
+        //   setCustomerInfo({
+        //     ...customerInfo,
+        //     customerCode: res.data.purrPetCode,
+        //     customerName: res.data.name,
+        //     customerPhone: res.data.phoneNumber,
+        //     customerAddress: address,
+        //   });
+        //}
       } else {
-        setEditInfo(true);
-        confirmInfo(false);
+        customerInfo.otp = "";
+        setError({ ...error, otp: true });
       }
     });
   };
@@ -202,6 +221,36 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       confirmInfo(false);
     } else if (existCustomer && editInfo) {
       console.log("edit customer");
+      let err = { ...error };
+      if (!customerInfo.customerName) {
+        err = { ...err, customerName: true };
+      }
+      if (!customerInfo.customerPhone) {
+        err = { ...err, customerPhone: true };
+      }
+      if (!customerInfo.customerAddress?.street) {
+        err = { ...err, street: true };
+      }
+      if (!customerInfo.customerAddress?.province) {
+        err = { ...err, province: true };
+      }
+      if (!customerInfo.customerAddress?.district) {
+        err = { ...err, district: true };
+      }
+      if (!customerInfo.customerAddress?.ward) {
+        err = { ...err, ward: true };
+      }
+      if (Object.keys(err).length > 0) {
+        setError(err);
+        return;
+      }
+      if (
+        !customerInfo.customerName ||
+        !customerInfo.customerPhone ||
+        !customerInfo.customerAddress?.street
+      ) {
+        return;
+      }
       //api update customer
       updateCustomer({
         purrPetCode: customerInfo.customerCode,
@@ -226,11 +275,12 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         address: customerInfo.customerAddress,
       }).then((res) => {
         if (res.err === 0) {
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-          });
-          customer({ ...customerInfo, customerCode: res.data.purrPetCode });
+          // setCustomerInfo({
+          //   ...customerInfo,
+          //   customerCode: res.data.purrPetCode,
+          // });
+          // customer({ ...customerInfo, customerCode: res.data.purrPetCode });
+          setCustomerState({ data: res.data, error: null, loading: false });
         }
       });
       //oke
@@ -242,10 +292,28 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
 
   const handleCancleEditInfo = () => {
     setEditInfo(false);
+    setError({});
     confirmInfo(true);
+    if (provinces.length > 0) {
+      const selectedProvince = provinces.find(
+        (province) => province.Name === customerState.address.province,
+      );
+      const selectedDistrict = selectedProvince.Districts.find(
+        (district) => district.Name === customerState.address.district,
+      );
+      setDistricts(selectedProvince.Districts);
+      setWards(selectedDistrict.Wards);
+    }
+    customer({ ...backupCustomerInfo });
+    setCustomerInfo({ ...backupCustomerInfo });
   };
 
   const handleChangeStreet = (e) => {
+    if (!e.target.value) {
+      setError({ ...error, street: true });
+    } else {
+      setError({ ...error, street: false });
+    }
     customer({
       ...customerInfo,
       customerAddress: {
@@ -368,7 +436,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
         variant="h6"
         gutterBottom
         component="div"
-        className="text-center font-bold"
+        className="mb-3 text-center font-bold"
       >
         Thông tin khách hàng
       </Typography>
@@ -383,22 +451,32 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
               disabled={otpValid}
               onChange={handleChangeCustomerInfo}
               variant="outlined"
+              className="my-3"
               error={error.customerEmail}
-              helperText={error.customerPhone && "Email không được để trống"}
+              helperText={error.customerEmail && "Email không hợp lệ"}
+              onBlur={() => {
+                if (!validateEmail(customerInfo.customerEmail)) {
+                  setError({ ...error, customerEmail: true });
+                }
+              }}
             />
+            {otpClick && !otpValid && (
+              <Typography className="text-sm italic text-blue-950">
+                Mã OTP đã được gửi đến email của bạn và có hiệu lực trong 5 phút
+              </Typography>
+            )}
             {!otpValid && (
-              <BigHoverFitContentButton
-                variant="outlined"
-                onClick={handleSendOTPCLick}
-              >
-                {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
-              </BigHoverFitContentButton>
+              <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <BigHoverFitContentButton onClick={handleSendOTPCLick}>
+                  {otpClick ? "Gửi lại OTP" : "Gửi OTP"}
+                </BigHoverFitContentButton>
+              </Box>
             )}
           </FormControl>
 
           {otpClick && !otpValid && (
             <FormControl>
-              <FormLabel className="font-bold text-black">OTP:</FormLabel>
+              <FormLabel className="my-2 font-bold text-black">OTP:</FormLabel>
               <TextField
                 required
                 name="otp"
@@ -406,22 +484,20 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
                 value={customerInfo.otp}
                 onChange={handleChangeCustomerInfo}
                 variant="outlined"
+                className="mb-3"
                 error={error.otp}
-                helperText={error.otp && "OTP không được để trống"}
+                helperText={error.otp && "OTP không hợp lệ"}
+                onBlur={() => {
+                  if (!validateOtp(customerInfo.otp)) {
+                    setError({ ...error, otp: true });
+                  }
+                }}
               />
-              {/* <Button
-                variant="outlined"
-                className="w-fit"
-                onClick={handleValidOTPCLick}
-              >
-                Xác thực
-              </Button> */}
-              <BigHoverFitContentButton
-                variant="outlined"
-                onClick={handleValidOTPCLick}
-              >
-                Xác thực
-              </BigHoverFitContentButton>
+              <Box sx={{ display: "flex", justifyContent: "end" }}>
+                <BigHoverFitContentButton onClick={handleValidOTPCLick}>
+                  Xác thực
+                </BigHoverFitContentButton>
+              </Box>
             </FormControl>
           )}
         </>
@@ -430,7 +506,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       {otpValid && (
         <>
           <FormControl>
-            <FormLabel className="font-bold text-black">
+            <FormLabel className="mb-2 font-bold text-black">
               Tên khách hàng:
             </FormLabel>
             <TextField
@@ -444,8 +520,13 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
               helperText={
                 error.customerName && "Tên khách hàng không được để trống"
               }
+              onBlur={() => {
+                if (!customerInfo.customerName) {
+                  setError({ ...error, customerName: true });
+                }
+              }}
             />
-            <FormLabel className="font-bold text-black">
+            <FormLabel className="my-2 font-bold text-black">
               Số điện thoại:
             </FormLabel>
             <TextField
@@ -456,27 +537,33 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
               onChange={handleChangeCustomerInfo}
               variant="outlined"
               error={error.customerPhone}
-              helperText={
-                error.customerPhone && "Số điện thoại không được để trống"
-              }
+              helperText={error.customerPhone && "Số điện thoại không hợp lệ"}
+              onBlur={() => {
+                if (!validatePhone(customerInfo.customerPhone)) {
+                  setError({ ...error, customerPhone: true });
+                }
+              }}
             />
-            <FormLabel className="font-bold text-black">
+            <FormLabel className="my-2 font-bold text-black">
               Số nhà, tên đường:
             </FormLabel>
             <TextField
               required
-              name="customerAddress"
+              name="street"
               value={customerInfo.customerAddress?.street}
               disabled={!editInfo}
               onChange={handleChangeStreet}
               variant="outlined"
-              error={error.customerAddress}
-              helperText={
-                error.customerAddress && "Địa chỉ không được để trống"
-              }
+              error={error.street}
+              helperText={error.street && "Địa chỉ không được để trống"}
+              onBlur={() => {
+                if (!customerInfo.customerAddress?.street) {
+                  setError({ ...error, street: true });
+                }
+              }}
             />
           </FormControl>
-          <FormControl>
+          {/* <FormControl>
             <FormLabel className="font-bold text-black">
               Tỉnh/thành phố:
             </FormLabel>
@@ -538,6 +625,87 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
               variant="outlined"
               onClick={handleEditInfo}
             >
+              {!editInfo ? "Sửa" : "Xác nhận thông tin"}
+            </BigHoverFitContentButton>
+          </FormControl> */}
+          <Box className="flex flex-row justify-between">
+            <FormControl className="w-1/3 pr-1">
+              <FormLabel className="my-2 font-bold text-black">
+                Tỉnh/thành phố:
+              </FormLabel>
+              <Select
+                className="w-full"
+                name="province"
+                value={customerInfo.customerAddress?.province}
+                onChange={handleProvinceChange}
+                variant="outlined"
+                disabled={!editInfo}
+                error={error.province}
+              >
+                {provinces.map((province) => (
+                  <MenuItem key={province.Name} value={province.Name}>
+                    {province.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText className="text-red-600">
+                {error.province && "Tỉnh/thành phố không được để trống"}
+              </FormHelperText>
+            </FormControl>
+            <FormControl className="w-1/3 px-1">
+              <FormLabel className="my-2 font-bold text-black">
+                Quận/huyện:
+              </FormLabel>
+              <Select
+                className="w-full"
+                name="district"
+                value={customerInfo.customerAddress?.district}
+                onChange={handleDistrictChange}
+                variant="outlined"
+                disabled={!editInfo || districts.length === 0}
+                error={error.district}
+              >
+                {districts.map((district) => (
+                  <MenuItem key={district.Name} value={district.Name}>
+                    {district.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText className="text-red-600">
+                {error.district && "Quận/huyện không được để trống"}
+              </FormHelperText>
+            </FormControl>
+            <FormControl className="w-1/3 pl-1">
+              <FormLabel className="my-2 font-bold text-black">
+                Phường/xã:
+              </FormLabel>
+              <Select
+                className="w-full"
+                name="ward"
+                value={customerInfo.customerAddress?.ward}
+                onChange={handleWardChange}
+                variant="outlined"
+                disabled={!editInfo || wards.length === 0}
+                error={error.ward}
+              >
+                {wards.map((ward) => (
+                  <MenuItem key={ward.Name} value={ward.Name}>
+                    {ward.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText className="text-red-600">
+                {error.ward && "Phường/xã không được để trống"}
+              </FormHelperText>
+            </FormControl>
+          </Box>
+          <FormControl className="mt-3 flex flex-row justify-end">
+            {existCustomer && editInfo && hasAddress && (
+              <BigHoverFitContentButton onClick={handleCancleEditInfo}>
+                Hủy
+              </BigHoverFitContentButton>
+            )}
+            <BigHoverFitContentButton className="ml-5" onClick={handleEditInfo}>
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
           </FormControl>

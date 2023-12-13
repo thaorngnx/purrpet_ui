@@ -131,25 +131,25 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   };
 
   const handleEditInfo = () => {
-    let err = {};
-    if (!customerInfo.customerName) {
-      err = { ...error, customerName: true };
-    }
-    if (
-      !customerInfo.customerPhone ||
-      !validatePhone(customerInfo.customerPhone)
-    ) {
-      err = { ...err, customerPhone: true };
-    }
-    if (Object.keys(err).length > 0) {
-      setError(err);
-      return;
-    }
     if (existCustomer && !editInfo) {
       setEditInfo(true);
       confirmInfo(false);
     } else if (existCustomer && editInfo) {
       console.log("edit customer");
+      let err = {};
+      if (!customerInfo.customerName) {
+        err = { ...error, customerName: true };
+      }
+      if (
+        !customerInfo.customerPhone ||
+        !validatePhone(customerInfo.customerPhone)
+      ) {
+        err = { ...err, customerPhone: true };
+      }
+      if (Object.keys(err).length > 0) {
+        setError(err);
+        return;
+      }
       //api update customer
       updateCustomer({
         purrPetCode: customerInfo.customerCode,
@@ -157,11 +157,12 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
         phoneNumber: customerInfo.customerPhone,
       }).then((res) => {
         if (res.err === 0) {
-          setCustomerInfo({
-            ...customerInfo,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
-          });
+          console.log("after update customer oke");
+          // setCustomerInfo({
+          //   ...customerInfo,
+          //   customerName: res.data.name,
+          //   customerPhone: res.data.phoneNumber,
+          // });
         }
       });
       //oke
@@ -182,11 +183,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             error: null,
             data: res.data,
           });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-          });
-          customer({ ...customerInfo, customerCode: res.data.purrPetCode });
         }
       });
 
@@ -199,6 +195,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   const handleCancleEditInfo = () => {
     setError({});
+    customer({ ...backupCustomerInfo });
     setCustomerInfo({ ...backupCustomerInfo });
     setEditInfo(false);
     confirmInfo(true);
