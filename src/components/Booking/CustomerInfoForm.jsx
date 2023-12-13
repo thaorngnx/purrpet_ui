@@ -11,9 +11,16 @@ import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
 import { useStore } from "../../zustand/store";
 import { BigHoverFitContentButton } from "../Button/StyledButton";
+import {
+  validateEmail,
+  validateOtp,
+  validatePhone,
+} from "../../utils/validationData";
 
 export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   const customerState = useStore((state) => state.customerState.data);
+
+  const { setCustomerState } = useStore();
 
   const [error, setError] = useState({});
   const [otpClick, setOtpClick] = useState(false);
@@ -33,7 +40,10 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   useEffect(() => {
     if (customerState != null) {
-      customer({ ...customerInfo, customerCode: customerState.purrPetCode });
+      customer({
+        ...customerInfo,
+        customerCode: customerState.purrPetCode,
+      });
       setCustomerInfo({
         ...customerInfo,
         customerName: customerState.name,
@@ -54,25 +64,12 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   }, [editInfo]);
 
   const handleChangeCustomerInfo = (event) => {
-    setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    } else {
+      setError({ ...error, [event.target.name]: false });
     }
-    if (event.target.name === "customerPhone") {
-      customer({ ...customerInfo, customerPhone: event.target.value });
-      setCustomerInfo({
-        ...customerInfo,
-        [event.target.name]: event.target.value,
-      });
-    }
-    if (event.target.name === "customerNote") {
-      // customerNote(event.target.value);
-      customer({ ...customerInfo, customerNote: event.target.value });
-      setCustomerInfo({
-        ...customerInfo,
-        [event.target.name]: event.target.value,
-      });
-    }
+    customer({ ...customerInfo, [event.target.name]: event.target.value });
     setCustomerInfo({
       ...customerInfo,
       [event.target.name]: event.target.value,
@@ -85,9 +82,14 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       setError({ ...error, customerEmail: true });
       return;
     }
+    if (!validateEmail(customerInfo.customerEmail)) {
+      setError({ ...error, customerEmail: true });
+      return;
+    }
     //api send otp
     sendOtp({ email: customerInfo.customerEmail }).then((res) => {
       if (res.err === 0) {
+        setCustomerInfo({ ...customerInfo, otp: "" });
         setOtpClick(true);
       }
     });
@@ -95,7 +97,11 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
 
   const handleValidOTPCLick = () => {
     console.log("send otp");
-    if (customerInfo.otp === "") {
+    if (!customerInfo.otp) {
+      setError({ ...error, otp: true });
+      return;
+    }
+    if (!validateOtp(customerInfo.otp)) {
       setError({ ...error, otp: true });
       return;
     }
@@ -111,35 +117,29 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
           setExistCustomer(false);
           setEditInfo(true);
         } else {
-          setExistCustomer(true);
-          setEditInfo(false);
-          confirmInfo(true);
-          customer({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
-          });
-          setCustomerInfo({
-            ...customerInfo,
-            customerCode: res.data.purrPetCode,
-            customerName: res.data.name,
-            customerPhone: res.data.phoneNumber,
+          setCustomerState({
+            loading: false,
+            error: null,
+            data: res.data,
           });
         }
       } else {
-        setEditInfo(true);
-        confirmInfo(false);
+        customerInfo.otp = "";
+        setError({ ...error, otp: true });
       }
     });
   };
 
   const handleEditInfo = () => {
-    if (customerInfo.customerName === "") {
+    if (!customerInfo.customerName) {
       setError({ ...error, customerName: true });
       return;
     }
-    if (customerInfo.customerPhone === "") {
+    if (!customerInfo.customerPhone) {
+      setError({ ...error, customerPhone: true });
+      return;
+    }
+    if (!validatePhone(customerInfo.customerPhone)) {
       setError({ ...error, customerPhone: true });
       return;
     }
@@ -175,6 +175,11 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
       }).then((res) => {
         if (res.err === 0) {
           console.log("after create customer oke");
+          setCustomerState({
+            loading: false,
+            error: null,
+            data: res.data,
+          });
           setCustomerInfo({
             ...customerInfo,
             customerCode: res.data.purrPetCode,
@@ -230,14 +235,19 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
               variant="outlined"
               className="my-3"
               error={error.customerEmail}
-              helperText={error.customerEmail && "Email không được để trống"}
+              helperText={error.customerEmail && "Email không hợp lệ"}
               focused={error.customerEmail}
               onBlur={() => {
-                if (customerInfo.customerEmail === "") {
+                if (!customerInfo.customerEmail) {
                   setError({ ...error, customerEmail: true });
                 }
               }}
             />
+            {otpClick && !otpValid && (
+              <Typography className="text-sm italic text-blue-950">
+                Mã OTP đã được gửi đến email của bạn và có hiệu lực trong 5 phút
+              </Typography>
+            )}
             {!otpValid && (
               <Box sx={{ display: "flex", justifyContent: "end" }}>
                 <BigHoverFitContentButton onClick={handleSendOTPCLick}>
@@ -259,7 +269,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
                 variant="outlined"
                 className="mb-3"
                 error={error.otp}
-                helperText={error.otp && "OTP không được để trống"}
+                helperText={error.otp && "OTP không hợp lệ"}
                 focused={error.otp}
                 onBlur={() => {
                   if (customerInfo.otp === "") {
@@ -305,9 +315,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
             variant="outlined"
             error={error.customerPhone}
             className="my-3"
-            helperText={
-              error.customerPhone && "Số điện thoại không được để trống"
-            }
+            helperText={error.customerPhone && "Số điện thoại không hợp lệ"}
           />
           <Box
             sx={{

@@ -9,12 +9,21 @@ import { logout } from "../api/auth";
 
 const customerState = {
   loading: false,
-  error: undefined,
+  error: null,
   data: null,
 };
 
 export const customerStore = (set, get) => ({
   customerState,
+  setCustomerState: (newState) => {
+    set(
+      (state) => {
+        state.customerState = newState;
+      },
+      false,
+      `customer/setCustomerState`,
+    );
+  },
   getCustomerById: (customerId) => {
     set(
       (state) => {
@@ -30,6 +39,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = res.data;
+            state.customerState.error = null;
           },
           false,
           `customer/getCustomerById_success`,
@@ -62,6 +72,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = res.data;
+            state.customerState.error = null;
           },
           false,
           `customer/getCustomerByCode_success`,
@@ -94,6 +105,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = res.data;
+            state.customerState.error = null;
           },
           false,
           `customer/updateCustomer_success`,
@@ -125,6 +137,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = res.data;
+            state.customerState.error = null;
           },
           false,
           `customer/createCustomer_success`,
@@ -156,6 +169,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = res.data;
+            state.customerState.error = null;
           },
           false,
           `customer/verifyOtp_success`,
@@ -165,6 +179,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.error = res.message;
+            state.customerState.data = null;
           },
           false,
           `customer/verifyOtp_error`,
@@ -187,6 +202,7 @@ export const customerStore = (set, get) => ({
           (state) => {
             state.customerState.loading = false;
             state.customerState.data = null;
+            state.customerState.error = null;
           },
           false,
           `customer/logout_success`,
