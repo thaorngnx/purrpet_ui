@@ -20,6 +20,7 @@ import { createBookingSpa } from "../../api/bookingSpa";
 import { createPaymentUrl } from "../../api/pay";
 import { BigHoverTransformButton } from "../Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
+import { validateObject } from "../../utils/validationData";
 
 export const BookingSpaForm = () => {
   const navigate = useNavigate();
@@ -189,7 +190,7 @@ export const BookingSpaForm = () => {
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column" }}
-      className="min-h-screen"
+      className="mb-3 min-h-screen"
     >
       <Typography
         variant="h5"
@@ -339,7 +340,7 @@ export const BookingSpaForm = () => {
           confirmInfo={handleConfirmInfo}
         />
       )}
-      {showBtnConfirmBook && (
+      {validateObject(bookingInfo) && showBtnConfirmBook && (
         <BigHoverTransformButton
           onClick={handleConfirmBooking}
           className="m-auto my-3"

@@ -24,6 +24,7 @@ import { createBookingHome, getUnavailableDay } from "../../api/bookingHome";
 import { createPaymentUrl } from "../../api/pay";
 import { BigHoverTransformButton } from "../Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
+import { validateObject } from "../../utils/validationData";
 
 export const BookingHomeForm = () => {
   const navigate = useNavigate();
@@ -267,7 +268,7 @@ export const BookingHomeForm = () => {
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column" }}
-      className="min-h-screen"
+      className="mb-3 min-h-screen"
     >
       <Typography
         variant="h5"
@@ -456,7 +457,7 @@ export const BookingHomeForm = () => {
           confirmInfo={handleConfirmInfo}
         />
       )}
-      {showBtnConfirmBook && (
+      {validateObject(bookingInfo) && showBtnConfirmBook && (
         <BigHoverTransformButton
           onClick={handleConfirmBooking}
           className="m-auto my-3"

@@ -131,16 +131,18 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
   };
 
   const handleEditInfo = () => {
+    let err = {};
     if (!customerInfo.customerName) {
-      setError({ ...error, customerName: true });
-      return;
+      err = { ...error, customerName: true };
     }
-    if (!customerInfo.customerPhone) {
-      setError({ ...error, customerPhone: true });
-      return;
+    if (
+      !customerInfo.customerPhone ||
+      !validatePhone(customerInfo.customerPhone)
+    ) {
+      err = { ...err, customerPhone: true };
     }
-    if (!validatePhone(customerInfo.customerPhone)) {
-      setError({ ...error, customerPhone: true });
+    if (Object.keys(err).length > 0) {
+      setError(err);
       return;
     }
     if (existCustomer && !editInfo) {

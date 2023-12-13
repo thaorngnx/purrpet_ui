@@ -28,3 +28,20 @@ export const validateOtp = (otp) => {
     const otpRegex = /^[0-9]{4}$/;
     return otpRegex.test(otp);
 }
+
+//validate object not have any empty value
+export const validateObject = (object) => {
+    for (let key in object) {
+        if (key === "customerNote") continue;
+        if (key === "dateCheckIn" || key === "dateCheckOut" || key === "bookingDate") {
+            if (object[key] === null) {
+                return false;
+            }
+            continue;
+        }
+        if (object[key] === "") {
+            return false;
+        }
+    }
+    return true;
+}
