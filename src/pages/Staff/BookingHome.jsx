@@ -21,7 +21,7 @@ import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
 import { getHomestays } from "../../api/homestay";
 import { getMasterDatas } from "../../api/masterData";
-import { getCustomerByEmail, createCustomer } from "../../api/customer";
+import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -46,7 +46,7 @@ export const BookingHome = () => {
   const [homeSizes, setHomeSizes] = useState([]);
   const [validSizes, setValidSizes] = useState([]);
   const [unavailableDays, setUnavailableDays] = useState([]);
-  const [inputCus, setInputCus] = useState('');
+  const [inputCus, setInputCus] = useState('khachle@gmail.com');
   const [customer, setCustomer] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [order, setOrder] = useState({});
@@ -337,7 +337,7 @@ export const BookingHome = () => {
     };
   
     const handleSubscribe = () => {
-      createCustomer({
+      createCustomerByStaff({
         name: nameValue,
         email: inputCus,
       }).then((res) => {

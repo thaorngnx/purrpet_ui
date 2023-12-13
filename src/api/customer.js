@@ -97,3 +97,12 @@ export async function getCustomerByEmail(email) {
     console.error(error);
   }
 }
+
+export async function createCustomerByStaff(customer) {
+  try {
+    const response = await api.post(`customer/createcus-staff`, customer);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

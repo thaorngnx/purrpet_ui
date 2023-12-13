@@ -21,7 +21,7 @@ import {
 import * as CONST from "../../constants";
 import { getCategories } from "../../api/category";
 import { getSpas } from "../../api/spa";
-import { getCustomerByEmail, createCustomer } from "../../api/customer";
+import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
 import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
@@ -261,7 +261,7 @@ export const BookingSpa = () => {
   };
 
   const handleSubscribe = () => {
-    createCustomer({
+    createCustomerByStaff({
       name: nameValue,
       email: inputCus,
     }).then((res) => {

@@ -4,7 +4,7 @@ import { SideNavStaff } from "../../components/Nav/SideNavStaff";
 import { GridProductOrder } from "./GridProductOrder";
 import { Button, Input } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getCustomerByEmail, createCustomer } from "../../api/customer";
+import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 
 export const CreateOrder = () => {
@@ -17,15 +17,6 @@ export const CreateOrder = () => {
   useEffect(() => {
     getCustomerByEmail({ email: inputValue }).then((res) => {
       if (res.err === 0) {
-        // if(res.customerAddress  === undefined){
-        //   console.log("khách hàng chưa có địa chỉ");
-        //   res.customerAddress = {
-        //     street: "Số 1 Võ Văn Ngân" ,
-        //     ward: "Linh Chiểu",
-        //     district: "Thủ Đức",
-        //     province:"TP Hồ Chí Minh" ,
-        //   }
-        // }
         setCustomer(res.data);
       } else {
         setShowNameInput(true);
@@ -48,7 +39,7 @@ export const CreateOrder = () => {
   };
 
   const handleSubscribe= () => {
-    createCustomer({name: nameValue, email: inputValue, address:({
+    createCustomerByStaff({name: nameValue, email: inputValue, address:({
       street: "Số 1 Võ Văn Ngân" ,
       ward: "Linh Chiểu",
       district: "Thủ Đức",
