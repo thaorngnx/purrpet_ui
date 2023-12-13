@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DataGrid } from '@mui/x-data-grid';
-import { getProducts } from '../../api/product';
+import { getProductStaff } from '../../api/product';
 import {  Button, FormControl} from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -16,7 +16,6 @@ import * as CONST from "../../constants";
 
 
 export const GridProductOrder = ({customer}) => {
-  console.log("khách mua hàng la: ",customer);
   const [productlist, setProductlist] = React.useState([]);
   const [inputValue, setInputValue] = React.useState('');
   const [selectedProducts, setSelectedProducts] = React.useState([]);
@@ -25,12 +24,13 @@ export const GridProductOrder = ({customer}) => {
   const [open, setOpen] = React.useState(false);
   const [disabled, setDisabled] = React.useState(true);
   const [order, setOrder] = React.useState({});
+  const [disabledicon, setDisabledicon] = React.useState(false);
   const handleClose = () => setOpen(false);
   React.useEffect(() => {
     const fetchProducts = async () => {
       try {
         const params = { key: inputValue };
-        const response = await getProducts(params);
+        const response = await getProductStaff(params);
         setProductlist(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -50,11 +50,15 @@ export const GridProductOrder = ({customer}) => {
   const handleAddQuantity = (productName) => {
     setSelectedProducts((prevSelectedProducts) => {
       return prevSelectedProducts.map((product) => {
-        if (product.productName === productName) {
+        if (product.productName === productName && product.quantity < product.inventory ) {
           const newQuantity = product.quantity + 1;
           return { ...product, quantity: newQuantity };
         }
-        return product;
+        else{
+          setDisabledicon(true);
+          return product;
+        }
+       
       });
     });
   };
@@ -107,6 +111,7 @@ export const GridProductOrder = ({customer}) => {
               <Button
                 variant="contained"
                 className="min-w-min bg-gray-300 p-2 text-black"
+                disabled={disabledicon}
                 onClick={() => handleAddQuantity(params.row.productName)}
               >
                 <AddIcon />
@@ -132,6 +137,7 @@ export const GridProductOrder = ({customer}) => {
       if (selectedProduct) {
           setSelectedProducts([...selectedProducts, { ...selectedProduct, quantity: 1 }]);
         setInputValue('');
+        
       } else {
         console.log('Sản phẩm không tồn tại');
       }
@@ -190,7 +196,7 @@ export const GridProductOrder = ({customer}) => {
       })
     }
   return (
-    <div>
+    <div >
       <Autocomplete
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -225,7 +231,7 @@ export const GridProductOrder = ({customer}) => {
         )}
       />
       {selectedProducts.length > 0 && (
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', marginLeft: '5%'}}>
           <div style={{ height: 400, width: '600px' }}>
             <DataGrid hideFooter rows={rows} columns={columns} pageSize={5} />
           </div>

@@ -74,3 +74,12 @@ export async function reportPruduct(date){
     console.error(error);
   }
 }
+
+export async function getProductStaff(params) {
+  try {
+    const response = await api.get("product/query-staff", { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
