@@ -1,8 +1,24 @@
 {
     "routes": [
         {
-            "src": "/[^/]*",
+            "src": "/.*",
             "dest": "/"
+        },
+        {
+            "src": "/staff",
+            "dest": "/staff"
+        },
+        {
+            "src": "/staff/.*",
+            "dest": "/staff"
+        },
+        {
+            "src": "/admin",
+            "dest": "/admin"
+        },
+        {
+            "src": "/admin/.*",
+            "dest": "/admin"
         }
     ]
 }
