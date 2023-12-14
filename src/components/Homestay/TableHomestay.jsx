@@ -39,6 +39,7 @@ export const TableHomestay = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
 
   useEffect(() => {
     getHomestays().then((res) => {
@@ -198,9 +199,33 @@ export const TableHomestay = () => {
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
+    setError({});
   };
 
   const handleUpdateHomestay = () => {
+    let err = {};
+    if (!selectedHomestay.homeType) {
+      err = { ...err, homeType: true };
+    }
+    if (!selectedHomestay.description) {
+      err = { ...err, description: true };
+    }
+    if (!selectedHomestay.price) {
+      err = { ...err, price: true };
+    }
+    if (!selectedHomestay.categoryCode) {
+      err = { ...err, categoryCode: true };
+    }
+    if (!selectedHomestay.masterDataCode) {
+      err = { ...err, masterDataCode: true };
+    }
+    // if (!selectedHomestay.images || selectedHomestay.images.length === 0) {
+    //   err = { ...err, images: true };
+    // }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
     console.log(selectedHomestay);
     updateHomestay({
@@ -239,7 +264,6 @@ export const TableHomestay = () => {
   };
 
   const handleDataUpdateHomestay = (updateHomestay) => {
-    console.log("updateHomestay", updateHomestay);
     setSelectedHomestay(updateHomestay);
   };
 
@@ -259,9 +283,33 @@ export const TableHomestay = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAdd(false);
+    setError({});
   };
 
   const handleCreateHomestay = () => {
+    let err = {};
+    if (!selectedHomestay.homeType) {
+      err = { ...err, homeType: true };
+    }
+    if (!selectedHomestay.description) {
+      err = { ...err, description: true };
+    }
+    if (!selectedHomestay.price) {
+      err = { ...err, price: true };
+    }
+    if (!selectedHomestay.categoryCode) {
+      err = { ...err, categoryCode: true };
+    }
+    if (!selectedHomestay.masterDataCode) {
+      err = { ...err, masterDataCode: true };
+    }
+    // if (!selectedHomestay.images || selectedHomestay.images.length === 0) {
+    //   err = { ...err, images: true };
+    // }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createHomestay({
       homeType: selectedHomestay.homeType,
@@ -359,12 +407,13 @@ export const TableHomestay = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA HOMESTAY
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateHomestay
               homeSize={sizeHome}
               categories={activeCategory}
               homestay={selectedHomestay}
               updateHomestay={handleDataUpdateHomestay}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -376,12 +425,13 @@ export const TableHomestay = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM HOMESTAY
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateHomestay
               homeSize={sizeHome}
               categories={activeCategory}
               homestay={selectedHomestay}
               updateHomestay={handleDataUpdateHomestay}
+              err={error}
             />
           </DialogContent>
           <DialogActions>

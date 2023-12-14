@@ -200,8 +200,17 @@ export const OrderHistory = () => {
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
             <ListItem key="title" className="flex">
-              <Typography variant="body1" className="w-1/5 font-bold">
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
                 Mã ĐH
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
+                Mã KH
               </Typography>
               <Typography
                 variant="body1"
@@ -245,8 +254,17 @@ export const OrderHistory = () => {
                   >
                     <Box className="flex w-full flex-col">
                       <Box className="mb-2 flex flex-row items-center">
-                        <Typography variant="body1" className="w-1/5 px-1">
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-center"
+                        >
                           {order.purrPetCode}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-center"
+                        >
+                          {order.customerCode}
                         </Typography>
                         <Typography
                           variant="body1"

@@ -42,7 +42,7 @@ export const UploadImage = ({ product, updateProduct, err }) => {
         className="hidden"
         id="images"
       />
-      <label for="images">
+      <label htmlFor="images">
         <Button
           variant="outlined"
           component="span"

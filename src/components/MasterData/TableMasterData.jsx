@@ -20,7 +20,6 @@ import {
   getMasterDatas,
   updateMasterData,
 } from "../../api/masterData";
-import { getCategories } from "../../api/category";
 import { UpdateMasterData } from "./UpdateMasterData";
 import * as CONST from "../../constants";
 
@@ -32,6 +31,7 @@ export const TableMasterData = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
 
   useEffect(() => {
     getMasterDatas().then((res) => {
@@ -121,9 +121,27 @@ export const TableMasterData = () => {
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
+    setError({});
   };
 
   const handleUpdateMasterData = () => {
+    let err = {};
+    if (!selectedMasterData.groupCode) {
+      err = { ...err, groupCode: true };
+    }
+    if (!selectedMasterData.name) {
+      err = { ...err, name: true };
+    }
+    if (!selectedMasterData.value) {
+      err = { ...err, value: true };
+    }
+    if (!selectedMasterData.description) {
+      err = { ...err, description: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
     console.log(selectedMasterData);
     updateMasterData({
@@ -146,7 +164,6 @@ export const TableMasterData = () => {
   };
 
   const handleDataUpdateMasterData = (updateMasterData) => {
-    console.log(updateMasterData);
     setSelectedMasterData(updateMasterData);
   };
 
@@ -162,9 +179,27 @@ export const TableMasterData = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAdd(false);
+    setError({});
   };
 
   const handleCreateMasterData = () => {
+    let err = {};
+    if (!selectedMasterData.groupCode) {
+      err = { ...err, groupCode: true };
+    }
+    if (!selectedMasterData.name) {
+      err = { ...err, name: true };
+    }
+    if (!selectedMasterData.value) {
+      err = { ...err, value: true };
+    }
+    if (!selectedMasterData.description) {
+      err = { ...err, description: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createMasterData({
       purrPetCode: selectedMasterData.purrPetCode,
@@ -241,10 +276,11 @@ export const TableMasterData = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA MATER DATA
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateMasterData
               masterData={selectedMasterData}
               updateMasterData={handleDataUpdateMasterData}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -256,10 +292,11 @@ export const TableMasterData = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM MATER DATA
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateMasterData
               masterData={selectedMasterData}
               updateMasterData={handleDataUpdateMasterData}
+              err={error}
             />
           </DialogContent>
           <DialogActions>

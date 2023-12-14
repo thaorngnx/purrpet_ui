@@ -8,13 +8,6 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
   const [error, setError] = useState({});
   const [categoryName, setCategoryName] = useState("");
 
-  const getCategoryName = (categoryCode) => {
-    const category = categories.find(
-      (category) => category.purrPetCode === categoryCode,
-    );
-    return category ? category.categoryName : "";
-  };
-
   useEffect(() => {
     setCategoryName(getCategoryName(product?.categoryCode));
   }, [product]);
@@ -65,8 +58,15 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
     updateProduct(updateData);
   };
 
+  const getCategoryName = (categoryCode) => {
+    const category = categories.find(
+      (category) => category.purrPetCode === categoryCode,
+    );
+    return category ? category.categoryName : "";
+  };
+
   return (
-    <Box className="m-5 w-[450px]">
+    <Box className="m-5 flex w-[450px] flex-col">
       <TextField
         required
         id="outlined-required"
@@ -120,7 +120,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
         helperText={
           error.categoryCode && "Danh mục sản phẩm không được để trống"
         }
-        className="mb-3 w-full"
+        className="mb-3"
       >
         {categories.map((category) => (
           <MenuItem key={category.categoryName} value={category.categoryName}>

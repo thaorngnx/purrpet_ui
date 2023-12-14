@@ -203,6 +203,12 @@ export const SpaHistory = () => {
                 variant="body1"
                 className="w-1/6 text-center font-bold"
               >
+                Mã KH
+              </Typography>
+              <Typography
+                variant="body1"
+                className="w-1/6 text-center font-bold"
+              >
                 Giờ hẹn
               </Typography>
               <Typography
@@ -249,6 +255,12 @@ export const SpaHistory = () => {
                       <Box className="mb-2 flex flex-row items-center">
                         <Typography variant="body1" className="w-1/6 px-1">
                           {bookingSpa.purrPetCode}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          className="w-1/6 px-1 text-center"
+                        >
+                          {bookingSpa.customerCode}
                         </Typography>
                         <Typography
                           variant="body1"

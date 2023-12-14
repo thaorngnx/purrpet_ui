@@ -31,6 +31,20 @@ export const TableSpa = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
+
+  const getCategoryName = (categoryCode) => {
+    const category = categories.find(
+      (category) => category.purrPetCode === categoryCode,
+    );
+    return category ? category.categoryName : "";
+  };
+
+  const getActiveCategory = (categories) => {
+    return categories.filter(
+      (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
+    );
+  };
 
   useEffect(() => {
     getSpas().then((res) => {
@@ -183,9 +197,33 @@ export const TableSpa = () => {
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
+    setError({});
   };
 
   const handleUpdateSpa = () => {
+    let err = {};
+    if (!selectedSpa.spaName) {
+      err.spaName = true;
+    }
+    if (!selectedSpa.spaType) {
+      err.spaType = true;
+    }
+    if (!selectedSpa.description) {
+      err.description = true;
+    }
+    if (!selectedSpa.price) {
+      err.price = true;
+    }
+    if (!selectedSpa.categoryCode) {
+      err.categoryCode = true;
+    }
+    // if (!selectedSpa.images || selectedSpa.images.length === 0) {
+    //   err.images = true;
+    // }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
     console.log(selectedSpa);
     updateSpa({
@@ -224,7 +262,6 @@ export const TableSpa = () => {
   };
 
   const handleDataUpdateSpa = (updateSpa) => {
-    console.log(updateSpa);
     setSelectedSpa(updateSpa);
   };
 
@@ -242,9 +279,33 @@ export const TableSpa = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAdd(false);
+    setError({});
   };
 
   const handleCreateSpa = () => {
+    let err = {};
+    if (!selectedSpa.spaName) {
+      err.spaName = true;
+    }
+    if (!selectedSpa.spaType) {
+      err.spaType = true;
+    }
+    if (!selectedSpa.description) {
+      err.description = true;
+    }
+    if (!selectedSpa.price) {
+      err.price = true;
+    }
+    if (!selectedSpa.categoryCode) {
+      err.categoryCode = true;
+    }
+    // if (!selectedSpa.images || selectedSpa.images.length === 0) {
+    //   err.images = true;
+    // }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createSpa({
       purrPetCode: selectedSpa.purrPetCode,
@@ -265,19 +326,6 @@ export const TableSpa = () => {
         setRows(res.data);
       });
     });
-  };
-
-  const getCategoryName = (categoryCode) => {
-    const category = categories.find(
-      (category) => category.purrPetCode === categoryCode,
-    );
-    return category ? category.categoryName : "";
-  };
-
-  const getActiveCategory = (categories) => {
-    return categories.filter(
-      (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
-    );
   };
 
   return (
@@ -336,11 +384,12 @@ export const TableSpa = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA SPA
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateSpa
               categories={activeCategory}
               spa={selectedSpa}
               updateSpa={handleDataUpdateSpa}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -352,11 +401,12 @@ export const TableSpa = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM SPA
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateSpa
               categories={activeCategory}
               spa={selectedSpa}
               updateSpa={handleDataUpdateSpa}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
