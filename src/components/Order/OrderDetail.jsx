@@ -115,10 +115,22 @@ export const OrderDetail = () => {
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
-      <Typography variant="h5" className="font-bold">
+      <Typography variant="h5" className="mb-5 font-bold">
         Chi tiết đơn hàng
       </Typography>
       <Paper className="mb-10 flex w-[90%] flex-col justify-center p-8">
+        {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY && (
+          <>
+            <Typography
+              variant="body1"
+              className="text-base italic text-red-800"
+            >
+              Vui lòng thanh toán để hoàn tất đơn. Đơn hàng sẽ tự động hủy sau
+              10 phút đặt hàng nếu không thanh toán.
+            </Typography>
+            <Divider className="my-3" />
+          </>
+        )}
         <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">

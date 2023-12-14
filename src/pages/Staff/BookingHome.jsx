@@ -11,10 +11,10 @@ import {
   Paper,
   Box,
   Button,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
@@ -26,12 +26,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { createBookingHome, getUnavailableDay, updateStatusBookingHome } from "../../api/bookingHome";
+import {
+  createBookingHome,
+  getUnavailableDay,
+  updateStatusBookingHome,
+} from "../../api/bookingHome";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
-import { Modal } from '@mui/base/Modal';
-import {StyledBackdrop} from '../../components/Modal/StyledBackdrop';
-import { ModalContent } from '../../components/Modal/ModalContent'
+import { validateObject, validateEmail } from "../../utils/validationData";
 
 export const BookingHome = () => {
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ export const BookingHome = () => {
   const [homeSizes, setHomeSizes] = useState([]);
   const [validSizes, setValidSizes] = useState([]);
   const [unavailableDays, setUnavailableDays] = useState([]);
-  const [inputCus, setInputCus] = useState('khachle@gmail.com');
+  const [inputCus, setInputCus] = useState("khachle@gmail.com");
   const [customer, setCustomer] = useState({});
   const [openModal, setOpenModal] = useState(false);
   const [order, setOrder] = useState({});
@@ -87,20 +89,25 @@ export const BookingHome = () => {
     getMasterDatas({ groupCode: CONST.GROUP_CODE.HOME_SIZE }).then((res) => {
       console.log(res.data);
       setHomeSizes(res.data);
-      getCustomerByEmail({email: inputCus}).then((res) => {
-        if (res.err === 0) {
-          setCustomer(res.data);
-        }else{
-          setShowNameInput(true);
-        }
-      });
+    });
+  }, [inputCus]);
+
+  useEffect(() => {
+    getCustomerByEmail({ email: inputCus }).then((res) => {
+      if (res.err === 0) {
+        setCustomer(res.data);
+        setBookingInfo({ ...bookingInfo, customerCode: res.data.purrPetCode });
+      } else {
+        setShowNameInput(true);
+      }
     });
   }, [inputCus]);
 
   const handleChangeBookingInfo = (event) => {
-    setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    } else {
+      setError({ ...error, [event.target.name]: false });
     }
     if (event.target.name === "homeSize") {
       const masterData = homeSizes.find(
@@ -209,6 +216,7 @@ export const BookingHome = () => {
       return;
     }
     setOpenCustomerInfoForm(true);
+    setShowBtnConfirmBook(true);
   };
 
   const handleDateCheckInChange = (event) => {
@@ -248,6 +256,7 @@ export const BookingHome = () => {
   };
 
   const handleConfirmBooking = () => {
+    setShowBtnConfirmBook(false);
     console.log("book", bookingInfo);
     createBookingHome({
       petName: bookingInfo.petName,
@@ -259,7 +268,7 @@ export const BookingHome = () => {
       dateCheckOut: bookingInfo.dateCheckOut,
     }).then((res) => {
       if (res.err === 0) {
-       setOrder(res.data);
+        setOrder(res.data);
         setOpenModal(true);
       }
       setMessage(res.message);
@@ -267,95 +276,115 @@ export const BookingHome = () => {
   };
 
   const handleChangeCustomerInfo = (e) => {
+    if (error.email) {
+      setError({ ...error, email: false });
+    }
     if (e.key === "Enter") {
+      if (!validateEmail(e.target.value)) {
+        setError({ ...error, email: true });
+        return;
+      }
       setInputCus(e.target.value);
     }
   };
 
-    const  handleCancelOrder = () => {
-    updateStatusBookingHome(order.purrPetCode, CONST.STATUS_BOOKING.CANCEL).then((res) => {
+  const handleCancelOrder = () => {
+    updateStatusBookingHome(
+      order.purrPetCode,
+      CONST.STATUS_BOOKING.CANCEL,
+    ).then((res) => {
+      if (res.err === 0) {
+        console.log(res);
+        setOpenModal(false);
+        setBookingInfo({
+          petName: "",
+          homeCode: "",
+          bookingHomePrice: 0,
+          customerCode: "",
+          customerNote: "",
+          homeSize: "",
+          petType: "",
+          categoryName: "",
+          categoryCode: "",
+          dateCheckIn: null,
+          dateCheckOut: null,
+          homePrice: 0,
+        });
+        setInputCus("khachle@gmail.com");
+        setOpenCustomerInfoForm(false);
+      }
+      setMessage(res.message);
+    });
+  };
+  const handlePayOrder = () => {
+    updateStatusBookingHome(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then(
+      (res) => {
         if (res.err === 0) {
-            console.log(res);
-            setOpenModal(false);
-            setBookingInfo({
-              petName: "",
-              homeCode: "",
-              bookingHomePrice: 0,
-              customerCode: "",
-              customerNote: "",
-              homeSize: "",
-              petType: "",
-              categoryName: "",
-              categoryCode: "",
-              dateCheckIn: null,
-              dateCheckOut: null,
-              homePrice: 0,
-            });
-            setInputCus("khachle@gmail.com");
-            setOpenCustomerInfoForm(false);
+          console.log(res);
+          setOpenModal(false);
+          setBookingInfo({
+            petName: "",
+            homeCode: "",
+            bookingHomePrice: 0,
+            customerCode: "",
+            customerNote: "",
+            homeSize: "",
+            petType: "",
+            categoryName: "",
+            categoryCode: "",
+            dateCheckIn: null,
+            dateCheckOut: null,
+            homePrice: 0,
+          });
+          setInputCus("khachle@gmail.com");
+          setOpenCustomerInfoForm(false);
         }
         setMessage(res.message);
-     });
-    };  
-    const handlePayOrder = () => {
-        updateStatusBookingHome(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then((res) => {
-            if (res.err === 0) {
-                console.log(res);
-                setOpenModal(false);
-              
-                setBookingInfo({
-                  petName: "",
-                  homeCode: "",
-                  bookingHomePrice: 0,
-                  customerCode: "",
-                  customerNote: "",
-                  homeSize: "",
-                  petType: "",
-                  categoryName: "",
-                  categoryCode: "",
-                  dateCheckIn: null,
-                  dateCheckOut: null,
-                  homePrice: 0,
-                });
-                setInputCus("khachle@gmail.com");
-                setOpenCustomerInfoForm(false);
-                
-            }
-            setMessage(res.message);
-         });
-        }
+      },
+    );
+  };
 
-    const handleClose = () => {
-        setOpenModal(false);
+  const handleClose = () => {
+    setOpenModal(false);
+    setError({});
+  };
+  const handleNameChange = (e) => {
+    if (!e.target.value) {
+      setError({ ...error, name: true });
+    } else {
+      setError({ ...error, name: false });
     }
-    const handleNameChange = (e) => { 
-      setNameValue(e.target.value);
-    };
-  
-    const handleCloseDialog = () => {
-      setShowNameInput(false);
-    };
-  
-    const handleSubscribe = () => {
-      createCustomerByStaff({
-        name: nameValue,
-        email: inputCus,
-      }).then((res) => {
-        if (res.err === 0) {
-          setCustomer(res.data);
-        } else {
-          setInputCus("CUS_1");
-        }
-        setShowNameInput(false);
-  
-      });
-      setShowNameInput(false);
-    
-     
+    setNameValue(e.target.value);
+  };
+
+  const handleCloseDialog = () => {
+    setShowNameInput(false);
+    setError({});
+  };
+
+  const handleSubscribe = () => {
+    if (!nameValue) {
+      setError({ ...error, name: true });
+      return;
     }
+    createCustomerByStaff({
+      name: nameValue,
+      email: inputCus,
+    }).then((res) => {
+      if (res.err === 0) {
+        setCustomer(res.data);
+        setBookingInfo({ ...bookingInfo, customerCode: res.data.purrPetCode });
+        setInputCus(res.data.email);
+      } else {
+        setInputCus("khachle@gmail.com");
+      }
+      setShowNameInput(false);
+    });
+    setShowNameInput(false);
+  };
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", width: "100%"}}
+      sx={{ display: "flex", flexDirection: "column", width: "100%" }}
       className="min-h-screen"
     >
       <Typography
@@ -540,81 +569,127 @@ export const BookingHome = () => {
           )}
       </Paper>
       {openCustomerInfoForm && (
-        <FormControl  sx={{
-          width: "85%",
-          ml: "auto",
-          mr: "auto",
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          p: 5,
-        }} >
-        <FormLabel className="font-bold text-black">Email Khách hàng:</FormLabel>
-        <TextField
-          required
-          name="email"
-          onKeyDown={handleChangeCustomerInfo}
-          variant="outlined"
-        />
-       <BigHoverTransformButton
+        <Paper
+          sx={{
+            width: "80%",
+            ml: "auto",
+            mr: "auto",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            p: 5,
+            mb: 3,
+          }}
+        >
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            className="text-center font-bold"
+          >
+            Thông tin khách hàng
+          </Typography>
+          <FormControl>
+            <FormLabel className="mb-2 font-bold text-black">
+              Email khách hàng:
+            </FormLabel>
+            <TextField
+              required
+              name="email"
+              onKeyDown={handleChangeCustomerInfo}
+              variant="outlined"
+              error={error.email}
+              helperText={error.email && "Email không hợp lệ"}
+              focused={error.email}
+            />
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Tên khách hàng:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.name}
+              </Typography>
+            </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Email:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.email}
+              </Typography>
+            </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Số điện thoại:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.phoneNumber}
+              </Typography>
+            </Box>
+          </FormControl>
+        </Paper>
+      )}
+      {validateObject(bookingInfo) &&
+        openCustomerInfoForm &&
+        showBtnConfirmBook && (
+          <BigHoverTransformButton
             onClick={handleConfirmBooking}
-            className="m-auto my-3"
+            className="m-auto mb-5"
           >
             Xác nhận đặt lịch
           </BigHoverTransformButton>
-      </FormControl>
-      )}
-       <Modal
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 9999,
-      }}
-      aria-labelledby="unstyled-modal-title"
-      aria-describedby="unstyled-modal-description"
-      open={openModal}
-      onClose={handleClose}
-      slots={{ backdrop: StyledBackdrop }}
-    >
-      <ModalContent sx={{ width: 600, display: 'flex', justifyContent: 'center' }}>
-        <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-        <p id="unstyled-modal-description">
-          Mã đơn hàng của bạn là: {order.purrPetCode}
-        </p>
-        <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-        <p id="unstyled-modal-description">
-          Tổng tiền: {order.bookingHomePrice}
-        </p>
-        <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
-        <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
-      </ModalContent>
-    </Modal>
-    <Dialog open={showNameInput} onClose={handleCloseDialog}>
-           <DialogTitle>Subscribe</DialogTitle>
-           <DialogContent>
-             <DialogContentText>
-               Tên của khách là: 
-             </DialogContentText>
-             <TextField
-               autoFocus
-               margin="dense"
-               id="name"
-               label="name"
-               fullWidth
-               variant="standard"
-                onChange={handleNameChange}
-             />
-           </DialogContent>
-           <DialogActions>
-             <Button onClick={handleCloseDialog}>Cancel</Button>
-             <Button onClick={handleSubscribe}>Subscribe</Button>
-           </DialogActions>
-         </Dialog>
+        )}
+      <Dialog open={openModal} onClose={handleClose}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          ĐƠN ĐẶT PHÒNG
+        </DialogTitle>
+        <DialogContent className="flex w-[400px] pb-0">
+          <Box className="mt-5 flex flex-col">
+            <Typography className="italic">
+              Đơn đặt phòng đã được tạo!
+            </Typography>
+            <Typography className="text-black">
+              Mã đơn đặt phòng: {order.purrPetCode}
+            </Typography>
+            <Typography className="text-black">
+              Khách hàng: {customer.name}
+            </Typography>
+            <Typography className="text-black">
+              Tổng tiền: {formatCurrency(order.bookingHomePrice)}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+            Huỷ đơn
+          </Button>
+          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
+            Thanh toán
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={showNameInput} onClose={handleCloseDialog}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          THÊM KHÁCH HÀNG
+        </DialogTitle>
+        <DialogContent className="flex w-[400px] justify-center pb-0">
+          <TextField
+            autoFocus
+            id="name"
+            name="name"
+            label="Tên khách hàng"
+            type="text"
+            onChange={handleNameChange}
+            className="my-5 w-[90%]"
+            error={error.name}
+            helperText={error.name && "Tên khách hàng không được để trống"}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleSubscribe}>Tạo</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

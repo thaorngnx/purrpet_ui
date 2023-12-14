@@ -12,10 +12,9 @@ import {
   Paper,
   Box,
   Button,
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
+  Dialog,
+  DialogActions,
+  DialogContent,
   DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
@@ -26,9 +25,7 @@ import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
 import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
-import { Modal } from "@mui/base/Modal";
-import { StyledBackdrop } from "../../components/Modal/StyledBackdrop";
-import { ModalContent } from "../../components/Modal/ModalContent";
+import { validateObject, validateEmail } from "../../utils/validationData";
 
 export const BookingSpa = () => {
   const navigate = useNavigate();
@@ -40,6 +37,7 @@ export const BookingSpa = () => {
   const [validSpas, setValidSpas] = useState([]);
   const [validSize, setValidSize] = useState([]);
   const [openTimeForm, setOpenTimeForm] = useState(false);
+  const [showBtnConfirmBook, setShowBtnConfirmBook] = useState(false);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
   const [inputCus, setInputCus] = useState("khachle@gmail.com");
   const [customer, setCustomer] = useState({});
@@ -47,7 +45,7 @@ export const BookingSpa = () => {
   const [order, setOrder] = useState({});
   const [showNameInput, setShowNameInput] = useState(false);
   const [nameValue, setNameValue] = useState("");
-  
+
   const [bookingInfo, setBookingInfo] = useState({
     petName: "",
     spaCode: "",
@@ -75,14 +73,25 @@ export const BookingSpa = () => {
       console.log(res.data);
       setAllSpas(res.data);
     });
+  }, []);
+
+  useEffect(() => {
     getCustomerByEmail({ email: inputCus }).then((res) => {
       if (res.err === 0) {
         setCustomer(res.data);
+        setBookingInfo({
+          ...bookingInfo,
+          customerCode: res.data.purrPetCode,
+        });
       } else {
         setShowNameInput(true);
       }
     });
   }, [inputCus]);
+
+  useEffect(() => {
+    setShowBtnConfirmBook(openCustomerInfoForm);
+  }, [openCustomerInfoForm]);
 
   const handleChangeBookingInfo = (event) => {
     setError({ ...error, [event.target.name]: false });
@@ -166,11 +175,10 @@ export const BookingSpa = () => {
 
   const handleUpdateBookingInfo = (bookingInfo) => {
     setBookingInfo(bookingInfo);
-    console.log(bookingInfo);
   };
 
   const handleConfirmBooking = () => {
-    console.log("book", bookingInfo);
+    setShowBtnConfirmBook(false);
     createBookingSpa({
       petName: bookingInfo.petName,
       spaCode: bookingInfo.spaCode,
@@ -190,7 +198,14 @@ export const BookingSpa = () => {
     });
   };
   const handleChangeCustomerInfo = (e) => {
+    if (error.email) {
+      setError({ ...error, email: false });
+    }
     if (e.key === "Enter") {
+      if (!validateEmail(e.target.value)) {
+        setError({ ...error, email: true });
+        return;
+      }
       setInputCus(e.target.value);
     }
   };
@@ -214,6 +229,7 @@ export const BookingSpa = () => {
           });
           setInputCus("khachle@gmail.com");
           setOpenCustomerInfoForm(false);
+          setShowBtnConfirmBook(false);
           setOpenTimeForm(false);
         }
         setMessage(res.message);
@@ -225,7 +241,6 @@ export const BookingSpa = () => {
       (res) => {
         if (res.err === 0) {
           console.log(res);
-          setOpenModal(false);
           setOpenModal(false);
           setBookingInfo({
             petName: "",
@@ -241,6 +256,7 @@ export const BookingSpa = () => {
           });
           setInputCus("khachle@gmail.com");
           setOpenCustomerInfoForm(false);
+          setShowBtnConfirmBook(false);
           setOpenTimeForm(false);
         }
         setMessage(res.message);
@@ -250,33 +266,52 @@ export const BookingSpa = () => {
 
   const handleClose = () => {
     setOpenModal(false);
+    setError({});
   };
 
-  const handleNameChange = (e) => { 
+  const handleNameChange = (e) => {
+    if (!e.target.value) {
+      setError({ ...error, name: true });
+    } else {
+      setError({ ...error, name: false });
+    }
     setNameValue(e.target.value);
   };
 
   const handleCloseDialog = () => {
     setShowNameInput(false);
+    setError({});
   };
 
   const handleSubscribe = () => {
+    let err = {};
+    if (!nameValue) {
+      console.log("name");
+      err = { ...err, name: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     createCustomerByStaff({
       name: nameValue,
       email: inputCus,
     }).then((res) => {
       if (res.err === 0) {
+        console.log(res.data);
         setCustomer(res.data);
+        setBookingInfo({
+          ...bookingInfo,
+          customerCode: res.data.purrPetCode,
+        });
       } else {
-        setInputCus("CUS_1");
+        setInputCus("khachle@gmail.com");
       }
       setShowNameInput(false);
-
     });
     setShowNameInput(false);
-  
-   
-  }
+  };
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -425,85 +460,128 @@ export const BookingSpa = () => {
         />
       )}
       {openCustomerInfoForm && (
-        <FormControl
+        <Paper
           sx={{
-            width: "85%",
+            width: "80%",
             ml: "auto",
             mr: "auto",
             position: "relative",
             display: "flex",
             flexDirection: "column",
             p: 5,
+            mb: 3,
           }}
         >
-          <FormLabel className="font-bold text-black">
-            Email Khách hàng:
-          </FormLabel>
-          <TextField
-            required
-            name="email"
-            onKeyDown={handleChangeCustomerInfo}
-            variant="outlined"
-          />
-          <BigHoverTransformButton
-          onClick={handleConfirmBooking}
-          className="m-auto my-3" >
-          Xác nhận đặt lịch
-        </BigHoverTransformButton>
-
-        </FormControl>
+          <Typography
+            variant="h6"
+            gutterBottom
+            component="div"
+            className="text-center font-bold"
+          >
+            Thông tin khách hàng
+          </Typography>
+          <FormControl>
+            <FormLabel className="mb-2 font-bold text-black">
+              Email khách hàng:
+            </FormLabel>
+            <TextField
+              required
+              name="email"
+              onKeyDown={handleChangeCustomerInfo}
+              variant="outlined"
+              error={error.email}
+              helperText={error.email && "Email không hợp lệ"}
+              focused={error.email}
+            />
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Tên khách hàng:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.name}
+              </Typography>
+            </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Email:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.email}
+              </Typography>
+            </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Số điện thoại:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {customer.phoneNumber}
+              </Typography>
+            </Box>
+          </FormControl>
+        </Paper>
       )}
-       <Modal
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 9999,
-        }}
-      aria-labelledby="unstyled-modal-title"
-      aria-describedby="unstyled-modal-description"
-      open={openModal}
-      onClose={handleClose}
-      slots={{ backdrop: StyledBackdrop }}
-    >
-      <ModalContent sx={{ width: 600, display: 'flex', justifyContent: 'center' }}>
-        <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-        <p id="unstyled-modal-description">
-          Mã đơn hàng của bạn là: {order.purrPetCode}
-        </p>
-        <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-        <p id="unstyled-modal-description">
-          Tổng tiền: {order.bookingSpaPrice}
-        </p>
-        <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
-        <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
-      </ModalContent>
-    </Modal>
-    <Dialog open={showNameInput} onClose={handleCloseDialog}>
-           <DialogTitle>Subscribe</DialogTitle>
-           <DialogContent>
-             <DialogContentText>
-               Tên của khách là: 
-             </DialogContentText>
-             <TextField
-               autoFocus
-               margin="dense"
-               id="name"
-               label="name"
-               fullWidth
-               variant="standard"
-                onChange={handleNameChange}
-             />
-           </DialogContent>
-           <DialogActions>
-             <Button onClick={handleCloseDialog}>Cancel</Button>
-             <Button onClick={handleSubscribe}>Subscribe</Button>
-           </DialogActions>
-         </Dialog>
+      {validateObject(bookingInfo) &&
+        openCustomerInfoForm &&
+        showBtnConfirmBook && (
+          <BigHoverTransformButton
+            onClick={handleConfirmBooking}
+            className="m-auto mb-5"
+          >
+            Xác nhận đặt lịch
+          </BigHoverTransformButton>
+        )}
+
+      <Dialog open={openModal} onClose={handleClose}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          ĐƠN ĐẶT LỊCH SPA
+        </DialogTitle>
+        <DialogContent className="flex w-[400px] pb-0">
+          <Box className="mt-5 flex flex-col">
+            <Typography className="italic">
+              Đơn đặt lịch đã được tạo!
+            </Typography>
+            <Typography className="text-black">
+              Mã đơn đặt lịch: {order.purrPetCode}
+            </Typography>
+            <Typography className="text-black">
+              Khách hàng: {customer.name}
+            </Typography>
+            <Typography className="text-black">
+              Tổng tiền: {formatCurrency(order.bookingSpaPrice)}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+            Huỷ đơn
+          </Button>
+          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
+            Thanh toán
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={showNameInput} onClose={handleCloseDialog}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          THÊM KHÁCH HÀNG
+        </DialogTitle>
+        <DialogContent className="flex w-[400px] justify-center pb-0">
+          <TextField
+            autoFocus
+            id="name"
+            name="name"
+            label="Tên khách hàng"
+            type="text"
+            onChange={handleNameChange}
+            className="my-5 w-[90%]"
+            error={error.name}
+            helperText={error.name && "Tên khách hàng không được để trống"}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Hủy</Button>
+          <Button onClick={handleSubscribe}>Tạo</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

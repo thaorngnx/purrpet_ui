@@ -20,9 +20,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { createOrder, updateStatusOrder } from "../../api/order";
-import { Modal } from "@mui/base/Modal";
-import { StyledBackdrop } from "../../components/Modal/StyledBackdrop";
-import { ModalContent } from "../../components/Modal/ModalContent";
 import {
   MiniIconRoundButton,
   BigHoverTransformButton,
@@ -40,6 +37,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   // const [disabled, setDisabled] = useState(true);
   const [order, setOrder] = useState({});
   const [disabledicon, setDisabledicon] = useState(false);
+  const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -62,6 +60,14 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
     setQuantity(quantity);
     fetchProducts();
   }, [inputValue, selectedProducts]);
+
+  useEffect(() => {
+    if (selectedProducts.length > 0) {
+      setShowBtnConfirmOrder(true);
+    } else {
+      setShowBtnConfirmOrder(false);
+    }
+  }, [selectedProducts]);
 
   useEffect(() => {
     if (order) {
@@ -115,6 +121,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
     {
       field: "actions",
       headerName: "Số lượng",
+      headerAlign: "center",
       minWidth: 170,
       renderCell: (params) => (
         <FormControl variant="outlined" sx={{ width: "100%" }}>
@@ -210,6 +217,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   };
 
   const handleCreateOrder = () => {
+    setShowBtnConfirmOrder(false);
     const productCodes = selectedProducts.map((product) => product.purrPetCode);
     const quantities = selectedProducts.map((product) => product.quantity);
 
@@ -314,11 +322,11 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             Thông tin đơn hàng
           </Typography>
           <Box className="mt-5 flex justify-between">
-            <Typography>Tổng sản phẩm:</Typography>
+            <Typography className="font-bold">Tổng sản phẩm:</Typography>
             <Typography>{quantity}</Typography>
           </Box>
           <Box className="mt-5 flex justify-between">
-            <Typography>Tổng giá tiền:</Typography>
+            <Typography className="font-bold">Tổng tiền:</Typography>
             <Typography>{formatCurrency(totalPrice)}</Typography>
           </Box>
           <Divider className="mt-5" />
@@ -326,59 +334,25 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             Thông tin khách hàng
           </Typography>
           <Box className="mt-5 flex justify-between">
-            <Typography>Tên khách hàng:</Typography>
+            <Typography className="font-bold">Tên khách hàng:</Typography>
             <Typography>{customer.name}</Typography>
           </Box>
           <Box className="mt-5 flex justify-between">
-            <Typography>Email:</Typography>
+            <Typography className="font-bold">Email:</Typography>
             <Typography>{customer.email}</Typography>
           </Box>
           <Box className="mt-5 flex justify-between">
-            <Typography>Số điện thoại:</Typography>
+            <Typography className="font-bold">Số điện thoại:</Typography>
             <Typography>{customer.phoneNumber}</Typography>
           </Box>
         </Paper>
       </Box>
-      {selectedProducts.length > 0 && (
+      {selectedProducts.length > 0 && showBtnConfirmOrder && (
         <BigHoverTransformButton onClick={handleCreateOrder} className="mt-5">
           Xác nhận thanh toán
         </BigHoverTransformButton>
       )}
 
-      {/* <Modal
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 9999,
-        }}
-        aria-labelledby="unstyled-modal-title"
-        aria-describedby="unstyled-modal-description"
-        open={open}
-        onClose={handleClose}
-        slots={{ backdrop: StyledBackdrop }}
-      >
-        <ModalContent
-          sx={{ width: 600, display: "flex", justifyContent: "center" }}
-        >
-          <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-          <p id="unstyled-modal-description">
-            Mã đơn hàng của bạn là: {order.purrPetCode}
-          </p>
-          <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-          <p id="unstyled-modal-description">Tổng tiền: {order.orderPrice}</p>
-          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
-            Huỷ đơn hàng
-          </Button>
-          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
-            Thanh toán
-          </Button>
-        </ModalContent>
-      </Modal> */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className=" bg-gray-400 text-center font-bold">
           ĐƠN HÀNG

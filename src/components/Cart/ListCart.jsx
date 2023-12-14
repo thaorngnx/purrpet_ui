@@ -28,8 +28,6 @@ export const ListCart = () => {
 
   const cart = useStore((state) => state.cartState.data);
   const { updateCart, deleteCart, deleteProductCart } = useStore();
-
-  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [productCart, setProductCart] = useState([]);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
   const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
@@ -161,7 +159,7 @@ export const ListCart = () => {
   };
 
   const handleConfirmOrder = () => {
-    setButtonDisabled(true);
+    setShowBtnConfirmOrder(false);
     orderInfo.orderItems = productCart.map((item) => {
       return {
         productCode: item.purrPetCode,
@@ -183,6 +181,10 @@ export const ListCart = () => {
             window.location.href = res.data.paymentUrl;
           }
         });
+      } else {
+        console.log(res.message);
+        // setProductCart([]);
+        // deleteCart();
       }
     });
   };
@@ -363,7 +365,6 @@ export const ListCart = () => {
           <BigHoverTransformButton
             onClick={handleConfirmOrder}
             className="mx-auto my-3 w-fit justify-center"
-            disabled={buttonDisabled}
           >
             Tiến hành thanh toán
           </BigHoverTransformButton>

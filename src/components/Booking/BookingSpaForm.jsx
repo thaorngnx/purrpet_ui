@@ -161,6 +161,7 @@ export const BookingSpaForm = () => {
   };
 
   const handleConfirmBooking = () => {
+    setShowBtnConfirmBook(false);
     console.log("book", bookingInfo);
     createBookingSpa({
       petName: bookingInfo.petName,

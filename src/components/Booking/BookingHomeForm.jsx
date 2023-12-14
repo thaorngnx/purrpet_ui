@@ -240,6 +240,7 @@ export const BookingHomeForm = () => {
   };
 
   const handleConfirmBooking = () => {
+    setShowBtnConfirmBook(false);
     console.log("book", bookingInfo);
     createBookingHome({
       petName: bookingInfo.petName,

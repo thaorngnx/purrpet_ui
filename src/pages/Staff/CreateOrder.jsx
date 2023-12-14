@@ -79,7 +79,7 @@ export const CreateOrder = () => {
       if (res.err === 0) {
         setCustomer(res.data);
       } else {
-        setInputValue("CUS_1");
+        setInputValue("khachle@gmail.com");
       }
       setShowNameInput(false);
     });
