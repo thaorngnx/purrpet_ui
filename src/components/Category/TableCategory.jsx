@@ -27,6 +27,29 @@ import { UpdateCategory } from "./UpdateCategory";
 import * as CONST from "../../constants";
 
 export const TableCategory = () => {
+  const [rows, setRows] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
+
+  useEffect(() => {
+    getCategories().then((res) => {
+      console.log(res.data);
+      setRows(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [alert]);
+
   const columns = [
     {
       field: "purrPetCode",
@@ -109,9 +132,21 @@ export const TableCategory = () => {
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
+    setError({});
   };
 
   const handleUpdateCategory = () => {
+    let err = {};
+    if (!selectedCategory.categoryName) {
+      err = { ...err, categoryName: true };
+    }
+    if (!selectedCategory.categoryType) {
+      err = { ...err, categoryType: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
     updateCategory({
       purrPetCode: selectedCategory.purrPetCode,
@@ -160,9 +195,21 @@ export const TableCategory = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAdd(false);
+    setError({});
   };
 
   const handleCreateCategory = () => {
+    let err = {};
+    if (!selectedCategory.categoryName) {
+      err = { ...err, categoryName: true };
+    }
+    if (!selectedCategory.categoryType) {
+      err = { ...err, categoryType: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createCategory({
       purrPetCode: selectedCategory.purrPetCode,
@@ -180,28 +227,6 @@ export const TableCategory = () => {
       });
     });
   };
-
-  const [rows, setRows] = useState([]);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openAdd, setOpenAdd] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [alert, setAlert] = useState(false);
-  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getCategories().then((res) => {
-      console.log(res.data);
-      setRows(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setAlert(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [alert]);
 
   return (
     <>
@@ -259,10 +284,11 @@ export const TableCategory = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA DANH MỤC
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateCategory
               category={selectedCategory}
               updateCategory={handleDataUpdateCategory}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -274,10 +300,11 @@ export const TableCategory = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM DANH MỤC
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateCategory
               category={selectedCategory}
               updateCategory={handleDataUpdateCategory}
+              err={error}
             />
           </DialogContent>
           <DialogActions>

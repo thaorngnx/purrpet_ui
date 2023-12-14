@@ -42,7 +42,7 @@ export const ChangePassword = ({ account, updateAccount, err }) => {
   };
 
   return (
-    <Box className="m-5">
+    <Box className="m-5 w-[400px]">
       <TextField
         label="Tên đăng nhập"
         fullWidth

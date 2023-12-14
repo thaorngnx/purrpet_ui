@@ -1,28 +1,46 @@
 import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../api/product";
 import { UploadImage } from "../Image/UploadImage";
 
-export const UpdateProduct = ({ categories, product, updateProduct }) => {
+export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
   const [productUpdate, setProductUpdate] = useState(product);
   const [error, setError] = useState({});
-  const [categoryCode, setCategoryCode] = useState(product?.categoryCode);
-  const [categoryName, setCategoryName] = useState(
-    getCategoryName(categoryCode),
-  );
+  const [categoryName, setCategoryName] = useState("");
+
+  const getCategoryName = (categoryCode) => {
+    const category = categories.find(
+      (category) => category.purrPetCode === categoryCode,
+    );
+    return category ? category.categoryName : "";
+  };
+
+  useEffect(() => {
+    setCategoryName(getCategoryName(product?.categoryCode));
+  }, [product]);
+
+  useEffect(() => {
+    if (Object.keys(err).length > 0) {
+      setError(err);
+    }
+  }, [err]);
 
   const handleChangeProduct = (event) => {
-    console.log("handleChangeProduct", event.target);
-    setError({ ...error, [event.target.name]: false });
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
+    } else {
+      setError({ ...error, [event.target.name]: false });
     }
     if (event.target.name === "category") {
+      if (!event.target.value) {
+        setError({ ...error, categoryCode: true });
+      } else {
+        setError({ ...error, categoryCode: false });
+      }
       const category = categories.find(
         (category) => category.categoryName === event.target.value,
       );
       setCategoryName(category.categoryName);
-      setCategoryCode(category.purrPetCode);
       setProductUpdate({
         ...productUpdate,
         categoryName: category.categoryName,
@@ -47,95 +65,88 @@ export const UpdateProduct = ({ categories, product, updateProduct }) => {
     updateProduct(updateData);
   };
 
-  const getCategoryName = (categoryCode) => {
-    const category = categories.find(
-      (category) => category.purrPetCode === categoryCode,
-    );
-    return category ? category.categoryName : "";
-  };
-
   return (
-    <Box component="form" sx={{ width: "90%", margin: "auto" }}>
-      <div className="mt-5">
-        <TextField
-          required
-          id="outlined-required"
-          label="Tên sản phẩm"
-          fullWidth
-          name="productName"
-          value={product.productName}
-          onChange={handleChangeProduct}
-          error={error.productName}
-          helperText={error.productName && "Tên sản phẩm không được để trống"}
-          className="mb-3"
-        />
-        <TextField
-          required
-          id="outlined-multiline-static"
-          label="Mô tả"
-          multiline
-          fullWidth
-          name="description"
-          value={product.description}
-          onChange={handleChangeProduct}
-          error={error.description}
-          helperText={error.description && "Mô tả sản phẩm không được để trống"}
-          className="mb-3"
-          InputProps={{
-            inputComponent: TextareaAutosize,
-          }}
-        />
-        <TextField
-          required
-          id="outlined-required"
-          label="Giá"
-          fullWidth
-          name="price"
-          value={product.price}
-          type="number"
-          onChange={handleChangeProduct}
-          error={error.price}
-          helperText={error.price && "Giá sản phẩm không được để trống"}
-          className="mb-3"
-        />
-        <TextField
-          label="Danh mục sản phẩm"
-          select
-          required
-          name="category"
-          key={categoryName}
-          value={categoryName}
-          sx={{ width: "50%" }}
-          onChange={handleChangeProduct}
-          error={error.categoryCode}
-          helperText={
-            error.categoryCode && "Danh mục sản phẩm không được để trống"
-          }
-        >
-          {categories.map((category) => (
-            <MenuItem key={category.categoryName} value={category.categoryName}>
-              {category.categoryName}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          required
-          id="outlined-required"
-          label="Số lượng hàng tồn kho"
-          type="number"
-          InputProps={{ inputProps: { min: 0 } }}
-          fullWidth
-          name="inventory"
-          value={product.inventory}
-          onChange={handleChangeProduct}
-          error={error.inventory}
-          helperText={
-            error.inventory && "Số lượng sản phẩm không được để trống"
-          }
-          className="mb-3"
-        />
-        <UploadImage product={product} updateProduct={handleUpdateImage} />
-      </div>
+    <Box className="m-5 w-[450px]">
+      <TextField
+        required
+        id="outlined-required"
+        label="Tên sản phẩm"
+        fullWidth
+        name="productName"
+        value={product.productName}
+        onChange={handleChangeProduct}
+        error={error.productName}
+        helperText={error.productName && "Tên sản phẩm không được để trống"}
+        className="mb-3"
+      />
+      <TextField
+        required
+        id="outlined-multiline-static"
+        label="Mô tả"
+        multiline
+        fullWidth
+        name="description"
+        value={product.description}
+        onChange={handleChangeProduct}
+        error={error.description}
+        helperText={error.description && "Mô tả sản phẩm không được để trống"}
+        className="mb-3"
+        InputProps={{
+          inputComponent: TextareaAutosize,
+        }}
+      />
+      <TextField
+        required
+        id="outlined-required"
+        label="Giá"
+        fullWidth
+        name="price"
+        value={product.price}
+        type="number"
+        onChange={handleChangeProduct}
+        error={error.price}
+        helperText={error.price && "Giá sản phẩm không được để trống"}
+        className="mb-3"
+      />
+      <TextField
+        label="Danh mục sản phẩm"
+        select
+        required
+        name="category"
+        key={categoryName}
+        value={categoryName}
+        onChange={handleChangeProduct}
+        error={error.categoryCode}
+        helperText={
+          error.categoryCode && "Danh mục sản phẩm không được để trống"
+        }
+        className="mb-3 w-full"
+      >
+        {categories.map((category) => (
+          <MenuItem key={category.categoryName} value={category.categoryName}>
+            {category.categoryName}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        required
+        id="outlined-required"
+        label="Số lượng hàng tồn kho"
+        type="number"
+        InputProps={{ inputProps: { min: 0 } }}
+        fullWidth
+        name="inventory"
+        value={product.inventory}
+        onChange={handleChangeProduct}
+        error={error.inventory}
+        helperText={error.inventory && "Số lượng sản phẩm không được để trống"}
+        className="mb-3"
+      />
+      <UploadImage
+        product={product}
+        updateProduct={handleUpdateImage}
+        err={error}
+      />
     </Box>
   );
 };

@@ -29,7 +29,7 @@ export const UpdateAccount = ({ account, updateAccount, err }) => {
   };
 
   return (
-    <Box className="m-5">
+    <Box className="m-5 w-[400px]">
       <TextField
         required
         id="outlined-required"

@@ -44,7 +44,7 @@ export const CreateAccount = ({ account, createAccount, err }) => {
   };
 
   return (
-    <Box component="form" className="m-5">
+    <Box component="form" className="m-5  w-[400px]">
       <TextField
         required
         label="Tên đăng nhập"

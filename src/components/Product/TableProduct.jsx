@@ -37,6 +37,20 @@ export const TableProduct = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
+
+  const getCategoryName = (categoryCode) => {
+    const category = categories.find(
+      (category) => category.purrPetCode === categoryCode,
+    );
+    return category ? category.categoryName : "";
+  };
+
+  const getActiveCategory = (categories) => {
+    return categories.filter(
+      (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
+    );
+  };
 
   useEffect(() => {
     getProducts().then((res) => {
@@ -111,8 +125,8 @@ export const TableProduct = () => {
       headerName: "Hình ảnh",
       flex: 3,
       headerAlign: "center",
-      align: "left",
-      minWidth: 150,
+      align: "center",
+      minWidth: 100,
       renderCell: (params) => (
         <img
           src={
@@ -121,8 +135,7 @@ export const TableProduct = () => {
               : null
           }
           alt={`Image ${params.row.purrPetCode}`}
-          width="100%"
-          height="100%"
+          className="max-h-full max-w-full object-contain"
         />
       ),
     },
@@ -190,11 +203,34 @@ export const TableProduct = () => {
 
   const handleCloseEditDialog = () => {
     setOpenEdit(false);
+    setError({});
   };
 
   const handleUpdateProduct = () => {
+    let err = {};
+    if (!selectedProduct.productName) {
+      err = { ...err, productName: true };
+    }
+    if (!selectedProduct.description) {
+      err = { ...err, description: true };
+    }
+    if (!selectedProduct.price) {
+      err = { ...err, price: true };
+    }
+    if (!selectedProduct.categoryCode) {
+      err = { ...err, categoryCode: true };
+    }
+    if (!selectedProduct.images || selectedProduct.images.length === 0) {
+      err = { ...err, images: true };
+    }
+    if (!selectedProduct.inventory) {
+      err = { ...err, inventory: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenEdit(false);
-    console.log("handleUpdateProduct", selectedProduct);
     updateProduct({
       purrPetCode: selectedProduct.purrPetCode,
       productName: selectedProduct.productName,
@@ -232,7 +268,6 @@ export const TableProduct = () => {
   };
 
   const handleDataUpdateProduct = (updateProduct) => {
-    console.log("selectedProduct", selectedProduct);
     setSelectedProduct(updateProduct);
   };
 
@@ -250,9 +285,33 @@ export const TableProduct = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAdd(false);
+    setError({});
   };
 
   const handleCreateProduct = () => {
+    let err = {};
+    if (!selectedProduct.productName) {
+      err = { ...err, productName: true };
+    }
+    if (!selectedProduct.description) {
+      err = { ...err, description: true };
+    }
+    if (!selectedProduct.price) {
+      err = { ...err, price: true };
+    }
+    if (!selectedProduct.categoryCode) {
+      err = { ...err, categoryCode: true };
+    }
+    if (!selectedProduct.images || selectedProduct.images.length === 0) {
+      err = { ...err, images: true };
+    }
+    if (!selectedProduct.inventory) {
+      err = { ...err, inventory: true };
+    }
+    if (Object.keys(err).length > 0) {
+      setError(err);
+      return;
+    }
     setOpenAdd(false);
     createProduct({
       purrPetCode: selectedProduct.purrPetCode,
@@ -273,19 +332,6 @@ export const TableProduct = () => {
         setRows(res.data);
       });
     });
-  };
-
-  const getCategoryName = (categoryCode) => {
-    const category = categories.find(
-      (category) => category.purrPetCode === categoryCode,
-    );
-    return category ? category.categoryName : "";
-  };
-
-  const getActiveCategory = (categories) => {
-    return categories.filter(
-      (category) => category.status === CONST.STATUS_CATEGORY.ACTIVE,
-    );
   };
 
   return (
@@ -344,11 +390,12 @@ export const TableProduct = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             SỬA SẢN PHẨM
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateProduct
               categories={activeCategory}
               product={selectedProduct}
               updateProduct={handleDataUpdateProduct}
+              err={error}
             />
           </DialogContent>
           <DialogActions>
@@ -360,11 +407,12 @@ export const TableProduct = () => {
           <DialogTitle className="bg-gray-400 p-5 text-center font-bold">
             THÊM SẢN PHẨM
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <UpdateProduct
               categories={activeCategory}
               product={selectedProduct}
               updateProduct={handleDataUpdateProduct}
+              err={error}
             />
           </DialogContent>
           <DialogActions>

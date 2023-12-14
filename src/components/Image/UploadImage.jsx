@@ -1,8 +1,15 @@
-import { Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
-export const UploadImage = ({ product, updateProduct }) => {
+export const UploadImage = ({ product, updateProduct, err }) => {
   const [selectedImage, setSelectedImage] = useState(product.images[0]?.path);
+  const [error, setError] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(err).length > 0) {
+      setError(err);
+    }
+  }, [err]);
 
   const handleImageChange = (event) => {
     if (!event.target.files[0]) return;
@@ -15,10 +22,15 @@ export const UploadImage = ({ product, updateProduct }) => {
   };
 
   return (
-    <div>
-      <Typography variant="h6" className="mb-2 font-bold">
+    <Box className="flex flex-col">
+      <Typography variant="h6" className="mb-2 text-base font-bold">
         Hình ảnh
       </Typography>
+      {error.images && (
+        <Typography variant="caption" className=" text-red-600">
+          Hình ảnh không được để trống
+        </Typography>
+      )}
       {selectedImage && (
         <img src={selectedImage} alt="Preview" className="h-auto max-w-full" />
       )}
@@ -27,7 +39,19 @@ export const UploadImage = ({ product, updateProduct }) => {
         type="file"
         accept="image/*"
         onChange={handleImageChange}
+        className="hidden"
+        id="images"
       />
-    </div>
+      <label for="images">
+        <Button
+          variant="outlined"
+          component="span"
+          size="small"
+          className="mt-3"
+        >
+          Chọn ảnh
+        </Button>
+      </label>
+    </Box>
   );
 };
