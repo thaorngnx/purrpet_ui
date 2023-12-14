@@ -60,7 +60,7 @@ export const BigHoverTransformButton = styled(Button)({
   },
 });
 
-export const MiniRemoveIconRoundXButton = styled(Button)({
+export const MiniIconRoundButton = styled(Button)({
   width: "20px",
   height: "20px",
   minWidth: "20px",

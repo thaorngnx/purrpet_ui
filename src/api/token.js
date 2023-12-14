@@ -50,10 +50,15 @@ api.interceptors.response.use(
         const refresh_token = Cookie.get(
           import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN,
         );
-        if (jwtDecode(refresh_token).exp < Date.now() / 1000) {
+        const decode = jwtDecode(refresh_token);
+        if (decode.exp < Date.now() / 1000) {
           console.log("refresh token expired");
-          Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-          Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, {
+            path: decode.path,
+          });
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN, {
+            path: decode.path,
+          });
           //reload page
           window.location.reload();
           return Promise.reject(error);
@@ -64,8 +69,10 @@ api.interceptors.response.use(
 
         if (!response) {
           console.log("refresh token vô dụng rồi!!!");
-          Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-          Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, 
+            { path: decode.path });
+          Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN, 
+            { path: decode.path });
           //reload page
           window.location.reload();
           return Promise.reject(error);
@@ -83,6 +90,11 @@ api.interceptors.response.use(
       } catch (error) {
         console.error(error);
       }
+    } else if (error.response.status === 401) {
+      Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
+      Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+      //reload page
+      window.location.reload();
     }
     return Promise.reject(error);
   },

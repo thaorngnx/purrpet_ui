@@ -257,7 +257,6 @@ export const TableMasterData = () => {
           hideFooterSelectedRowCount
           slots={{
             toolbar: GridToolbar,
-            noRowsOverlay: () => "Không có dữ liệu",
           }}
           classes={{
             columnHeaderTitle: "font-bold text-center",

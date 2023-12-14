@@ -1,39 +1,55 @@
-import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import { DataGrid } from '@mui/x-data-grid';
-import { getProductStaff } from '../../api/product';
-import {  Button, FormControl} from '@mui/material';
+import { useState, useEffect } from "react";
+import { getProductStaff } from "../../api/product";
+import { DataGrid, viVN } from "@mui/x-data-grid";
+import {
+  Button,
+  FormControl,
+  Box,
+  TextField,
+  Autocomplete,
+  Paper,
+  Typography,
+  Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { TiDeleteOutline } from "react-icons/ti";
-import { VscDiffAdded } from "react-icons/vsc";
-import { createOrder, updateStatusOrder } from '../../api/order';
-import { Modal } from '@mui/base/Modal';
-import {StyledBackdrop} from '../../components/Modal/StyledBackdrop';
-import { ModalContent } from '../../components/Modal/ModalContent';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { createOrder, updateStatusOrder } from "../../api/order";
+import { Modal } from "@mui/base/Modal";
+import { StyledBackdrop } from "../../components/Modal/StyledBackdrop";
+import { ModalContent } from "../../components/Modal/ModalContent";
+import {
+  MiniIconRoundButton,
+  BigHoverTransformButton,
+} from "../../components/Button/StyledButton";
+import { formatCurrency } from "../../utils/formatData";
 import * as CONST from "../../constants";
 
-
-export const GridProductOrder = ({customer}) => {
-  const [productlist, setProductlist] = React.useState([]);
-  const [inputValue, setInputValue] = React.useState('');
-  const [selectedProducts, setSelectedProducts] = React.useState([]);
-  const [totalPrice, setTotalPrice] = React.useState(0);
-  const [quantity, setQuantity] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [disabled, setDisabled] = React.useState(true);
-  const [order, setOrder] = React.useState({});
-  const [disabledicon, setDisabledicon] = React.useState(false);
+export const GridProductOrder = ({ customer, updateCustomer }) => {
+  const [productlist, setProductlist] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [open, setOpen] = useState(false);
+  // const [disabled, setDisabled] = useState(true);
+  const [order, setOrder] = useState({});
+  const [disabledicon, setDisabledicon] = useState(false);
   const handleClose = () => setOpen(false);
-  React.useEffect(() => {
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const params = { key: inputValue };
         const response = await getProductStaff(params);
         setProductlist(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
     const totalPrice = selectedProducts.reduce((total, product) => {
@@ -47,22 +63,34 @@ export const GridProductOrder = ({customer}) => {
     fetchProducts();
   }, [inputValue, selectedProducts]);
 
+  useEffect(() => {
+    if (order) {
+      setProductlist([]);
+      setSelectedProducts([]);
+      setTotalPrice(0);
+      setQuantity(0);
+      setInputValue("");
+      updateCustomer();
+    }
+  }, [order]);
+
   const handleAddQuantity = (productName) => {
     setSelectedProducts((prevSelectedProducts) => {
       return prevSelectedProducts.map((product) => {
-        if (product.productName === productName && product.quantity < product.inventory ) {
+        if (
+          product.productName === productName &&
+          product.quantity < product.inventory
+        ) {
           const newQuantity = product.quantity + 1;
           return { ...product, quantity: newQuantity };
-        }
-        else{
+        } else {
           setDisabledicon(true);
           return product;
         }
-       
       });
     });
   };
-  
+
   const handleSubtractQuantity = (productName) => {
     setSelectedProducts((prevSelectedProducts) => {
       return prevSelectedProducts.map((product) => {
@@ -77,91 +105,126 @@ export const GridProductOrder = ({customer}) => {
 
   const handleDeleteProduct = (productName) => {
     setSelectedProducts((prevSelectedProducts) => {
-      return prevSelectedProducts.filter((product) => product.productName !== productName);
+      return prevSelectedProducts.filter(
+        (product) => product.productName !== productName,
+      );
     });
   };
   const columns = [
-    { field: 'productName', headerName: 'Tên sản phẩm', width: 150 },
+    { field: "productName", headerName: "Tên sản phẩm", minWidth: 150 },
     {
-      field: 'actions',
-      headerName: 'Số lượng',
-      width: 200,
+      field: "actions",
+      headerName: "Số lượng",
+      minWidth: 170,
       renderCell: (params) => (
-        <>
-          <FormControl variant="outlined" sx={{ width: '100%' }}>
-            <div>
-              <Button
-                variant="contained"
-                className="min-w-min bg-gray-300 p-2 text-black"
-                onClick={() => handleSubtractQuantity(params.row.productName)}
-              >
-                <RemoveIcon />
-              </Button>
-              <TextField
-                type="number"
-                variant="outlined"
-                size="small"
-                value={params.row.quantity}
-                disabled
-                sx={{ width: '100px' }}
-                inputProps={{
-                  style: { textAlign: 'center' },
-                }}
-              />
-              <Button
-                variant="contained"
-                className="min-w-min bg-gray-300 p-2 text-black"
-                disabled={disabledicon}
-                onClick={() => handleAddQuantity(params.row.productName)}
-              >
-                <AddIcon />
-              </Button>
-            </div>
-          </FormControl>
-        </>
+        <FormControl variant="outlined" sx={{ width: "100%" }}>
+          <Box className="flex flex-row">
+            <Button
+              variant="contained"
+              className="min-w-min bg-gray-300 p-2 text-black"
+              onClick={() => handleSubtractQuantity(params.row.productName)}
+            >
+              <RemoveIcon />
+            </Button>
+            <TextField
+              type="number"
+              variant="outlined"
+              size="small"
+              value={params.row.quantity}
+              disabled
+              sx={{ width: "70px" }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
+            />
+            <Button
+              variant="contained"
+              className="min-w-min bg-gray-300 p-2 text-black"
+              disabled={disabledicon}
+              onClick={() => handleAddQuantity(params.row.productName)}
+            >
+              <AddIcon />
+            </Button>
+          </Box>
+        </FormControl>
       ),
     },
-    { field: 'productPrice', headerName: 'Giá sản phẩm', width: 200 },
-    { field: 'deleteProduct', headerName: '', width: 200, renderCell: (params) =>  <TiDeleteOutline className="text-xl" onClick={() => handleDeleteProduct(params.row.productName)} /> },
+    {
+      field: "productPrice",
+      headerName: "Đơn giá",
+      headerAlign: "center",
+      align: "right",
+      minWidth: 120,
+      valueFormatter: (params) => formatCurrency(params.value),
+    },
+    {
+      field: "totalPrice",
+      headerName: "Thành tiền",
+      headerAlign: "center",
+      align: "right",
+      minWidth: 120,
+      valueFormatter: (params) => formatCurrency(params.value),
+    },
+    {
+      field: "deleteProduct",
+      headerName: "",
+      align: "center",
+      minWidth: 20,
+      renderCell: (params) => (
+        <MiniIconRoundButton
+          onClick={() => handleDeleteProduct(params.row.productName)}
+        >
+          <HighlightOffIcon />
+        </MiniIconRoundButton>
+      ),
+    },
   ];
   const rows = selectedProducts.map((product, index) => ({
     id: index + 1,
     productName: product.productName,
-    productPrice: product.price * product.quantity,
+    productPrice: product.price,
+    totalPrice: product.price * product.quantity,
     quantity: product.quantity,
   }));
 
   const handleAddProduct = () => {
-    if (inputValue && !selectedProducts.some((product) => product.productName === inputValue)) {
-      const selectedProduct = productlist.find((product) => product.productName === inputValue);
+    if (
+      inputValue &&
+      !selectedProducts.some((product) => product.productName === inputValue)
+    ) {
+      const selectedProduct = productlist.find(
+        (product) => product.productName === inputValue,
+      );
       if (selectedProduct) {
-          setSelectedProducts([...selectedProducts, { ...selectedProduct, quantity: 1 }]);
-        setInputValue('');
-        
+        setSelectedProducts([
+          ...selectedProducts,
+          { ...selectedProduct, quantity: 1 },
+        ]);
+        setInputValue("");
       } else {
-        console.log('Sản phẩm không tồn tại');
+        console.log("Sản phẩm không tồn tại");
       }
     } else {
       handleAddQuantity(inputValue);
     }
-    setDisabled(false);
   };
 
   const handleCreateOrder = () => {
     const productCodes = selectedProducts.map((product) => product.purrPetCode);
     const quantities = selectedProducts.map((product) => product.quantity);
-  
+
     const orderItems = productCodes.map((productCode, index) => ({
       productCode: productCode,
       quantity: quantities[index],
     }));
-    if(customer.address === undefined){
+
+    if (customer.address === undefined) {
       customer.address = {
-      street: "Số 1 Võ Văn Ngân" ,
-      ward: "Linh Chiểu",
-      district: "Thủ Đức",
-      province:"TP Hồ Chí Minh" ,
-      }
+        street: "Số 1 Võ Văn Ngân",
+        ward: "Linh Chiểu",
+        district: "Thủ Đức",
+        province: "TP Hồ Chí Minh",
+      };
     }
     const orderData = {
       orderItems: orderItems,
@@ -171,111 +234,178 @@ export const GridProductOrder = ({customer}) => {
     console.log("order data: ", orderData);
     createOrder(orderData)
       .then((res) => {
-        setOrder(res.data);
-        setOpen(true);
+        console.log("res: ", res);
+        if (res.err === 0) {
+          setOrder(res.data);
+          setOpen(true);
+        }
       })
       .catch((err) => {
         console.log(err);
-      }); 
-   
+      });
   };
   const handleCancelOrder = (purrPetCode) => {
-    updateStatusOrder( purrPetCode, CONST.STATUS_ORDER.CANCEL
-    ).then((res) => {
+    updateStatusOrder(purrPetCode, CONST.STATUS_ORDER.CANCEL).then((res) => {
       setOpen(false);
       setSelectedProducts([]);
-      setDisabled(true);
-    })
-  }
+    });
+  };
   const handlePayOrder = () => {
-      updateStatusOrder( order.purrPetCode, CONST.STATUS_ORDER.PAID
-      ).then((res) => {
+    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.PAID).then(
+      (res) => {
         setOpen(false);
         setSelectedProducts([]);
-        setDisabled(true);
-      })
-    }
+      },
+    );
+  };
   return (
-    <div >
-      <Autocomplete
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleAddProduct();
-          }
-        }}
-        id="controllable-states-demo"
-        options={productlist.map((product) => product.productName)}
-        sx={{ width: 600, marginLeft: '5%' }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Tìm kiến sản phẩm"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <>
-                  {params.InputProps.endAdornment}
-                  {inputValue && !selectedProducts.includes(inputValue) && (
-                    <Button onClick={handleAddProduct}>
-                      <VscDiffAdded />
-                    </Button>
-                  )}
-                </>
-              ),
+    <Box className="flex w-full flex-col items-center justify-center p-5">
+      <Box className="flex h-96 w-full justify-between">
+        <Box className="flex w-3/5 flex-col">
+          <Autocomplete
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
             }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleAddProduct();
+              }
+            }}
+            id="product-search"
+            options={productlist.map((product) => product.productName)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Tên sản phẩm"
+                placeholder="Nhập tên sản phẩm"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {params.InputProps.endAdornment}
+                      {inputValue && !selectedProducts.includes(inputValue) && (
+                        <MiniIconRoundButton onClick={handleAddProduct}>
+                          <AddCircleOutlineIcon />
+                        </MiniIconRoundButton>
+                      )}
+                    </>
+                  ),
+                }}
+              />
+            )}
           />
-        )}
-      />
+          <Box className="mt-5 h-full">
+            <DataGrid
+              hideFooter
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              classes={{
+                columnHeaderTitle: "font-bold text-center",
+                columnHeaders: "bg-gray-200",
+              }}
+              localeText={viVN.components.MuiDataGrid.defaultProps.localeText}
+            />
+          </Box>
+        </Box>
+        <Paper className="ml-5 w-2/5 px-5">
+          <Typography className="mt-5 text-center text-lg font-bold">
+            Thông tin đơn hàng
+          </Typography>
+          <Box className="mt-5 flex justify-between">
+            <Typography>Tổng sản phẩm:</Typography>
+            <Typography>{quantity}</Typography>
+          </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography>Tổng giá tiền:</Typography>
+            <Typography>{formatCurrency(totalPrice)}</Typography>
+          </Box>
+          <Divider className="mt-5" />
+          <Typography className="mt-5 text-center text-lg font-bold">
+            Thông tin khách hàng
+          </Typography>
+          <Box className="mt-5 flex justify-between">
+            <Typography>Tên khách hàng:</Typography>
+            <Typography>{customer.name}</Typography>
+          </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography>Email:</Typography>
+            <Typography>{customer.email}</Typography>
+          </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography>Số điện thoại:</Typography>
+            <Typography>{customer.phoneNumber}</Typography>
+          </Box>
+        </Paper>
+      </Box>
       {selectedProducts.length > 0 && (
-        <div style={{display: 'flex', marginLeft: '5%'}}>
-          <div style={{ height: 400, width: '600px' }}>
-            <DataGrid hideFooter rows={rows} columns={columns} pageSize={5} />
-          </div>
-          <div style={{ width: '20%', marginLeft: '20px' }}>
-          <div> Tổng sản phẩm: {quantity}</div>
-          <div>Tổng giá tiền: {totalPrice}</div>
-          </div>
-        </div>
+        <BigHoverTransformButton onClick={handleCreateOrder} className="mt-5">
+          Xác nhận thanh toán
+        </BigHoverTransformButton>
       )}
-     <div style={{display: 'flex', justifyContent: 'right', marginRight: '20%' }}>
-      <Button type="button" disabled={disabled} onClick={handleCreateOrder} style={{background: '#3a74bb',color: '#ffff'}}>
-        Xác nhận thanh toán
-      </Button>
-      <Modal
-     style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      zIndex: 9999,
-    }}
-      aria-labelledby="unstyled-modal-title"
-      aria-describedby="unstyled-modal-description"
-      open={open}
-      onClose={handleClose}
-      slots={{ backdrop: StyledBackdrop }}
-    >
-      <ModalContent sx={{ width: 600, display: 'flex', justifyContent: 'center' }}>
-        <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
-        <p id="unstyled-modal-description">
-          Mã đơn hàng của bạn là: {order.purrPetCode}
-        </p>
-        <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
-        <p id="unstyled-modal-description">
-          Tổng tiền: {order.orderPrice}
-        </p>
-        <Button onClick={() => handleCancelOrder(order.purrPetCode)}>Huỷ đơn hàng</Button>
-        <Button onClick={() => handlePayOrder(order.purrPetCode)}>Thanh toán</Button>
-      </ModalContent>
-    </Modal>
-    </div>
-    </div>
+
+      {/* <Modal
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 9999,
+        }}
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        slots={{ backdrop: StyledBackdrop }}
+      >
+        <ModalContent
+          sx={{ width: 600, display: "flex", justifyContent: "center" }}
+        >
+          <h1 id="unstyled-modal-title">Đơn hàng của bạn đã được tạo</h1>
+          <p id="unstyled-modal-description">
+            Mã đơn hàng của bạn là: {order.purrPetCode}
+          </p>
+          <p id="unstyled-modal-description"> Khách hàng: {customer.name}</p>
+          <p id="unstyled-modal-description">Tổng tiền: {order.orderPrice}</p>
+          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+            Huỷ đơn hàng
+          </Button>
+          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
+            Thanh toán
+          </Button>
+        </ModalContent>
+      </Modal> */}
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          ĐƠN HÀNG
+        </DialogTitle>
+        <DialogContent className="flex w-[400px] pb-0">
+          <Box className="mt-5 flex flex-col">
+            <Typography className="italic">Đơn hàng đã được tạo!</Typography>
+            <Typography className="text-black">
+              Mã đơn hàng của bạn là: {order.purrPetCode}
+            </Typography>
+            <Typography className="text-black">
+              Khách hàng: {customer.name}
+            </Typography>
+            <Typography className="text-black">
+              Tổng tiền: {formatCurrency(order.orderPrice)}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+            Huỷ đơn hàng
+          </Button>
+          <Button onClick={() => handlePayOrder(order.purrPetCode)}>
+            Thanh toán
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };

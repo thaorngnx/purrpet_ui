@@ -20,7 +20,7 @@ export const HeaderAdmin = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
+    const storedUsername = localStorage.getItem("usernameAdmin");
     if (storedUsername) {
       setUsername(storedUsername);
     }

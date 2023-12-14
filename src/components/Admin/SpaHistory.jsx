@@ -19,10 +19,7 @@ import { useEffect, useState } from "react";
 import { getBookingSpas } from "../../api/bookingSpa";
 import { Link } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
-import {
-  MiniHoverButton,
-  MiniRemoveIconRoundXButton,
-} from "../Button/StyledButton";
+import { MiniHoverButton, MiniIconRoundButton } from "../Button/StyledButton";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -108,13 +105,13 @@ export const SpaHistory = () => {
             />
             {searchKey !== "" && (
               <Tooltip title="Xóa từ khóa tìm kiếm" placement="top">
-                <MiniRemoveIconRoundXButton
+                <MiniIconRoundButton
                   onClick={() => {
                     setSearchKey("");
                   }}
                 >
                   <HighlightOffIcon />
-                </MiniRemoveIconRoundXButton>
+                </MiniIconRoundButton>
               </Tooltip>
             )}
           </Box>
@@ -150,7 +147,7 @@ export const SpaHistory = () => {
             </LocalizationProvider>
             {rangeDate.toDate !== null && (
               <Tooltip title="Xóa tìm kiếm theo ngày" placement="top">
-                <MiniRemoveIconRoundXButton
+                <MiniIconRoundButton
                   onClick={() => {
                     setRangeDate({
                       fromDate: null,
@@ -159,7 +156,7 @@ export const SpaHistory = () => {
                   }}
                 >
                   <HighlightOffIcon />
-                </MiniRemoveIconRoundXButton>
+                </MiniIconRoundButton>
               </Tooltip>
             )}
           </Box>

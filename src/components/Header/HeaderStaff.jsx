@@ -19,7 +19,7 @@ export const HeaderStaff = () => {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
+    const storedUsername = localStorage.getItem("usernameStaff");
     if (storedUsername) {
       setUsername(storedUsername);
     }
@@ -36,8 +36,12 @@ export const HeaderStaff = () => {
   const handleLogout = () => {
     logout().then((res) => {
       if (res.err === 0) {
-        Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN);
-        Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN);
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, {
+          path: "/staff",
+        });
+        Cookie.remove(import.meta.env.VITE_APP_COOKIE_REFRESH_TOKEN, {
+          path: "/staff",
+        });
         navigate("/staff/login");
       }
     });

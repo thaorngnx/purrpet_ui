@@ -59,6 +59,7 @@ export const LoginStaff = () => {
       if (res.err === 0) {
         setAccount({ username: "", password: "" });
         setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
+        localStorage.setItem("usernameStaff", account.username);
         navigate("/staff");
       } else {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);

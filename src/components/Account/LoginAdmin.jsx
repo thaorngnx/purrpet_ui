@@ -46,9 +46,9 @@ export const LoginAdmin = () => {
       err = { ...err, username: true };
     }
     console.log(validatePassword(account.password));
-    // if (!account.password || !validatePassword(account.password)) {
-    //   err = { ...err, password: true };
-    // }
+    if (!account.password || !validatePassword(account.password)) {
+      err = { ...err, password: true };
+    }
     if (Object.keys(err).length > 0) {
       console.log(err);
       setError(err);
@@ -61,7 +61,7 @@ export const LoginAdmin = () => {
       if (res.err === 0) {
         setAccount({ username: "", password: "" });
         setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
-        localStorage.setItem("username", account.username);
+        localStorage.setItem("usernameAdmin", account.username);
         navigate("/admin");
       } else {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
