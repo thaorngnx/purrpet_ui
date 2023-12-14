@@ -7,7 +7,7 @@ export const validateEmail = (email) => {
 
 //validate password: min 8 characters, 1 special character
 export const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,}$/;
+    const passwordRegex = /^(?=.*[!@#$%^&*()_+]).{8,}$/;
     return passwordRegex.test(password);
 }
 

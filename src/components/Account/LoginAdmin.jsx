@@ -45,9 +45,10 @@ export const LoginAdmin = () => {
     if (!account.username) {
       err = { ...err, username: true };
     }
-    if (!account.password || !validatePassword(account.password)) {
-      err = { ...err, password: true };
-    }
+    console.log(validatePassword(account.password));
+    // if (!account.password || !validatePassword(account.password)) {
+    //   err = { ...err, password: true };
+    // }
     if (Object.keys(err).length > 0) {
       console.log(err);
       setError(err);

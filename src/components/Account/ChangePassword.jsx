@@ -74,14 +74,12 @@ export const ChangePassword = ({ account, updateAccount, err }) => {
           endAdornment: (
             <InputAdornment position="end">
               {" "}
-              {togglePassword.passwordConfirm ? (
-                <VisibilityOff
-                  onClick={() => togglePasswordHide("passwordConfirm")}
-                />
+              {togglePassword.password ? (
+                <VisibilityOff onClick={() => togglePasswordHide("password")} />
               ) : (
                 <Visibility
                   className="cursor_pointer"
-                  onClick={() => togglePasswordHide("passwordConfirm")}
+                  onClick={() => togglePasswordHide("password")}
                 />
               )}
             </InputAdornment>
