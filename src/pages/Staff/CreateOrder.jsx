@@ -58,9 +58,9 @@ export const CreateOrder = () => {
   return (
     <>
       <HeaderStaff />
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <SideNavStaff />
-        <Input placeholder="Enter email" onKeyDown={handleEmailChange} />
+        <Input className= "mt-[20px] w-[400px] mr-[20px]" placeholder="Enter email" onKeyDown={handleEmailChange} />
       </div>
           <GridProductOrder customer={customer} />
           

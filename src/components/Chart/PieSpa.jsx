@@ -1,6 +1,5 @@
 import { Box, Typography } from "@mui/material";
 import React from 'react';
-import {reportPruduct} from '../../api/product';
 import {getTypeHomeStay} from '../../api/homestay';
 import { getreportSpa } from "../../api/spa";
 import { useEffect, useState } from 'react';

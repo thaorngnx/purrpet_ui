@@ -66,7 +66,7 @@ export async function updateStatusProduct(purrPetCode) {
   }
 }
 
-export async function reportPruduct(date){
+export async function reportProduct(date){
   try {
     const response = await api.post(`product/report-product`, date );
     return response.data;

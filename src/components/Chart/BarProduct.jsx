@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import BarChart from "../../components/Chart/Bar";
 import React from 'react';
-import {reportPruduct} from '../../api/product';
+import {reportProduct} from '../../api/product';
 import { useEffect, useState } from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -21,6 +21,7 @@ export const BarProduct = () => {
         borderWidth: 1,
       },
     ],
+    productNames: [],
   });
   const previousDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
   const currentDate = dayjs().format('YYYY-MM-DD');
@@ -38,18 +39,17 @@ export const BarProduct = () => {
  
 //product
 const reloadChartData = () => {
-  // Gọi API hoặc xử lý khác để lấy dữ liệu mới
-  reportPruduct({
+  reportProduct({
     fromDate: fromDate,
     toDate: toDate,
   })
     .then((res) => {
       const data = res.data;
-      console.log(data);
       const productNames = data.map((item) => item.productName);
+      const productCodes = data.map((item) => item._id);
       const totalQuantity = data.map((item) => item.totalQuantity);
       setChartData({
-        labels: productNames,
+        labels: productCodes,
         datasets: [
           {
             label: 'Số lượng bán ra',
@@ -59,6 +59,7 @@ const reloadChartData = () => {
             borderWidth: 1,
           },
         ],
+        productNames: productNames,
       });
     })
     .catch((error) => {
@@ -66,11 +67,44 @@ const reloadChartData = () => {
     });
 };
 
+const options = {
+  plugins: {
+    tooltip: {
+      enabled: true,
+      intersect: false,
+      callbacks: {
+        title: (tooltipItems) => {
+          if (tooltipItems.length > 0) {
+            const index = tooltipItems[0].dataIndex;
+            const productName = chartData.productNames[index];
+            
+            // Remove duplicate product names
+            const uniqueProductNames = Array.from(new Set(productName.split(' - '))).join(' - ');
+            
+            return uniqueProductNames;
+          }
+          return '';
+        },
+        label: (tooltipItem) => {
+          return tooltipItem.formattedValue;
+        },
+      },
+    },
+  },
+};
 
-  useEffect(() => {
-    reloadChartData(fromDate, toDate);
-  }, [fromDate, toDate]);
+useEffect(() => {
+  reloadChartData(fromDate, toDate);
+}, [fromDate, toDate]);
 
+useEffect(() => {
+  setChartData((prevChartData) => ({
+    ...prevChartData,
+    productNames: chartData.labels.map((label, index) => {
+      return `${label} - ${chartData.productNames[index]}`;
+    }),
+  }));
+}, [chartData.labels, chartData.productNames]);
   return (
     <>
           <Box sx={{ my: 4 }}>
@@ -88,8 +122,8 @@ const reloadChartData = () => {
               </LocalizationProvider>
           </Typography>
           <Box className="w-[60%]">
-          <BarChart chartData={chartData} />
-          </Box>
+          <BarChart chartData={chartData} options={options} />
+        </Box>
           </Box>
     </>
   );

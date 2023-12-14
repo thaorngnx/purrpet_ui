@@ -241,7 +241,7 @@ export const GridProductOrder = ({customer}) => {
           </div>
         </div>
       )}
-     <div style={{display: 'flex', justifyContent: 'center' }}>
+     <div style={{display: 'flex', justifyContent: 'right', marginRight: '20%' }}>
       <Button type="button" disabled={disabled} onClick={handleCreateOrder} style={{background: '#3a74bb',color: '#ffff'}}>
         Xác nhận thanh toán
       </Button>

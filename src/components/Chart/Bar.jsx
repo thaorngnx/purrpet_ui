@@ -5,9 +5,9 @@ import { Chart, CategoryScale, LinearScale, BarController, BarElement } from 'ch
 Chart.register(CategoryScale, LinearScale, BarController, BarElement);
 
 
-const BarChart = ({ chartData }) => {
+const BarChart = ({ chartData,  options }) => {
     
-    return <Bar data={chartData} />;
+    return <Bar data={chartData} options={options} />;
   };
 
 export default BarChart;
