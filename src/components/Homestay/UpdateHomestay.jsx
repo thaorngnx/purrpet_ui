@@ -102,7 +102,7 @@ export const UpdateHomestay = ({
         className="mb-3"
         onChange={handleChangeHomestay}
         error={error.homeType}
-        helperText={error.homeType && "Loại spa không được để trống"}
+        helperText={error.homeType && "Loại phòng không được để trống"}
       >
         {Object.values(CONST.PRODUCT_TYPE).map((type) => (
           <MenuItem key={type} value={type}>

@@ -92,7 +92,11 @@ export const LookUpOrderForm = () => {
       console.log(res);
       if (res.err === 0) {
         //message success
-        setCustomerState({ data: res.data, error: null, loading: false });
+        if (res.data) {
+          setCustomerState({ data: res.data, error: null, loading: false });
+        } else {
+          alert("Email chưa có đơn hàng nào");
+        }
         navigate("/order");
       } else {
         setError({ ...error, otp: true });
