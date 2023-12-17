@@ -30,8 +30,11 @@ import { BookingSpaDetailAdmin } from "./pages/Admin/BookingSpaDetailAdmin";
 import { BookingHomeAdmin } from "./pages/Admin/BookingHomeAdmin";
 import { BookingHomeDetailAdmin } from "./pages/Admin/BookingHomeDetailAdmin";
 import { OrderStaff } from "./pages/Staff/OrderStaff";
+import { OrderDetailStaff } from "./pages/Staff/OrderDetailStaff";
 import { BookingSpaStaff } from "./pages/Staff/BookingSpaStaff";
+import { BookingSpaDetailStaff } from "./pages/Staff/BookingSpaDetailStaff";
 import { BookingHomeStaff } from "./pages/Staff/BookingHomeStaff";
+import { BookingHomeDetailStaff } from "./pages/Staff/BookingHomeDetailStaff";
 import { ProtectedAdminRoutes } from "./ProtectedAdminRoutes";
 import { ProtectedCustomerRoutes } from "./ProtectedCustomerRoutes";
 import { ProtectedStaffRoutes } from "./ProtectedStaffRoutes";
@@ -148,16 +151,16 @@ function App() {
             <Route path="create/bookingSpa" element={<CreateBookingSpa />} />
             <Route path="create/bookingHome" element={<CreateBookingHome />} />
             <Route path="order" element={<OrderStaff />} />
-            <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
+            <Route path="order/:orderCode" element={<OrderDetailStaff />} />
             <Route path="bookingSpa" element={<BookingSpaStaff />} />
             <Route
               path="bookingSpa/:bookingSpaCode"
-              element={<BookingSpaDetailAdmin />}
+              element={<BookingSpaDetailStaff />}
             />
             <Route path="bookingHome" element={<BookingHomeStaff />} />
             <Route
               path="bookingHome/:bookingHomeCode"
-              element={<BookingHomeDetailAdmin />}
+              element={<BookingHomeDetailStaff />}
             />
           </Route>
         </Route>
