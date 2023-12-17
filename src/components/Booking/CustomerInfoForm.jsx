@@ -193,7 +193,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     }
   };
 
-  const handleCancleEditInfo = () => {
+  const handleCancelEditInfo = () => {
     setError({});
     customer({ ...backupCustomerInfo });
     setCustomerInfo({ ...backupCustomerInfo });
@@ -325,7 +325,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
           >
             {existCustomer && editInfo && (
               <BigHoverFitContentButton
-                onClick={handleCancleEditInfo}
+                onClick={handleCancelEditInfo}
                 className="mr-3"
               >
                 Hủy

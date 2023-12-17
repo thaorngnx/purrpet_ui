@@ -131,14 +131,13 @@ export const CustomerInfo = () => {
       //api update customer
       updateCustomer(customerInfo).then((res) => {
         if (res.err === 0) {
-          console.log(res);
+          setEditInfo(false);
         }
       });
-      setEditInfo(false);
     }
   };
 
-  const handleCancleEditInfo = () => {
+  const handleCancelEditInfo = () => {
     setEditInfo(false);
     setError({});
     if (provinces.length > 0) {
@@ -359,7 +358,7 @@ export const CustomerInfo = () => {
           </Box>
           <FormControl className="mt-3 flex flex-row justify-end">
             {editInfo && (
-              <BigHoverFitContentButton onClick={handleCancleEditInfo}>
+              <BigHoverFitContentButton onClick={handleCancelEditInfo}>
                 Hủy
               </BigHoverFitContentButton>
             )}

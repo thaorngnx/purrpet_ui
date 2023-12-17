@@ -84,11 +84,7 @@ export const LookUpOrderForm = () => {
 
   const handleVerifyOTP = () => {
     console.log("verify otp");
-    if (!otp) {
-      setError({ ...error, otp: true });
-      return;
-    }
-    if (!validateOtp(otp)) {
+    if (!otp || !validateOtp(otp)) {
       setError({ ...error, otp: true });
       return;
     }

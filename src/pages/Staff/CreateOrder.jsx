@@ -71,9 +71,9 @@ export const CreateOrder = () => {
       email: inputValue,
       address: {
         street: "Số 1 Võ Văn Ngân",
-        ward: "Linh Chiểu",
-        district: "Thủ Đức",
-        province: "TP Hồ Chí Minh",
+        ward: "Phường Linh Chiểu",
+        district: "Quận Thủ Đức",
+        province: "Thành phố Hồ Chí Minh",
       },
     }).then((res) => {
       if (res.err === 0) {

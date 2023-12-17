@@ -290,7 +290,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
     }
   };
 
-  const handleCancleEditInfo = () => {
+  const handleCancelEditInfo = () => {
     setEditInfo(false);
     setError({});
     confirmInfo(true);
@@ -616,7 +616,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
             {existCustomer && editInfo && hasAddress && (
               <BigHoverFitContentButton
                 variant="outlined"
-                onClick={handleCancleEditInfo}
+                onClick={handleCancelEditInfo}
               >
                 Hủy
               </BigHoverFitContentButton>
@@ -701,7 +701,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
           </Box>
           <FormControl className="mt-3 flex flex-row justify-end">
             {existCustomer && editInfo && hasAddress && (
-              <BigHoverFitContentButton onClick={handleCancleEditInfo}>
+              <BigHoverFitContentButton onClick={handleCancelEditInfo}>
                 Hủy
               </BigHoverFitContentButton>
             )}

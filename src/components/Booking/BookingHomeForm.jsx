@@ -111,19 +111,19 @@ export const BookingHomeForm = () => {
       });
     } else if (event.target.name === "petType") {
       console.log("petType", event.target.value);
-      let validHomes = [];
-      validHomes = allHomes.filter(
+      let validHome = [];
+      validHome = allHomes.filter(
         (home) => home.homeType === event.target.value,
       );
       if (bookingInfo.categoryCode !== "") {
-        validHomes = allHomes.filter(
+        validHome = allHomes.filter(
           (home) =>
             home.homeType === event.target.value &&
             home.categoryCode === bookingInfo.categoryCode,
         );
       }
       const validSizes = [];
-      validHomes.forEach((home) => {
+      validHome.forEach((home) => {
         const size = homeSizes.find(
           (size) => size.purrPetCode === home.masterDataCode,
         );
@@ -133,7 +133,7 @@ export const BookingHomeForm = () => {
       });
 
       setValidSizes(validSizes);
-      setValidHomes(validHomes);
+      setValidHomes(validHome);
       setBookingInfo({
         ...bookingInfo,
         petType: event.target.value,
@@ -150,14 +150,14 @@ export const BookingHomeForm = () => {
       const category = categories.find(
         (category) => category.categoryName === event.target.value,
       );
-      const validHomes = allHomes.filter(
+      const validHome = allHomes.filter(
         (home) =>
           home.categoryCode === category.purrPetCode &&
           home.homeType === bookingInfo.petType,
       );
-      setValidHomes(validHomes);
+      setValidHomes(validHome);
       const validSizes = [];
-      validHomes.forEach((home) => {
+      validHome.forEach((home) => {
         const size = homeSizes.find(
           (size) => size.purrPetCode === home.masterDataCode,
         );

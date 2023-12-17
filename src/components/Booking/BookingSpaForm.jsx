@@ -77,10 +77,10 @@ export const BookingSpaForm = () => {
         spaName: spa.spaName,
       });
     } else if (event.target.name === "petType") {
-      let validSpas = [];
-      validSpas = allSpas.filter((spa) => spa.spaType === event.target.value);
+      let validSpa = [];
+      validSpa = allSpas.filter((spa) => spa.spaType === event.target.value);
       const validSizes = [];
-      validSpas.forEach((spa) => {
+      validSpa.forEach((spa) => {
         const category = categories.find(
           (category) => category.purrPetCode === spa.categoryCode,
         );
@@ -96,14 +96,14 @@ export const BookingSpaForm = () => {
         const size = categories.find(
           (category) => category.categoryName === bookingInfo.size,
         );
-        validSpas = allSpas.filter(
+        validSpa = allSpas.filter(
           (spa) =>
             spa.spaType === event.target.value &&
             spa.categoryCode === size.purrPetCode,
         );
       }
       setValidSize(validSizes);
-      setValidSpas(validSpas);
+      setValidSpas(validSpa);
       setBookingInfo({
         ...bookingInfo,
         petType: event.target.value,
