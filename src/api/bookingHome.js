@@ -2,7 +2,7 @@ import api from "./token";
 
 export async function getBookingHomes(params) {
   try {
-    const response = await api.get("bookingHome/query", { params });
+    const response = await api.get("bookingHome/query?order=createdAt.desc", { params });
     return response.data;
   } catch (error) {
     console.error(error);

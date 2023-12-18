@@ -2,7 +2,7 @@ import api from "./token";
 
 export async function getOrders(params) {
   try {
-    const response = await api.get("order/query", { params });
+    const response = await api.get("order/query?order=createdAt.desc", { params });
     return response.data;
   } catch (error) {
     console.error(error);
