@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getActiveCategories } from "../../api/category";
-import { getHomestays } from "../../api/homestay";
+import { getActiveHomestays } from "../../api/homestay";
 import { getMasterDatas } from "../../api/masterData";
 import { CustomerInfoForm } from "./CustomerInfoForm";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -64,9 +64,7 @@ export const BookingHomeForm = () => {
       console.log(res.data);
       setCategories(res.data);
     });
-    getHomestays({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
+    getActiveHomestays().then((res) => {
       console.log(res.data);
       setAllHomes(res.data);
     });

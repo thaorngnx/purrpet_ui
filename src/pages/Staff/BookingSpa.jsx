@@ -18,8 +18,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
-import { getCategories } from "../../api/category";
-import { getSpas } from "../../api/spa";
+import { getActiveCategories } from "../../api/category";
+import { getActiveSpas } from "../../api/spa";
 import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
 import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
@@ -60,16 +60,13 @@ export const BookingSpa = () => {
   });
 
   useEffect(() => {
-    getCategories({
+    getActiveCategories({
       categoryType: CONST.CATEGORY_TYPE.SPA,
-      status: CONST.STATUS.ACTIVE,
     }).then((res) => {
       console.log(res.data);
       setCategories(res.data);
     });
-    getSpas({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
+    getActiveSpas().then((res) => {
       console.log(res.data);
       setAllSpas(res.data);
     });

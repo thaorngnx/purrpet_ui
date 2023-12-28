@@ -18,8 +18,8 @@ import {
   DialogTitle,
 } from "@mui/material";
 import * as CONST from "../../constants";
-import { getCategories } from "../../api/category";
-import { getHomestays } from "../../api/homestay";
+import { getActiveCategories } from "../../api/category";
+import { getActiveHomestays } from "../../api/homestay";
 import { getMasterDatas } from "../../api/masterData";
 import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -73,16 +73,13 @@ export const BookingHome = () => {
   });
 
   useEffect(() => {
-    getCategories({
+    getActiveCategories({
       categoryType: CONST.CATEGORY_TYPE.HOMESTAY,
-      status: CONST.STATUS.ACTIVE,
     }).then((res) => {
       console.log(res.data);
       setCategories(res.data);
     });
-    getHomestays({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
+    getActiveHomestays().then((res) => {
       console.log(res.data);
       setAllHomes(res.data);
     });

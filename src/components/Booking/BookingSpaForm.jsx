@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getActiveCategories } from "../../api/category";
-import { getSpas } from "../../api/spa";
+import { getActiveSpas } from "../../api/spa";
 import { CustomerInfoForm } from "./CustomerInfoForm";
 import { TimeSpaForm } from "./TimeSpaForm";
 import { createBookingSpa } from "../../api/bookingSpa";
@@ -54,9 +54,7 @@ export const BookingSpaForm = () => {
       console.log(res.data);
       setCategories(res.data);
     });
-    getSpas({
-      status: CONST.STATUS.ACTIVE,
-    }).then((res) => {
+    getActiveSpas().then((res) => {
       console.log(res.data);
       setAllSpas(res.data);
     });
