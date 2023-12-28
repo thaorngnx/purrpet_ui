@@ -12,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import * as CONST from "../../constants";
-import { getCategories } from "../../api/category";
+import { getActiveCategories } from "../../api/category";
 import { getSpas } from "../../api/spa";
 import { CustomerInfoForm } from "./CustomerInfoForm";
 import { TimeSpaForm } from "./TimeSpaForm";
@@ -48,9 +48,8 @@ export const BookingSpaForm = () => {
   });
 
   useEffect(() => {
-    getCategories({
+    getActiveCategories({
       categoryType: CONST.CATEGORY_TYPE.SPA,
-      status: CONST.STATUS.ACTIVE,
     }).then((res) => {
       console.log(res.data);
       setCategories(res.data);

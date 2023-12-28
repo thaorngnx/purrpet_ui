@@ -12,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 import * as CONST from "../../constants";
-import { getCategories } from "../../api/category";
+import { getActiveCategories } from "../../api/category";
 import { getHomestays } from "../../api/homestay";
 import { getMasterDatas } from "../../api/masterData";
 import { CustomerInfoForm } from "./CustomerInfoForm";
@@ -58,9 +58,8 @@ export const BookingHomeForm = () => {
   });
 
   useEffect(() => {
-    getCategories({
+    getActiveCategories({
       categoryType: CONST.CATEGORY_TYPE.HOMESTAY,
-      status: CONST.STATUS.ACTIVE,
     }).then((res) => {
       console.log(res.data);
       setCategories(res.data);
