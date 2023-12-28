@@ -10,9 +10,9 @@ export async function getSpas(params) {
   }
 }
 
-export async function getActiveSpas(params) {
+export async function getActiveSpas() {
   try {
-    const response = await api.get("spa/query-customer", { params });
+    const response = await api.get("spa/query-customer");
     return response.data;
   } catch (error) {
     console.error(error);
