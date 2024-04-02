@@ -191,6 +191,7 @@ export const BookingHomeForm = () => {
   const handleDateCheckInChange = (event) => {
     const newDate = dayjs(event).startOf("day");
     let checkOut = dayjs(bookingInfo.dateCheckOut);
+    
     if (newDate.isAfter(checkOut) || newDate.isSame(checkOut)) {
       checkOut = null;
     }
@@ -213,9 +214,9 @@ export const BookingHomeForm = () => {
     let price = bookingInfo.homePrice;
     if (dayjs(dateCheckOut).isValid()) {
       let diff = dateCheckOut.diff(dateCheckIn, "day");
+      console.log("diff", diff);
       price = diff * bookingInfo.homePrice;
     }
-    console.log("checkout", dateCheckOut);
     setBookingInfo({
       ...bookingInfo,
       dateCheckIn: dateCheckIn,

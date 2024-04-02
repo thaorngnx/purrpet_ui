@@ -30,11 +30,12 @@ export const STATUS_SPA = {
 };
 
 export const STATUS_ORDER = {
-  WAITING_FOR_PAY: "Chờ thanh toán",
-  PAID: "Đã thanh toán",
-  DELIVERING: "Đang giao hàng",
-  DONE: "Đã hoàn thành",
-  CANCEL: "Đã hủy",
+  WAITING_FOR_PAY: 'Chờ thanh toán',
+  NEW: 'Đơn hàng mới',
+  PREPARE: 'Đang chuẩn bị',
+  DELIVERING: 'Đang giao hàng',
+  CANCEL: 'Đã hủy',
+  DONE: 'Đã hoàn thành',
 };
 
 export const STATUS_BOOKING = {

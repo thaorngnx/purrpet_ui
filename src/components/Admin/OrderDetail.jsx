@@ -116,7 +116,6 @@ export const OrderDetail = () => {
   };
 
   const handleChangeStatus = () => {
-    console.log("cancel");
     updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.CANCEL).then(
       (res) => {
         console.log(res);
@@ -248,8 +247,8 @@ export const OrderDetail = () => {
           <Typography variant="body1" className="text-end text-lg font-bold">
             Tổng tiền: {formatCurrency(order.orderPrice)}
           </Typography>
-          <Box className="mt-3 flex flex-row justify-end">
-            {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY && (
+          <Box className="mt-3  flex flex-row justify-end">
+            {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY || order.status === CONST.STATUS_ORDER.NEW || order.status === CONST.STATUS_ORDER.PREPARE && (
               <>
                 <Button
                   variant="contained"
@@ -260,7 +259,7 @@ export const OrderDetail = () => {
                 </Button>
               </>
             )}
-            {order.status === CONST.STATUS_ORDER.PAID && (
+            {order.status === CONST.STATUS_ORDER.PREPARE && (
               <>
                 <Button
                   variant="contained"

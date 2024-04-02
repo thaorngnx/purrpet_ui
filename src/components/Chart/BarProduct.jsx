@@ -68,7 +68,6 @@ export const BarProduct = () => {
               borderWidth: 1,
             },
           ],
-          productNames: productNames,
         });
       })
       .catch((error) => {
@@ -76,33 +75,33 @@ export const BarProduct = () => {
       });
   };
 
-  const options = {
-    plugins: {
-      tooltip: {
-        enabled: true,
-        intersect: false,
-        callbacks: {
-          title: (tooltipItems) => {
-            if (tooltipItems.length > 0) {
-              const index = tooltipItems[0].dataIndex;
-              const productName = chartData.productNames[index];
+  // const options = {
+  //   plugins: {
+  //     tooltip: {
+  //       enabled: true,
+  //       intersect: false,
+  //       callbacks: {
+  //         title: (tooltipItems) => {
+  //           if (tooltipItems.length > 0) {
+  //             const index = tooltipItems[0].dataIndex;
+  //             const productName = chartData.productNames[index];
 
-              // Remove duplicate product names
-              const uniqueProductNames = Array.from(
-                new Set(productName.split(" - ")),
-              ).join(" - ");
+  //             // Remove duplicate product names
+  //             const uniqueProductNames = Array.from(
+  //               new Set(productName.split(" - ")),
+  //             ).join(" - ");
 
-              return uniqueProductNames;
-            }
-            return "";
-          },
-          label: (tooltipItem) => {
-            return tooltipItem.formattedValue;
-          },
-        },
-      },
-    },
-  };
+  //             return uniqueProductNames;
+  //           }
+  //           return "";
+  //         },
+  //         label: (tooltipItem) => {
+  //           return tooltipItem.formattedValue;
+  //         },
+  //       },
+  //     },
+  //   },
+  // };
 
   return (
     <>
@@ -133,7 +132,7 @@ export const BarProduct = () => {
           </LocalizationProvider>
         </Box>
         <Box className="w-[80%]">
-          <BarChart chartData={chartData} options={options} />
+          <BarChart chartData={chartData} />
         </Box>
       </Box>
     </>

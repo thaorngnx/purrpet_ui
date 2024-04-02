@@ -86,19 +86,24 @@ export const BookingSpaForm = () => {
         }
       });
       //change type when chosen size
+     console.log(bookingInfo.size);
       if (
         (!validSize.includes(bookingInfo.size) && bookingInfo.size !== "") ||
         bookingInfo.size !== ""
       ) {
+        console.log("change size");
         const size = categories.find(
           (category) => category.categoryName === bookingInfo.size,
         );
+        
         validSpa = allSpas.filter(
           (spa) =>
             spa.spaType === event.target.value &&
             spa.categoryCode === size.purrPetCode,
         );
       }
+
+      console.log(validSpa);
       setValidSize(validSizes);
       setValidSpas(validSpa);
       setBookingInfo({
