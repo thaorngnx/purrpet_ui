@@ -5,6 +5,7 @@ import React from "react";
 import { BarProduct } from "../../components/Chart/BarProduct";
 import { LineHomeStay } from "../../components/Chart/LineHomeStay";
 import { PieSpa } from "../../components/Chart/PieSpa";
+import Revenue from "./Revenue";
 
 export const Dashboard = () => {
   return (
@@ -19,6 +20,7 @@ export const Dashboard = () => {
           <BarProduct />
           <LineHomeStay />
           <PieSpa />
+          <Revenue />
         </Box>
       </Box>
     </>

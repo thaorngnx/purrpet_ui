@@ -17,3 +17,11 @@ export async function vnpayReturn(body) {
     console.error(error);
   }
 }
+export async function reportRevenue(body) {
+  try {
+    const response = await api.post("pay/financialReport", body);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

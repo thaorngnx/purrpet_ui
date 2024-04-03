@@ -29,14 +29,16 @@ export const BarProduct = () => {
     reloadChartData(fromDate, toDate);
   }, [fromDate, toDate]);
 
-  useEffect(() => {
-    setChartData((prevChartData) => ({
-      ...prevChartData,
-      productNames: chartData.labels.map((label, index) => {
-        return `${label} - ${chartData.productNames[index]}`;
-      }),
-    }));
-  }, [chartData.labels, chartData.productNames]);
+  // useEffect(() => {
+    
+  //   setChartData((prevChartData) => ({
+  //     ...prevChartData,
+  //     productNames: chartData.labels.map((label, index) => {
+  //       return `${label} - ${chartData.productNames[index]}`;
+  //     }),
+  //   }));
+   
+  // }, [chartData.labels]);
 
   const handleFromDateChange = (newValue) => {
     setFromDate(dayjs(newValue));
@@ -54,7 +56,7 @@ export const BarProduct = () => {
     })
       .then((res) => {
         const data = res.data;
-        const productNames = data.map((item) => item.productName);
+         const productNames = data.map((item) => item.productName);
         const productCodes = data.map((item) => item._id);
         const totalQuantity = data.map((item) => item.totalQuantity);
         setChartData({
@@ -68,7 +70,9 @@ export const BarProduct = () => {
               borderWidth: 1,
             },
           ],
+          productNames: productNames,
         });
+        
       })
       .catch((error) => {
         console.log(error);
@@ -85,12 +89,12 @@ export const BarProduct = () => {
   //           if (tooltipItems.length > 0) {
   //             const index = tooltipItems[0].dataIndex;
   //             const productName = chartData.productNames[index];
-
+  
   //             // Remove duplicate product names
   //             const uniqueProductNames = Array.from(
-  //               new Set(productName.split(" - ")),
+  //               new Set(productName.split(" - "))
   //             ).join(" - ");
-
+  
   //             return uniqueProductNames;
   //           }
   //           return "";
