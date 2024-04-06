@@ -38,6 +38,9 @@ export const OrderDetail = () => {
     orderPrice: 0,
     orderItems: [],
     productOrder: [],
+    payMethod: "",
+    paymentStatus: "",
+    pointUsed: 0,
   });
 
   useEffect(() => {
@@ -82,6 +85,9 @@ export const OrderDetail = () => {
               orderPrice: order.orderPrice,
               orderItems: order.orderItems,
               productOrder: productOrder,
+              payMethod: order.payMethod,
+              paymentStatus: order.paymentStatus,
+              pointUsed: order.pointUsed,
             });
           }
         });
@@ -146,9 +152,18 @@ export const OrderDetail = () => {
               {order.status}
             </Typography>
             <Typography variant="body1">
-              <span className="font-bold">Ghi chú: </span>
-              {order.customerNote}
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {order.payMethod}
             </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Trạng thái thanh toán: </span>
+              {order.paymentStatus}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Điểm sử dụng: </span>
+              {formatCurrency(order.pointUsed)}
+            </Typography>
+            
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -168,6 +183,10 @@ export const OrderDetail = () => {
               {order.customerAddress?.street}, {order.customerAddress?.ward},{" "}
               {order.customerAddress?.district},{" "}
               {order.customerAddress?.province}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Ghi chú: </span>
+              {order.customerNote}
             </Typography>
           </Box>
         </Box>
@@ -247,7 +266,7 @@ export const OrderDetail = () => {
             Tổng tiền: {formatCurrency(order.orderPrice)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
-            {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY && (
+            {order.paymentStatus === CONST.STATUS_ORDER.WAITING_FOR_PAY  && (
               <>
                 <Button
                   variant="contained"
@@ -265,6 +284,28 @@ export const OrderDetail = () => {
                 </Button>
               </>
             )}
+            {
+              order.status === CONST.STATUS_ORDER.NEW && (
+                <Button
+                  variant="contained"
+                  className="ml-3 bg-black"
+                  onClick={handleChangeStatus}
+                >
+                  Huỷ Đơn
+                </Button>
+              )
+            }
+            {
+              order.status === CONST.STATUS_ORDER.DONE && (
+                <Button
+                  variant="contained"
+                  className="ml-3 bg-black"
+                  onClick={handleChangeStatus}
+                >
+                  Trả hàng/ hoán tiền
+                </Button>
+              )
+            }
           </Box>
         </Box>
       </Paper>

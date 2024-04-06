@@ -38,6 +38,7 @@ export const LineHomeStay = () => {
       toDate: toDate,
     })
       .then((res) => {
+        console.log(res);
         const data = res.data;
         const homeStayNames = Object.keys(data);
         const totalQuantity1 = Object.values(data);

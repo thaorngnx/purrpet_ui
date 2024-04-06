@@ -28,6 +28,9 @@ export const OrderDetail = () => {
     customerName: "",
     customerPhone: "",
     customerEmail: "",
+    payMethod:"",
+    paymentStatus: "",
+    pointUsed: "",
     customerAddress: {
       street: "",
       ward: "",
@@ -45,6 +48,7 @@ export const OrderDetail = () => {
       console.log(res);
       if (res.err === 0) {
         const order = res.data;
+        console.log(order);
         const orderItems = res.data.orderItems;
         const productCodes = [];
         res.data.orderItems.forEach((item) => {
@@ -82,6 +86,9 @@ export const OrderDetail = () => {
               orderPrice: order.orderPrice,
               orderItems: order.orderItems,
               productOrder: productOrder,
+              payMethod: order.payMethod,
+              paymentStatus: order.paymentStatus,
+              pointUsed: order.pointUsed,
             });
           }
         });
@@ -125,6 +132,17 @@ export const OrderDetail = () => {
       },
     );
   };
+  const handlePrepareClick = () => {
+    console.log("prepare");
+    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.PREPARE).then(
+      (res) => {
+        console.log("res",res);
+        if (res.err === 0) {
+          window.location.reload();
+        }
+      },
+    );
+  }
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -147,9 +165,18 @@ export const OrderDetail = () => {
               {order.status}
             </Typography>
             <Typography variant="body1">
-              <span className="font-bold">Ghi chú: </span>
-              {order.customerNote}
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {order.payMethod}
             </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Trạng thái thanh toán: </span>
+              {order.paymentStatus}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Điểm sử dụng: </span>
+              {formatCurrency(order.pointUsed)}
+            </Typography>
+           
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -169,6 +196,10 @@ export const OrderDetail = () => {
               {order.customerAddress?.street}, {order.customerAddress?.ward},{" "}
               {order.customerAddress?.district},{" "}
               {order.customerAddress?.province}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Ghi chú: </span>
+              {order.customerNote}
             </Typography>
           </Box>
         </Box>
@@ -248,18 +279,37 @@ export const OrderDetail = () => {
             Tổng tiền: {formatCurrency(order.orderPrice)}
           </Typography>
           <Box className="mt-3  flex flex-row justify-end">
-            {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY || order.status === CONST.STATUS_ORDER.NEW || order.status === CONST.STATUS_ORDER.PREPARE && (
-              <>
+          { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY || order.status === CONST.STATUS_ORDER.PREPARE ) &&(
+              <>  
+                <Button
+                variant="contained"
+                className="bg-black mr-3"
+                onClick={handleChangeStatus}
+              >
+                Hủy đơn
+              </Button>
+                
+              </>
+            )}
+             { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.COD || order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.PAID )  &&(
+              <>  
+                <Button
+                variant="contained"
+                className="bg-black mr-3"
+                onClick={handleChangeStatus}
+              >
+                Hủy đơn
+              </Button>
                 <Button
                   variant="contained"
                   className="bg-black"
-                  onClick={handleChangeStatus}
+                  onClick={handlePrepareClick}
                 >
-                  Hủy đơn
+                  Chuẩn bị hàng
                 </Button>
               </>
             )}
-            {order.status === CONST.STATUS_ORDER.PREPARE && (
+            {order.status === CONST.STATUS_ORDER.PREPARE  && (
               <>
                 <Button
                   variant="contained"

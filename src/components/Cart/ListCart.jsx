@@ -22,6 +22,9 @@ import { useStore } from "../../zustand/store";
 import { createPaymentUrl } from "../../api/pay";
 import { BigHoverTransformButton } from "../Button/StyledButton";
 import { validateObject } from "../../utils/validationData";
+import * as CONST from "../../constants";
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 export const ListCart = () => {
   const navigate = useNavigate();
@@ -41,6 +44,7 @@ export const ListCart = () => {
     },
     customerNote: "",
     orderItems: [],
+    payMethod: CONST.PAYMENT_METHOD.COD,
   });
 
   useEffect(() => {
@@ -107,6 +111,7 @@ export const ListCart = () => {
       });
     }
   };
+  console.log(productCart.length > 0 && validateObject(orderInfo) && showBtnConfirmOrder)
 
   const handleSubtractQuantity = (product) => {
     if (product.quantity > 1) {
@@ -166,21 +171,29 @@ export const ListCart = () => {
         quantity: item.quantity,
       };
     });
+    console.log(orderInfo);
     createOrder(orderInfo).then((res) => {
       console.log(res);
       if (res.err === 0) {
         console.log("order success");
         //delete cart
         deleteCart();
+        if(res.data.payMethod === CONST.PAYMENT_METHOD.COD){
+          navigate(`/order/${res.data.purrPetCode}`);
+          return;
+        }
+        else{
+          createPaymentUrl({
+            orderCode: res.data.purrPetCode,
+          }).then((res) => {
+            if (res.err === 0) {
+              window.location.href = res.data.paymentUrl;
+            }
+          });
+        }
         //navigate
         // navigate(`/order/${res.data.purrPetCode}`);
-        createPaymentUrl({
-          orderCode: res.data.purrPetCode,
-        }).then((res) => {
-          if (res.err === 0) {
-            window.location.href = res.data.paymentUrl;
-          }
-        });
+       
       } else {
         console.log(res.message);
         // setProductCart([]);
@@ -188,6 +201,12 @@ export const ListCart = () => {
       }
     });
   };
+  const handleChangePaymentMethod = (e) => {
+    setOrderInfo({
+      ...orderInfo,
+      payMethod: e.target.value,
+    });
+  }
 
   return (
     <Box className="mb-5 flex min-h-screen flex-col">
@@ -358,16 +377,57 @@ export const ListCart = () => {
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
         />
-      )}
+      )} {
+        productCart.length > 0 && showBtnConfirmOrder && (
+        <FormControl   sx={{
+          width: "90%",
+          ml: "auto",
+          mr: "auto",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          p: 5,
+        }}>
+          <FormLabel className="mt-2 font-bold text-black">
+            Phương thức thanh toán:
+          </FormLabel>
+          <RadioGroup
+            name="payMethod"
+            value={orderInfo.payMethod}
+            onChange={handleChangePaymentMethod}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COD}
+              control={<Radio />}
+              label="Tiền mặt"
+              icon={<PaymentsIcon />}
+            />
+            
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.VNPAY}
+              control={<Radio />}
+              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
+              label="VNPAY"
+            />
+          </RadioGroup>
+        </FormControl>)
+         
+        
+      }
+        
       {productCart.length > 0 &&
         validateObject(orderInfo) &&
         showBtnConfirmOrder && (
+        
+        
           <BigHoverTransformButton
             onClick={handleConfirmOrder}
             className="mx-auto my-3 w-fit justify-center"
           >
             Tiến hành thanh toán
           </BigHoverTransformButton>
+        
         )}
     </Box>
   );
