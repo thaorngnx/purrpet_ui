@@ -53,8 +53,10 @@ export const TableProduct = () => {
   };
 
   useEffect(() => {
-    getProducts().then((res) => {
-      console.log(res.data);
+    const param ={
+      limit: 10000,
+    }
+    getProducts(param).then((res) => {
       setRows(res.data);
     });
     const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
@@ -62,7 +64,7 @@ export const TableProduct = () => {
       console.log(res.data);
       setCategories(res.data);
     });
-  }, []);
+  }, [alert]);
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -247,9 +249,9 @@ export const TableProduct = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
-        setRows(res.data);
-      });
+      // getProducts().then((res) => {
+      //   setRows(res.data);
+      // });
     });
   };
 
@@ -261,9 +263,9 @@ export const TableProduct = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
-        setRows(res.data);
-      });
+      // getProducts().then((res) => {
+      //   setRows(res.data);
+      // });
     });
   };
 
@@ -328,9 +330,9 @@ export const TableProduct = () => {
         setSeverity(CONST.ALERT_SEVERITY.WARNING);
       }
       setMessage(res.message);
-      getProducts().then((res) => {
-        setRows(res.data);
-      });
+      // getProducts().then((res) => {
+      //   setRows(res.data);
+      // });
     });
   };
 
@@ -365,7 +367,8 @@ export const TableProduct = () => {
           getRowId={getRowId}
           columns={columns}
           initialState={{
-            pagination: { paginationModel: { pageSize: 5 } },
+            pagination: { paginationModel: { pageSize: 10 } },
+            
           }}
           pageSizeOptions={[5, 10, 25, 100]}
           hideFooterSelectedRowCount

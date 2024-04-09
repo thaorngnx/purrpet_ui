@@ -7,6 +7,8 @@ import {
   TextField,
   Typography,
   Tooltip,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -26,6 +28,7 @@ import * as CONST from "../../constants";
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import PaymentsIcon from '@mui/icons-material/Payments';
 
+
 export const ListCart = () => {
   const navigate = useNavigate();
 
@@ -34,6 +37,9 @@ export const ListCart = () => {
   const [productCart, setProductCart] = useState([]);
   const [openCustomerInfoForm, setOpenCustomerInfoForm] = useState(false);
   const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
+  const [alert, setAlert] = useState(false);
+  const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
+  const [message, setMessage] = useState("");
   const [orderInfo, setOrderInfo] = useState({
     customerCode: "",
     customerAddress: {
@@ -111,7 +117,6 @@ export const ListCart = () => {
       });
     }
   };
-  console.log(productCart.length > 0 && validateObject(orderInfo) && showBtnConfirmOrder)
 
   const handleSubtractQuantity = (product) => {
     if (product.quantity > 1) {
@@ -171,7 +176,6 @@ export const ListCart = () => {
         quantity: item.quantity,
       };
     });
-    console.log(orderInfo);
     createOrder(orderInfo).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -194,7 +198,14 @@ export const ListCart = () => {
         //navigate
         // navigate(`/order/${res.data.purrPetCode}`);
        
-      } else {
+      }
+      else if (res.err === -1) {
+        setAlert(true);
+        setSeverity(CONST.ALERT_SEVERITY.ERROR);
+        setMessage(res.message);
+        window.location.reload();
+      } 
+      else {
         console.log(res.message);
         // setProductCart([]);
         // deleteCart();
@@ -213,6 +224,13 @@ export const ListCart = () => {
       <Typography variant="h4" className="m-3 text-center font-bold">
         Giỏ hàng
       </Typography>
+      <Snackbar
+        open={alert}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        severity={severity}
+      >
+        <Alert severity={severity}>{message}</Alert>
+      </Snackbar>
       <Paper
         sx={{
           width: "90%",

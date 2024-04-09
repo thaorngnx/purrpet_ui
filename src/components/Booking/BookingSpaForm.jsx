@@ -186,7 +186,11 @@ export const BookingSpaForm = () => {
           }
         });
       }
-      setMessage(res.message);
+      else if (res.err === -1) {
+        setMessage(res.message);
+        window.location.reload();
+      }
+      
     });
   };
 

@@ -37,7 +37,10 @@ export const TableCategory = () => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    getCategories().then((res) => {
+    const param ={
+      limit: 10000,
+    }
+    getCategories(param).then((res) => {
       console.log(res.data);
       setRows(res.data);
     });
@@ -259,7 +262,7 @@ export const TableCategory = () => {
           getRowId={getRowId}
           columns={columns}
           initialState={{
-            pagination: { paginationModel: { pageSize: 5 } },
+            pagination: { paginationModel: { pageSize: 10 } },
           }}
           pageSizeOptions={[5, 10, 25, 100]}
           hideFooterSelectedRowCount

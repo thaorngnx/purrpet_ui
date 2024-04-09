@@ -42,7 +42,10 @@ export const TableHomestay = () => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    getHomestays().then((res) => {
+    const param = {
+      limit: 10000,
+    };
+    getHomestays(param).then((res) => {
       console.log(res.data);
       setRows(res.data);
     });

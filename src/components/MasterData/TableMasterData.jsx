@@ -34,7 +34,10 @@ export const TableMasterData = () => {
   const [error, setError] = useState({});
 
   useEffect(() => {
-    getMasterDatas().then((res) => {
+    const param = {
+      limit: 10000,
+    };
+    getMasterDatas(param).then((res) => {
       console.log(res.data);
       setRows(res.data);
     });

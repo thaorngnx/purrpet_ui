@@ -47,7 +47,10 @@ export const TableSpa = () => {
   };
 
   useEffect(() => {
-    getSpas().then((res) => {
+   const param = {
+      limit: 10000,
+    };
+    getSpas(param).then((res) => {
       console.log(res.data);
       setRows(res.data);
     });

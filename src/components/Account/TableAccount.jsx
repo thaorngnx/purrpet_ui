@@ -41,9 +41,13 @@ export const TableAccount = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState({});
 
+
   useEffect(() => {
-    getAccounts().then((res) => {
-      console.log(res.data);
+    const param ={
+      limit: 10000,
+    }
+
+    getAccounts(param).then((res) => {
       setRows(res.data);
     });
   }, []);
@@ -336,9 +340,10 @@ export const TableAccount = () => {
           getRowId={getRowId}
           columns={columns}
           initialState={{
-            pagination: { paginationModel: { pageSize: 5 } },
+            pagination: { paginationModel: { pageSize: 10 } },
           }}
-          pageSizeOptions={[5, 10, 25, 100]}
+          pageSizeOptions={[5, 10, 15]}
+          
           hideFooterSelectedRowCount
           slots={{
             toolbar: GridToolbar,

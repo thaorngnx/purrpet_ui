@@ -1,6 +1,6 @@
 import api from "./token";
 
-export async function getAccounts() {
+export async function getAccounts( params ) {
   try {
     const response = await api.get("account/query");
     return response.data;
