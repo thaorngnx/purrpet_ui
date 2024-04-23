@@ -34,6 +34,9 @@ export const BookingHomeDetail = () => {
     bookingHomePrice: 0,
     status: "",
     createdAt: "",
+    pointUsed: 0,
+    payMethod: "",
+    totalPayment: 0,
     homestay: {
       purrPetCode: "",
       homeType: "",
@@ -65,6 +68,9 @@ export const BookingHomeDetail = () => {
               bookingHomePrice: bookingHomeInfo.bookingHomePrice,
               status: bookingHomeInfo.status,
               createdAt: bookingHomeInfo.createdAt,
+              pointUsed: bookingHomeInfo.pointUsed,
+              payMethod: bookingHomeInfo.payMethod,
+              totalPayment: bookingHomeInfo.totalPayment,
               homestay: {
                 purrPetCode: res.data.purrPetCode,
                 homeType: res.data.homeType,
@@ -80,7 +86,6 @@ export const BookingHomeDetail = () => {
   }, [bookingHomeCode]);
 
   const handlePaymentClick = () => {
-    console.log("payment");
     createPaymentUrl({ orderCode: bookingHome.purrPetCode }).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -131,6 +136,14 @@ export const BookingHomeDetail = () => {
               {formatDateTime(bookingHome.createdAt)}
             </Typography>
             <Typography variant="body1">
+              <span className="font-bold">Điểm sử dụng: </span>
+              { formatCurrency(bookingSpa.pointUsed) }
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {bookingSpa.payMethod}
+            </Typography>
+            <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
               {bookingHome.status}
             </Typography>
@@ -152,6 +165,7 @@ export const BookingHomeDetail = () => {
               <span className="font-bold">Ghi chú: </span>
               {bookingHome.customerNote}
             </Typography>
+          
           </Box>
         </Box>
         <Divider className="my-3" />
@@ -243,7 +257,7 @@ export const BookingHomeDetail = () => {
             </ListItem>
           </List>
           <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(bookingHome.bookingHomePrice)}
+            Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (

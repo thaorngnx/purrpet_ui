@@ -51,6 +51,7 @@ export const ListCart = () => {
     customerNote: "",
     orderItems: [],
     payMethod: CONST.PAYMENT_METHOD.COD,
+    userPoint: 0,
   });
 
   useEffect(() => {
@@ -161,6 +162,7 @@ export const ListCart = () => {
       customerCode: customerInfo.customerCode,
       customerAddress: customerInfo.customerAddress,
       customerNote: customerInfo.customerNote,
+      userPoint: customerInfo.userPoint,
     });
   };
 
@@ -177,12 +179,12 @@ export const ListCart = () => {
       };
     });
     createOrder(orderInfo).then((res) => {
-      console.log(res);
       if (res.err === 0) {
-        console.log("order success");
+        console.log("order success", res);
         //delete cart
         deleteCart();
         if(res.data.payMethod === CONST.PAYMENT_METHOD.COD){
+          console.log(res.data.purrPetCode);
           navigate(`/order/${res.data.purrPetCode}`);
           return;
         }
@@ -394,6 +396,7 @@ export const ListCart = () => {
         <CustomerInfoFormForOrder
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
+          totalPrice = {productCart.reduce((a, b) => a + b.totalPrice, 0)} 
         />
       )} {
         productCart.length > 0 && showBtnConfirmOrder && (
@@ -437,7 +440,6 @@ export const ListCart = () => {
       {productCart.length > 0 &&
         validateObject(orderInfo) &&
         showBtnConfirmOrder && (
-        
         
           <BigHoverTransformButton
             onClick={handleConfirmOrder}

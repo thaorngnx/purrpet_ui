@@ -30,6 +30,7 @@ export async function getOrdersByCustomer() {
 export async function createOrder(order) {
   try {
     const response = await api.post("order/create", order);
+    console.log('kq',response);
     return response.data;
   } catch (error) {
     console.error(error);

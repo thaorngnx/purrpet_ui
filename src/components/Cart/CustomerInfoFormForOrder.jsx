@@ -20,8 +20,9 @@ import {
   validateOtp,
   validatePhone,
 } from "../../utils/validationData";
+import { formatCurrency } from "../../utils/formatData";
 
-export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
+export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) => {
   const customerState = useStore((state) => state.customerState.data);
 
   const { setCustomerState } = useStore();
@@ -50,6 +51,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
     },
     customerNote: "",
     customerCode: "",
+    customerUserPoint: 0,
   });
 
   useEffect(() => {
@@ -418,6 +420,19 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
       }
     }
   };
+  const handleChangePoint = (e) => {
+    if (e.target.value > customerState.point || e.target.value < 0 || e.target.value > totalPrice * 0.1) {
+      setError({ ...error, customerUserPoint: true });
+      e.target.value = 0;
+    } else {
+      setError({ ...error, customerUserPoint: false });
+      customer({
+        ...customerInfo,
+        userPoint: e.target.value,
+      });
+    }
+    
+  }
 
   return (
     <Paper
@@ -708,6 +723,25 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo }) => {
             <BigHoverFitContentButton className="ml-5" onClick={handleEditInfo}>
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
+          </FormControl>
+          <FormControl>
+          <FormLabel className="mb-2 font-bold text-black">
+              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point) } điểm tích luỹ)
+            </FormLabel>
+            <TextField
+              required
+              name="customerUserPoint"
+              type="number"
+              onChange={handleChangePoint}
+              variant="outlined"
+              error={error.customerUserPoint}
+              helperText={error.customerUserPoint && "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"}
+              onBlur={() => {
+                if (customerInfo.customerUserPoint > customerState.point || customerInfo.customerUserPoint < 0 || customerInfo.customerUserPoint > totalPrice * 0.1) {
+                  setError({ ...error, customerUserPoint: true });
+                }}
+              }
+            />
           </FormControl>
           <FormControl>
             <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>

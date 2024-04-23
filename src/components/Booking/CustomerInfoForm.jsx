@@ -16,8 +16,10 @@ import {
   validateOtp,
   validatePhone,
 } from "../../utils/validationData";
+import { formatCurrency } from "../../utils/formatData";
 
-export const CustomerInfoForm = ({ customer, confirmInfo }) => {
+
+export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   const customerState = useStore((state) => state.customerState.data);
 
   const { setCustomerState } = useStore();
@@ -36,6 +38,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     customerEmail: "",
     customerNote: "",
     customerCode: "",
+    customerUserPoint: 0,
   });
 
   useEffect(() => {
@@ -201,6 +204,20 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
     confirmInfo(true);
   };
 
+  const handleChangePoint = (event) => {
+    if (event.target.value > 0.1 * totalPrice || event.target.value > customerState.point || event.target.value < 0) {
+      setError({ ...error, customerUserPoint: true });
+      event.target.value = 0;
+    } else {
+      setError({ ...error, customerUserPoint: false });
+      customer({
+        ...customerInfo,
+        userPoint: event.target.value,
+      });
+    }
+   
+  };
+
   return (
     <Paper
       sx={{
@@ -335,6 +352,21 @@ export const CustomerInfoForm = ({ customer, confirmInfo }) => {
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
           </Box>
+          <FormControl>
+          <FormLabel className="mb-2 font-bold text-black">
+              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point) } điểm tích luỹ)
+            </FormLabel>
+            <TextField
+              required
+              name="customerUserPoint"
+              type="number"
+              onChange={handleChangePoint}
+              variant="outlined"
+              error={error.customerUserPoint}
+              helperText={error.customerUserPoint && "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"}
+              
+            />
+          </FormControl>
           <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
           <TextField
             required

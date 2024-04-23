@@ -17,19 +17,21 @@ import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { MiniHoverButton } from "../Button/StyledButton";
 
 export const SpaHistory = () => {
+
   const [resBSpas, setResBSpas] = useState([]);
   const [tabSpa, setTabSpa] = useState(0);
   const [page, setPage] = useState(0);
+
   // const [sort, setSort] = useState("asc");
   useEffect(() => {
     const params = {
       limit: 10,
       page: page,
-      // key: categoryCode || searchKey,
-      // order: sort,
+    //   // key: categoryCode || searchKey,
+    //   // order: sort,
     };
     //api get booking spa
-    getBookingSpas(params).then((res) => {
+    getBookingSpas().then((res) => {
       console.log(res);
       if (res.err === 0) {
         setResBSpas(res);

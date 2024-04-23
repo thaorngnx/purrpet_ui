@@ -118,9 +118,8 @@ const Revenue = () => {
       totalBookingHome: [0, 0, 0],
       total: 0,
     }
-      
     );
-  
+
     const handleFromDateChange = (newValue) => {
       setFromDate(dayjs(newValue));
     };
@@ -141,7 +140,6 @@ const Revenue = () => {
             console.log(error);
           });
         }, [ fromDate, toDate]);
-        console.log(data.countOrder);
   const rows = [
       createData('Đơn đặt hàng', data.countOrder[0] , formatCurrency(data.totalOrder[0]), fromDate.format("YYYY-MM-DD"), toDate.format("YYYY-MM-DD"), data.countOrder[1], data.countOrder[2], formatCurrency(data.totalOrder[1]), formatCurrency(data.totalOrder[2])),
       createData('Đơn đặt lịch spa', data.countBookingSpa[0], formatCurrency(data.totalBookingSpa[0]), fromDate.format("YYYY-MM-DD"), toDate.format("YYYY-MM-DD"), data.countBookingSpa[1], data.countBookingSpa[2], formatCurrency(data.totalBookingSpa[1]), formatCurrency(data.totalBookingSpa[2])),

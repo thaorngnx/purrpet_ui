@@ -8,22 +8,79 @@ import {
   Badge,
   TextField,
 } from "@mui/material";
+import { Socket } from 'socket.io-client';
+import { socket } from '../../../socket';
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { useStore } from "../../zustand/store";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useNotificationStore } from "../../zustand/notificationStore";
+import { FormNotification } from "../Notification/FormNotification";
+import { useEffect } from "react";
+import { getAllNotifications } from "../../api/notification";
+import { useRef } from "react";
 
 export function HeaderCustomer() {
   const cart = useStore((state) => state.cartState.data);
+  const customer = useStore((state) => state.customerState.data);
   const categories = useStore((state) => state.activeProductCategoryState.data);
-
   const [style, setStyle] = useState(false);
   const [style2, setStyle2] = useState(false);
   const [style3, setStyle3] = useState(false);
   const [searchKey, setSearchKey] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+
+  const notiNotSeen = notifications.filter(
+    (noti) => noti.seen === false,
+  ).length;
+
+  const socketRef = useRef(Socket);
+
+  useEffect(() => {
+  
+    if(customer && customer.accessToken){
+      getAllNotifications().then((res) => {
+        setNotifications(res.data);
+      });
+    }
+  },[]);
+
+  useEffect(() => {
+    if (customer &&
+      Object.keys(customer).length > 0 &&
+      customer.accessToken
+    ) {
+      // Socket
+      const accessToken = customer.accessToken;
+      const socketClient = socket(accessToken);
+      socketRef.current = socketClient;
+
+      function onTradeEvent(value) {
+        const socketData = JSON.parse(value);
+        getAllNotifications().then((res) => {
+          if (res.err === 0) {
+            setNotifications(res.data);
+          }
+        });
+      }
+      socketClient.on('connect', () => {
+        console.log('socket connected');
+      });
+
+      socketClient.on(accessToken, onTradeEvent);
+
+      return () => {
+        socketClient.off(accessToken, onTradeEvent);
+      };
+    }
+  }, [customer?.accessToken]);
+
+  
 
   const handleCategorySelect = (categoryCode) => {
     navigate(`/product?category=${categoryCode}`);
@@ -39,7 +96,7 @@ export function HeaderCustomer() {
     >
       <Container className="p-0">
         <Toolbar disableGutters>
-          <img src={img} alt="logo" width="15%" />
+          <img src={img} alt="logo" width="15%" onClick={()=>navigate('/')}/>
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -175,6 +232,18 @@ export function HeaderCustomer() {
             </div>
           </Box>
           <Box className="flex w-[35%] items-center justify-end text-center text-black">
+          <Box  className='mr-10' onMouseLeave={()=> setShowNotification(false)}> 
+              <Badge badgeContent={notiNotSeen  > 0 ? notiNotSeen  : null} color="error">
+                  <NotificationsIcon color= {showNotification ? 'disabled' : 'inherit'}
+                   onMouseEnter={() => setShowNotification(true)}
+                  />
+                </Badge>
+                {
+                  showNotification && (
+                   < FormNotification />
+                  )
+                }
+                </Box>
             <Button
               sx={{
                 color: "black",
@@ -210,6 +279,7 @@ export function HeaderCustomer() {
                   }}
                 />
               </Badge>
+             
             </Box>
           </Box>
         </Toolbar>

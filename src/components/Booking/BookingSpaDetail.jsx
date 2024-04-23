@@ -34,6 +34,9 @@ export const BookingSpaDetail = () => {
     bookingSpaPrice: 0,
     status: "",
     createdAt: "",
+    pointUsed: 0,
+    payMethod:"", 
+    totalPayment: 0,
     spa: {
       purrPetCode: "",
       spaName: "",
@@ -64,6 +67,9 @@ export const BookingSpaDetail = () => {
               bookingSpaPrice: bookingSpaInfo.bookingSpaPrice,
               status: bookingSpaInfo.status,
               createdAt: bookingSpaInfo.createdAt,
+              pointUsed: bookingSpaInfo.pointUsed,
+              payMethod: bookingSpaInfo.payMethod,
+              totalPayment: bookingSpaInfo.totalPayment,
               spa: {
                 purrPetCode: res.data.purrPetCode,
                 spaName: res.data.spaName,
@@ -129,6 +135,14 @@ export const BookingSpaDetail = () => {
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingSpa.createdAt)}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Điểm sử dụng: </span>
+              { formatCurrency(bookingSpa.pointUsed) }
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {bookingSpa.payMethod}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
@@ -219,7 +233,7 @@ export const BookingSpaDetail = () => {
             </ListItem>
           </List>
           <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(bookingSpa.bookingSpaPrice)}
+            Tổng tiền: {formatCurrency(bookingSpa.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (

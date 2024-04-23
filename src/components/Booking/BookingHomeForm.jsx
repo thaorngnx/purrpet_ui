@@ -55,6 +55,7 @@ export const BookingHomeForm = () => {
     dateCheckIn: null,
     dateCheckOut: null,
     homePrice: 0,
+    userPoint:0,
   });
 
   useEffect(() => {
@@ -230,6 +231,8 @@ export const BookingHomeForm = () => {
       ...bookingInfo,
       customerCode: customerInfo.customerCode,
       customerNote: customerInfo.customerNote,
+      userPoint: customerInfo.userPoint,
+
     });
   };
 
@@ -239,7 +242,6 @@ export const BookingHomeForm = () => {
 
   const handleConfirmBooking = () => {
     setShowBtnConfirmBook(false);
-    console.log("book", bookingInfo);
     createBookingHome({
       petName: bookingInfo.petName,
       homeCode: bookingInfo.homeCode,
@@ -248,6 +250,8 @@ export const BookingHomeForm = () => {
       customerNote: bookingInfo.customerNote,
       dateCheckIn: bookingInfo.dateCheckIn,
       dateCheckOut: bookingInfo.dateCheckOut,
+      payMethod: CONST.PAYMENT_METHOD.VNPAY,
+      userPoint: bookingInfo.userPoint,
     }).then((res) => {
       if (res.err === 0) {
         // navigate(`/bookingHome/${res.data.purrPetCode}`);
@@ -454,6 +458,7 @@ export const BookingHomeForm = () => {
         <CustomerInfoForm
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
+          totalPrice={bookingInfo.bookingHomePrice}
         />
       )}
       {validateObject(bookingInfo) && showBtnConfirmBook && (

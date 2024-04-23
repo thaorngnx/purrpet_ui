@@ -5,6 +5,7 @@ import ContactPageIcon from "@mui/icons-material/ContactPage";
 import { useStore } from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 import { BigHoverButton } from "../Button/StyledButton";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export const SideNavCustomerInfo = () => {
   const navigate = useNavigate();
@@ -47,6 +48,22 @@ export const SideNavCustomerInfo = () => {
           className="m-0 text-base"
         >
           Đơn hàng của tôi
+        </Typography>
+      </Link>
+      <Link
+        to={"/notification"}
+        underline="none"
+        color={"inherit"}
+        className="m-2 flex flex-row"
+      >
+        <NotificationsIcon className="mr-1" />
+        <Typography
+          variant="h2"
+          gutterBottom
+          component="div"
+          className="m-0 text-base"
+        >
+          Thông báo
         </Typography>
       </Link>
       <BigHoverButton onClick={handleLogout} className="my-5">

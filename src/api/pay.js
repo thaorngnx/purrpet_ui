@@ -20,6 +20,7 @@ export async function vnpayReturn(body) {
 export async function reportRevenue(body) {
   try {
     const response = await api.post("pay/financialReport", body);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);

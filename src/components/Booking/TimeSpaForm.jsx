@@ -35,7 +35,6 @@ export const TimeSpaForm = ({
     getAvailableTime({
       bookingDate: newDate,
     }).then((res) => {
-      console.log("rés", res);
       if (res.err === 0) {
         setValidTime(res.data);
       } else {

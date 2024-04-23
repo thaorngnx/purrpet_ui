@@ -9,10 +9,7 @@ export const ProtectedAdminRoutes = () => {
   const accessToken = Cookie.get(import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN, {
     path: "/admin",
   });
-  console.log(accessToken);
-
-  console.log(window.location.pathname);
-
+  
   if (accessToken) {
     const decoded = jwtDecode(accessToken);
     if (decoded.role === CONST.ROLE.ADMIN) {

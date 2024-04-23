@@ -26,6 +26,10 @@ import {
 } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import * as CONST from "../../constants";
+import { FormControlLabel, Radio, RadioGroup, FormLabel } from "@mui/material";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import { createPaymentUrl } from "../../api/pay";
+
 
 export const GridProductOrder = ({ customer, updateCustomer }) => {
   const [productlist, setProductlist] = useState([]);
@@ -34,10 +38,11 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [open, setOpen] = useState(false);
-  // const [disabled, setDisabled] = useState(true);
   const [order, setOrder] = useState({});
   const [disabledicon, setDisabledicon] = useState(false);
   const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
+  const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(CONST.PAYMENT_METHOD.COD);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -238,19 +243,20 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
       orderItems: orderItems,
       customerCode: customer.purrPetCode,
       customerAddress: customer.address,
+      payMethod: paymentMethod,
     };
-    console.log("order data: ", orderData);
     createOrder(orderData)
       .then((res) => {
-        console.log("res: ", res);
         if (res.err === 0) {
           setOrder(res.data);
+          setShowPaymentMethod(false);
           setOpen(true);
         }
       })
       .catch((err) => {
         console.log(err);
       });
+    
   };
   const handleCancelOrder = (purrPetCode) => {
     updateStatusOrder(purrPetCode, CONST.STATUS_ORDER.CANCEL).then((res) => {
@@ -259,12 +265,24 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
     });
   };
   const handlePayOrder = () => {
-    updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.PAID).then(
-      (res) => {
-        setOpen(false);
-        setSelectedProducts([]);
-      },
-    );
+     if(paymentMethod === CONST.PAYMENT_METHOD.VNPAY){
+      console.log(order.purrPetCode)
+        createPaymentUrl({
+          orderCode: order.purrPetCode,
+        }).then((res) => {
+         
+           window.location.href = res.data.paymentUrl;
+        });
+
+      }else{
+        updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.PAID).then(
+          (res) => {
+            setOpen(false);
+            setSelectedProducts([]);
+          },
+        );
+      }
+      
   };
   return (
     <Box className="flex w-full flex-col items-center justify-center p-5">
@@ -348,11 +366,53 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
         </Paper>
       </Box>
       {selectedProducts.length > 0 && showBtnConfirmOrder && (
-        <BigHoverTransformButton onClick={handleCreateOrder} className="mt-5">
-          Xác nhận thanh toán
+        <BigHoverTransformButton onClick={()=>setShowPaymentMethod(true)} className="mt-5">
+         Phương thức thanh toán
         </BigHoverTransformButton>
       )}
-
+      <Dialog open={showPaymentMethod} onClose={handleClose}>
+        <DialogTitle className=" bg-gray-400 text-center font-bold">
+          Phương thức thanh toán
+          </DialogTitle>
+        <DialogContent className="flex-col w-[400px] pb-0">
+        <FormControl   sx={{
+          width: "90%",
+          ml: "auto",
+          mr: "auto",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          p: 5,
+        }}>
+          <RadioGroup
+            name="payMethod"
+            value={paymentMethod}
+            onChange={(event) => setPaymentMethod(event.target.value)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COD}
+              control={<Radio />}
+              label="Tiền mặt"
+              icon={<PaymentsIcon />}
+            />
+            
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.VNPAY}
+              control={<Radio />}
+              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
+              label="VNPAY"
+            />
+          </RadioGroup>
+        </FormControl>
+        <DialogActions>
+          
+          <Button onClick={handleCreateOrder}>
+            Tiến hành thanh toán
+          </Button>
+        </DialogActions>
+          </DialogContent>
+        </Dialog>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className=" bg-gray-400 text-center font-bold">
           ĐƠN HÀNG
@@ -368,6 +428,9 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             </Typography>
             <Typography className="text-black">
               Tổng tiền: {formatCurrency(order.orderPrice)}
+            </Typography>
+            <Typography className="text-black">
+              Phương thức thanh toán: {order.payMethod}
             </Typography>
           </Box>
         </DialogContent>

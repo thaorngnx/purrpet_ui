@@ -23,12 +23,14 @@ import { BookingSpaPage } from "./pages/Customer/BookingSpaPage";
 import { OrderDetailPage } from "./pages/Customer/OrderDetailPage";
 import { BookingSpaDetailPage } from "./pages/Customer/BookingSpaDetailPage";
 import { BookingHomeDetailPage } from "./pages/Customer/BookingHomeDetailPage";
+import { NotificationPage } from "./pages/Customer/NotificationPage";
 import { OrderAdmin } from "./pages/Admin/OrderAdmin";
 import { OrderDetailAdmin } from "./pages/Admin/OrderDetailAdmin";
 import { BookingSpaAdmin } from "./pages/Admin/BookingSpaAdmin";
 import { BookingSpaDetailAdmin } from "./pages/Admin/BookingSpaDetailAdmin";
 import { BookingHomeAdmin } from "./pages/Admin/BookingHomeAdmin";
 import { BookingHomeDetailAdmin } from "./pages/Admin/BookingHomeDetailAdmin";
+import { NotificationAdmin } from "./pages/Admin/NotificationAdmin";
 import { OrderStaff } from "./pages/Staff/OrderStaff";
 import { OrderDetailStaff } from "./pages/Staff/OrderDetailStaff";
 import { BookingSpaStaff } from "./pages/Staff/BookingSpaStaff";
@@ -47,6 +49,7 @@ import Cookie from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { CircularProgress } from "@mui/material";
 import * as CONST from "./constants";
+import { NotificationStaff } from "./pages/Staff/NotificationStaff";
 
 function App() {
   const {
@@ -103,6 +106,7 @@ function App() {
           <Route path="booking/spa" element={<BookingSpaPage />} />
           <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
+          <Route path="notification" element={<NotificationPage/>} />
           <Route path="lookup" element={<LookUpOrderPage />} />
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />
@@ -132,6 +136,7 @@ function App() {
             <Route path="order" element={<OrderAdmin />} />
             <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
             <Route path="bookingSpa" element={<BookingSpaAdmin />} />
+            <Route path="notification" element={<NotificationAdmin />} />
             <Route
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailAdmin />}
@@ -147,6 +152,7 @@ function App() {
           <Route path="login" element={<LoginStaff />} />
           <Route element={<ProtectedStaffRoutes />}>
             <Route index element={<CreateOrder />} />
+            <Route path="notification" element={<NotificationStaff/>} />
             <Route path="create/order" element={<CreateOrder />} />
             <Route path="create/bookingSpa" element={<CreateBookingSpa />} />
             <Route path="create/bookingHome" element={<CreateBookingHome />} />

@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Badge,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import MuiDrawer from "@mui/material/Drawer";
@@ -22,8 +23,15 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import HolidayVillageIcon from "@mui/icons-material/HolidayVillage";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useEffect, useRef } from "react";
+import { getAllNotifications } from "../../api/notification";
+import { socket } from "../../../socket";
+import { Socket } from "socket.io-client";
+
 
 const drawerWidth = 240;
 
@@ -73,6 +81,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const NavNoti= [
+  {
+    icon: <NotificationsIcon />,
+    text: "Thông báo",
+    href: "/staff/notification",
+  }
+];
+
 const NavListCreate = [
   {
     icon: <AddShoppingCartIcon />,
@@ -109,6 +125,51 @@ export const SideNavStaff = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+  const accessToken = Cookies.get('access_token');
+
+  const notiNotSeen = notifications.filter(
+    (noti) => noti.seen === false,
+  ).length;
+
+  const socketRef = useRef(Socket);
+
+  useEffect(() => {
+  
+    if(accessToken){
+      getAllNotifications().then((res) => {
+        setNotifications(res.data);
+      });
+    }
+  },[]);
+
+  useEffect(() => {
+    if (accessToken
+    ) {
+      // Socket
+      const socketClient = socket(accessToken);
+      socketRef.current = socketClient;
+
+      function onTradeEvent(value) {
+        const socketData = JSON.parse(value);
+        getAllNotifications().then((res) => {
+          if (res.err === 0) {
+            setNotifications(res.data);
+          }
+        });
+      }
+      socketClient.on('connect', () => {
+        console.log('socket connected');
+      });
+
+      socketClient.on(accessToken, onTradeEvent);
+
+      return () => {
+        socketClient.off(accessToken, onTradeEvent);
+      };
+    }
+  }, [accessToken]);
+
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -120,6 +181,45 @@ export const SideNavStaff = () => {
           </IconButton>
         </DrawerHeader>
         <Divider />
+        {
+          NavNoti.map((nav) => (
+            <List>
+              <ListItem
+                key={nav.text}
+                sx={{ display: "block", p: 0 }}
+                onClick={() => {
+                  navigate(nav.href);
+                }}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                     <Badge badgeContent={notiNotSeen  > 0 ? notiNotSeen  : null} color="error">
+                    <Tooltip title={nav.text} placement="right">
+                      {nav.icon}
+                    </Tooltip>
+                    </Badge>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={nav.text}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          ))
+        }
         <List>
           {NavListCreate.map((nav) => (
             <ListItem

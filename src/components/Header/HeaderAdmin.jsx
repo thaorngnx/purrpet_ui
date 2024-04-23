@@ -6,6 +6,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Box,
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { logout } from "../../api/auth";
@@ -55,33 +56,36 @@ export const HeaderAdmin = () => {
       className="sticky top-0 z-[100] flex-none bg-[#d9d9d9]"
     >
       <Toolbar>
+    
         <Typography className="ml-[48%] w-fit">
           <img src={logo} alt="logo" className=" w-28" />
         </Typography>
-        <Typography
-          variant="inherit"
-          sx={{
-            flexGrow: 1,
-            color: "#000000",
-            fontWeight: "bold",
-            textAlign: "end",
-          }}
-        >
-          Hi, {username}
-        </Typography>
-        <IconButton
-          size="large"
-          edge="end"
-          color="base"
-          aria-label="account of current user"
-          aria-controls="menu-appbar"
-          aria-haspopup="true"
-          onClick={handleMenuOpen}
-          sx={{ ml: 2 }}
-        >
-          <AccountCircle />
-          <Typography sx={{ ml: 1 }}></Typography>
-        </IconButton>
+         <Typography
+           variant="inherit"
+           sx={{
+             flexGrow: 1,
+             color: "#000000",
+             fontWeight: "bold",
+             textAlign: "end",
+           }}
+         >
+           Hi, {username}
+         </Typography>
+         <IconButton
+           size="large"
+           edge="end"
+           color="base"
+           aria-label="account of current user"
+           aria-controls="menu-appbar"
+           aria-haspopup="true"
+           onClick={handleMenuOpen}
+           sx={{ ml: 2 }}
+         >
+           <AccountCircle />
+           <Typography sx={{ ml: 1 }}></Typography>
+         </IconButton>
+      
+        
         <Menu
           id="menu-appbar"
           anchorEl={anchorEl}

@@ -45,17 +45,16 @@ export const BookingSpaForm = () => {
     spaName: "",
     size: "",
     petType: "",
+    userPoint: 0,
   });
 
   useEffect(() => {
     getActiveCategories({
       categoryType: CONST.CATEGORY_TYPE.SPA,
     }).then((res) => {
-      console.log(res.data);
       setCategories(res.data);
     });
     getActiveSpas().then((res) => {
-      console.log(res.data);
       setAllSpas(res.data);
     });
   }, []);
@@ -103,7 +102,6 @@ export const BookingSpaForm = () => {
         );
       }
 
-      console.log(validSpa);
       setValidSize(validSizes);
       setValidSpas(validSpa);
       setBookingInfo({
@@ -155,6 +153,7 @@ export const BookingSpaForm = () => {
       ...bookingInfo,
       customerCode: customerInfo.customerCode,
       customerNote: customerInfo.customerNote,
+      userPoint: customerInfo.userPoint,
     });
   };
 
@@ -164,7 +163,6 @@ export const BookingSpaForm = () => {
 
   const handleConfirmBooking = () => {
     setShowBtnConfirmBook(false);
-    console.log("book", bookingInfo);
     createBookingSpa({
       petName: bookingInfo.petName,
       spaCode: bookingInfo.spaCode,
@@ -173,11 +171,13 @@ export const BookingSpaForm = () => {
       customerNote: bookingInfo.customerNote,
       bookingDate: bookingInfo.bookingDate,
       bookingTime: bookingInfo.bookingTime,
+      payMethod: CONST.PAYMENT_METHOD.VNPAY,
+      userPoint: bookingInfo.userPoint,
     }).then((res) => {
       console.log(res);
       if (res.err === 0) {
-        // navigate(`/bookingSpa/${res.data.purrPetCode}`);
-        // navigate("/");
+        navigate(`/bookingHome/${res.data.purrPetCode}`);
+        navigate("/");
         createPaymentUrl({
           orderCode: res.data.purrPetCode,
         }).then((res) => {
@@ -186,11 +186,7 @@ export const BookingSpaForm = () => {
           }
         });
       }
-      else if (res.err === -1) {
-        setMessage(res.message);
-        window.location.reload();
-      }
-      
+      setMessage(res.message);
     });
   };
 
@@ -345,6 +341,7 @@ export const BookingSpaForm = () => {
         <CustomerInfoForm
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
+          totalPrice = {bookingInfo.bookingSpaPrice}
         />
       )}
       {validateObject(bookingInfo) && showBtnConfirmBook && (

@@ -7,7 +7,7 @@ import { customerStore } from "./customerStore";
 const combineStore = (set, get) => ({
   ...cartStore(set, get),
   ...activeProductCategoryStore(set, get),
-  ...customerStore(set, get),
+  ...customerStore(set, get), 
 });
 
 export const useStore = create(devtools(combineStore));

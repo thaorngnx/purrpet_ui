@@ -23,7 +23,12 @@ export const ProductGrid = () => {
   const searchKey = searchParams.get("search");
 
   const [selectedSort, setSelectedSort] = useState(sort || "");
-  const [resProducts, setResProducts] = useState({});
+  const [resProducts, setResProducts] = useState({
+    data: [],
+    pagination: {
+      total: 0,
+    },
+  });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -32,13 +37,14 @@ export const ProductGrid = () => {
       key: categoryCode || searchKey,
       order: sort,
     };
-    getActiveProducts(params).then((res) => {
+    getActiveProducts(params).then((res) =>
+   {  
       setResProducts(res);
     });
   }, [page, categoryCode, sort, searchKey]);
-
+ 
   const products = resProducts.data || [];
-  const totalPage = resProducts.totalPage || 0;
+  const totalPage = resProducts.pagination.total || 0;
 
   const handleChangeSort = (event) => {
     const value = event.target.value;
@@ -53,6 +59,7 @@ export const ProductGrid = () => {
   const handlePage = (event, value) => {
     setPage(value);
   };
+  
 
   return (
     <Box className="min-h-screen w-[100%] flex-col">
