@@ -10,6 +10,7 @@ import { formatTimeToNow } from '../../utils/formatData';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 import * as CONST from "../../constants";
+import { el } from 'date-fns/locale';
 
 export const Notification = ()=>
 {
@@ -40,7 +41,13 @@ export const Notification = ()=>
       viewNotification(notification._id);
      
       if (notification.type === NOTIFICATION_TYPE.ORDER) {
-        navigate(`${link}/order/${notification.orderCode}`);
+        if(notification.action === CONST.NOTIFICATION_ACTION.REFUND_ORDER)
+        {
+          navigate(`${link}/refundProcessing/${notification.orderCode}`, { state: { notification: notification } });
+        }else{
+          navigate(`${link}/order/${notification.orderCode}`);
+        }
+       
 
       } else if (notification.type === NOTIFICATION_TYPE.BOOKING_SPA) {
         navigate(`${link}/bookingSpa/${notification.orderCode}`);

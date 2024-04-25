@@ -50,6 +50,7 @@ import { jwtDecode } from "jwt-decode";
 import { CircularProgress } from "@mui/material";
 import * as CONST from "./constants";
 import { NotificationStaff } from "./pages/Staff/NotificationStaff";
+import { RefundProcessing } from "./pages/Admin/RefundProcessing";
 
 function App() {
   const {
@@ -137,6 +138,7 @@ function App() {
             <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
             <Route path="bookingSpa" element={<BookingSpaAdmin />} />
             <Route path="notification" element={<NotificationAdmin />} />
+            <Route path = "refundProcessing/:orderCode" element = {<RefundProcessing/>}/>
             <Route
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailAdmin />}
@@ -158,6 +160,7 @@ function App() {
             <Route path="create/bookingHome" element={<CreateBookingHome />} />
             <Route path="order" element={<OrderStaff />} />
             <Route path="order/:orderCode" element={<OrderDetailStaff />} />
+            <Route path = "refundProcessing/:orderCode" element = {<RefundProcessing/>}/>
             <Route path="bookingSpa" element={<BookingSpaStaff />} />
             <Route
               path="bookingSpa/:bookingSpaCode"

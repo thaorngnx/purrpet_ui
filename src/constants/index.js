@@ -108,6 +108,7 @@ export const NOTIFICATION_TYPE = {
   BOOKING_HOME: 'bookingHome',
   BOOKING_SPA: 'bookingSpa',
   REVIEW: 'review',
+
 };
 
 export const NOTIFICATION_ACTION = {
@@ -118,4 +119,5 @@ export const NOTIFICATION_ACTION = {
   NEW_BOOKING_SPA: 'newBookingSpa',
   BOOKING_SPA_UPDATE: 'bookingSpaUpdate',
   NEW_REVIEW: 'newReview',
+  REFUND_ORDER: 'orderRefund',
 };

@@ -26,3 +26,19 @@ export async function reportRevenue(body) {
     console.error(error);
   }
 }
+export async function acceptRefund(body) {
+  try {
+    const response = await api.post("pay/accept-refund", body);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function rejectRefund(body) {
+  try {
+    const response = await api.post("pay/cancel-refund", body);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

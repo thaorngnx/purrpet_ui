@@ -26,10 +26,10 @@ import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { validateObject, validateEmail } from "../../utils/validationData";
+import { createPaymentUrl } from "../../api/pay";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
 export const BookingSpa = () => {
-  const navigate = useNavigate();
-
   const [error, setError] = useState({});
   const [message, setMessage] = useState("");
   const [categories, setCategories] = useState([]);
@@ -45,6 +45,7 @@ export const BookingSpa = () => {
   const [order, setOrder] = useState({});
   const [showNameInput, setShowNameInput] = useState(false);
   const [nameValue, setNameValue] = useState("");
+ // const [showPaymentMethod, setShowPaymentMethod] = useState(false);
 
   const [bookingInfo, setBookingInfo] = useState({
     petName: "",
@@ -57,6 +58,7 @@ export const BookingSpa = () => {
     spaName: "",
     size: "",
     petType: "",
+    payMethod: CONST.PAYMENT_METHOD.COD,
   });
 
   useEffect(() => {
@@ -184,6 +186,7 @@ export const BookingSpa = () => {
       customerNote: bookingInfo.customerNote,
       bookingDate: bookingInfo.bookingDate,
       bookingTime: bookingInfo.bookingTime,
+      payMethod: bookingInfo.payMethod,
     }).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -228,12 +231,14 @@ export const BookingSpa = () => {
           setOpenCustomerInfoForm(false);
           setShowBtnConfirmBook(false);
           setOpenTimeForm(false);
+          setOpenModal(false);
         }
         setMessage(res.message);
       },
     );
   };
   const handlePayOrder = () => {
+    if (order.paymentMethod === CONST.PAYMENT_METHOD.COD) {
     updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then(
       (res) => {
         if (res.err === 0) {
@@ -259,6 +264,13 @@ export const BookingSpa = () => {
         setMessage(res.message);
       },
     );
+  } else {
+    createPaymentUrl(order.purrPetCode).then((res) => {
+      if (res.err === 0) {
+        window.location.href = res.data;
+      }
+    });
+  }
   };
 
   const handleClose = () => {
@@ -514,6 +526,31 @@ export const BookingSpa = () => {
                 {customer.phoneNumber}
               </Typography>
             </Box>
+            <FormControl>
+            <FormLabel className="mt-2 font-bold text-black">
+            Phương thức thanh toán:
+          </FormLabel>
+          <RadioGroup
+            name="payMethod"
+            value={bookingInfo.payMethod}
+            onChange={(event)=>setBookingInfo({ ...bookingInfo, payMethod: event.target.value })}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COD}
+              control={<Radio />}
+              label="Tiền mặt"
+              icon={<PaymentsIcon />}
+            />
+            
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.VNPAY}
+              control={<Radio />}
+              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
+              label="VNPAY"
+            />
+          </RadioGroup>
+              </FormControl>
           </FormControl>
         </Paper>
       )}
@@ -527,6 +564,7 @@ export const BookingSpa = () => {
             Xác nhận đặt lịch
           </BigHoverTransformButton>
         )}
+        
 
       <Dialog open={openModal} onClose={handleClose}>
         <DialogTitle className=" bg-gray-400 text-center font-bold">
@@ -544,12 +582,15 @@ export const BookingSpa = () => {
               Khách hàng: {customer.name}
             </Typography>
             <Typography className="text-black">
+              Phương thức thanh toán: {order.payMethod}
+            </Typography>
+            <Typography className="text-black">
               Tổng tiền: {formatCurrency(order.bookingSpaPrice)}
             </Typography>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleCancelOrder(order.purrPetCode)}>
+          <Button onClick={()=>handleCancelOrder(order.purrPetCode)}>
             Huỷ đơn
           </Button>
           <Button onClick={() => handlePayOrder(order.purrPetCode)}>

@@ -263,7 +263,7 @@ export const OrderDetail = () => {
             })}
           </List>
           <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(order.orderPrice)}
+            Tổng tiền: {formatCurrency(order.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
             {order.paymentStatus === CONST.STATUS_ORDER.WAITING_FOR_PAY  && (

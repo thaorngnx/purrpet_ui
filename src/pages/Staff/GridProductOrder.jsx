@@ -67,6 +67,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   }, [inputValue, selectedProducts]);
 
   useEffect(() => {
+  
     if (selectedProducts.length > 0) {
       setShowBtnConfirmOrder(true);
     } else {
@@ -204,9 +205,11 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
       inputValue &&
       !selectedProducts.some((product) => product.productName === inputValue)
     ) {
+      console.log(inputValue);
       const selectedProduct = productlist.find(
         (product) => product.productName === inputValue,
       );
+      
       if (selectedProduct) {
         setSelectedProducts([
           ...selectedProducts,
@@ -266,7 +269,6 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   };
   const handlePayOrder = () => {
      if(paymentMethod === CONST.PAYMENT_METHOD.VNPAY){
-      console.log(order.purrPetCode)
         createPaymentUrl({
           orderCode: order.purrPetCode,
         }).then((res) => {

@@ -34,6 +34,8 @@ import {
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { validateObject, validateEmail } from "../../utils/validationData";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import { createPaymentUrl } from "../../api/pay";
 
 export const BookingHome = () => {
   const navigate = useNavigate();
@@ -70,6 +72,7 @@ export const BookingHome = () => {
     dateCheckIn: null,
     dateCheckOut: null,
     homePrice: 0,
+    payMethod: CONST.PAYMENT_METHOD.COD,
   });
 
   useEffect(() => {
@@ -263,6 +266,7 @@ export const BookingHome = () => {
       customerNote: bookingInfo.customerNote,
       dateCheckIn: bookingInfo.dateCheckIn,
       dateCheckOut: bookingInfo.dateCheckOut,
+      payMethod: bookingInfo.payMethod,
     }).then((res) => {
       if (res.err === 0) {
         setOrder(res.data);
@@ -314,6 +318,7 @@ export const BookingHome = () => {
     });
   };
   const handlePayOrder = () => {
+    if(order.payMethod === CONST.PAYMENT_METHOD.COD){
     updateStatusBookingHome(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then(
       (res) => {
         if (res.err === 0) {
@@ -339,7 +344,16 @@ export const BookingHome = () => {
         setMessage(res.message);
       },
     );
-  };
+  }
+  else{
+    createPaymentUrl(order.purrPetCode).then((res) => {
+      if (res.err === 0) {
+        window.location.href = res.data;
+      }
+    }
+    )
+  }
+};
 
   const handleClose = () => {
     setOpenModal(false);
@@ -624,6 +638,31 @@ export const BookingHome = () => {
               </Typography>
             </Box>
           </FormControl>
+          <FormControl>
+            <FormLabel className="mt-2 font-bold text-black">
+            Phương thức thanh toán:
+          </FormLabel>
+          <RadioGroup
+            name="payMethod"
+            value={bookingInfo.payMethod}
+            onChange={(event)=>setBookingInfo({ ...bookingInfo, payMethod: event.target.value })}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COD}
+              control={<Radio />}
+              label="Tiền mặt"
+              icon={<PaymentsIcon />}
+            />
+            
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.VNPAY}
+              control={<Radio />}
+              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
+              label="VNPAY"
+            />
+          </RadioGroup>
+              </FormControl>
         </Paper>
       )}
       {validateObject(bookingInfo) &&
