@@ -194,9 +194,11 @@ export const ListCart = () => {
           }).then((res) => {
             if (res.err === 0) {
               window.location.href = res.data.paymentUrl;
-            }
+            
+            }   
           });
-        }
+        
+      }
         //navigate
         // navigate(`/order/${res.data.purrPetCode}`);
        

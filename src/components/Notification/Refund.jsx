@@ -29,7 +29,7 @@ export const Refund = ({ notification }) => {
                 <h3 className="text-base font-bold text-gray-900 mb-2">Thông tin đơn hàng: {notification.orderCode}</h3>
                 <h3 className="text-base font-bold text-gray-900 mb-2">Lý do hoàn tiền: {content}</h3>
                 <h3 className="text-base font-bold text-gray-900 mb-2">Hình ảnh:</h3>
-                <img src={notification.image[0].path } alt="image" className="w-[40%]" />
+                <img src={notification.image[0] } alt="image" className="w-[40%]" />
                 <h3 className="text-base font-bold text-gray-900 mt-4">Số tài khoản khách hàng: {bankNumber}</h3>
                 <h3 className="text-base font-bold text-gray-900 mb-2">Ngân hàng: {bank}</h3>
                 <Box className="flex flex-row mt-4">

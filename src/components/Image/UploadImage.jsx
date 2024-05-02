@@ -16,10 +16,15 @@ export const UploadImage = ({ product, updateProduct, err }) => {
     const file = event.target.files[0];
     updateProduct({ ...product, images: file });
     if (file) {
+      console.log('file',file);
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
     }
+
   };
+  console.log('selectedImage',selectedImage);
+  
+  
 
   return (
     <Box className="flex flex-col">
