@@ -73,6 +73,7 @@ export const OrderDetail = () => {
                 }
               });
             });
+            console.log(order);
             setOrder({
               purrPetCode: order.purrPetCode,
               createdAt: order.createdAt,
@@ -88,6 +89,7 @@ export const OrderDetail = () => {
               payMethod: order.payMethod,
               paymentStatus: order.paymentStatus,
               pointUsed: order.pointUsed,
+              totalPayment: order.totalPayment,
             });
           }
         });

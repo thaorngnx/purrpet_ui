@@ -33,6 +33,8 @@ import { Socket } from "socket.io-client";
 import { getAllNotifications } from "../../api/notification";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
 const drawerWidth = 240;
 
@@ -119,6 +121,15 @@ const NavListManage = [
     icon: <HolidayVillageIcon />,
     text: "Quản lý đặt phòng",
     href: "/admin/bookingHome",
+  },
+];
+
+const NavWarehouseManage = [
+  { icon: <WarehouseIcon />, text: "Quản lý nhập hàng", href: "/admin/consignment" },
+  {
+    icon: <HandshakeIcon />,
+    text: "Quản lý nhà cung cấp",
+    href: "/admin/supplier",
   },
 ];
 
@@ -258,6 +269,42 @@ export const SideNavAdmin = () => {
         <Divider />
         <List>
           {NavListManage.map((nav) => (
+            <ListItem
+              key={nav.text}
+              sx={{ display: "block", p: 0 }}
+              onClick={() => {
+                navigate(nav.href);
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tooltip title={nav.text} placement="right">
+                    {nav.icon}
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText
+                  primary={nav.text}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {NavWarehouseManage.map((nav) => (
             <ListItem
               key={nav.text}
               sx={{ display: "block", p: 0 }}

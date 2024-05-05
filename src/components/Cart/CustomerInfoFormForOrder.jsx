@@ -724,9 +724,11 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
           </FormControl>
+          {
+            customerState &&
           <FormControl>
           <FormLabel className="mb-2 font-bold text-black">
-              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point) } điểm tích luỹ)
+              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point ) } điểm tích luỹ)
             </FormLabel>
             <TextField
               required
@@ -743,6 +745,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
               }
             />
           </FormControl>
+        }
           <FormControl>
             <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
             <TextField

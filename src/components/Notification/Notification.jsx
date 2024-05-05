@@ -51,7 +51,7 @@ export const Notification = ()=>
         {notificationState.error && <h1>{notificationState.error}</h1>}
          <Box className="text-end font-bold text-[#000000]  p-3" >
             <Button onClick={()=>handleViewAll()}>
-        {notificationState.data && notificationState.data.lenght > 0 ? 'Đánh dấu tất cả đã đọc' : 'Không có thông báo'}
+        {notificationState.data  ? 'Đánh dấu tất cả đã đọc' : 'Không có thông báo'}
             </Button>
           </Box>
         {notificationState.data && notificationState.data.map((item, index) => (

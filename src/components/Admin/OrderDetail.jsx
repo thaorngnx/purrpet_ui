@@ -41,6 +41,7 @@ export const OrderDetail = () => {
     orderPrice: 0,
     orderItems: [],
     productOrder: [],
+    totalPayment: 0,
   });
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export const OrderDetail = () => {
               payMethod: order.payMethod,
               paymentStatus: order.paymentStatus,
               pointUsed: order.pointUsed,
+              totalPayment: order.totalPayment,
             });
           }
         });
@@ -276,7 +278,7 @@ export const OrderDetail = () => {
             })}
           </List>
           <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(order.orderPrice)}
+            Tổng tiền: {formatCurrency(order.totalPayment)}
           </Typography>
           <Box className="mt-3  flex flex-row justify-end">
           { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY || order.status === CONST.STATUS_ORDER.PREPARE ) &&(

@@ -51,6 +51,8 @@ import { CircularProgress } from "@mui/material";
 import * as CONST from "./constants";
 import { NotificationStaff } from "./pages/Staff/NotificationStaff";
 import { RefundProcessing } from "./pages/Admin/RefundProcessing";
+import { Comsignment } from "./pages/Admin/Comsignment";
+import { Supplier } from "./pages/Admin/Supplier";
 
 function App() {
   const {
@@ -138,6 +140,8 @@ function App() {
             <Route path="order/:orderCode" element={<OrderDetailAdmin />} />
             <Route path="bookingSpa" element={<BookingSpaAdmin />} />
             <Route path="notification" element={<NotificationAdmin />} />
+            <Route path="consignment" element={<Comsignment />} />
+            <Route path="supplier" element = {<Supplier/>}/>
             <Route path = "refundProcessing/:orderCode" element = {<RefundProcessing/>}/>
             <Route
               path="bookingSpa/:bookingSpaCode"
