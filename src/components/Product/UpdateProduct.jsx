@@ -128,7 +128,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
           </MenuItem>
         ))}
       </TextField>
-      <TextField
+      {/* <TextField
         required
         id="outlined-required"
         label="Số lượng hàng tồn kho"
@@ -141,7 +141,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
         error={error.inventory}
         helperText={error.inventory && "Số lượng sản phẩm không được để trống"}
         className="mb-3"
-      />
+      /> */}
       <UploadImage
         product={product}
         updateProduct={handleUpdateImage}

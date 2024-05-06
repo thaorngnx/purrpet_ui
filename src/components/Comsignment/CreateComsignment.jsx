@@ -107,7 +107,6 @@ export const CreateComsignment = ({infoComsignment, createComsignment,err}
         const newProduct = products.find(
           (product) => product.purrPetCode === productSelected
         );
-        console.log(infoComsignment)
         if(infoComsignment.productList){
           const newProductList = [...infoComsignment.productList, {
             expiryDate: expiryDate,
@@ -169,7 +168,6 @@ export const CreateComsignment = ({infoComsignment, createComsignment,err}
     const filteredProducts = products.filter((product) =>
       product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
     );
-    console.log('filter',filteredProducts)
     
     return (
         <Box className="m-5 w-[500px] ">

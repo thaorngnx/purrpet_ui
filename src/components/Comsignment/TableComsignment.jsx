@@ -209,9 +209,16 @@ export const TableComsignment = () => {
             console.log(res.data);
         });
     }, [alert]);
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setAlert(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }, [alert]);
     const rows = data.map((comsignment) => {
         return createData(comsignment.purrPetCode, comsignment.productList.length, comsignment.supplierCode, comsignment.productList);
     });
+
     const handleAddComsignment = () => {
         setOpenAdd(true);
     }

@@ -225,9 +225,9 @@ export const TableProduct = () => {
     if (!selectedProduct.images || selectedProduct.images.length === 0) {
       err = { ...err, images: true };
     }
-    if (!selectedProduct.inventory) {
-      err = { ...err, inventory: true };
-    }
+    // if (!selectedProduct.inventory) {
+    //   err = { ...err, inventory: true };
+    // }
     if (Object.keys(err).length > 0) {
       setError(err);
       return;
@@ -241,7 +241,7 @@ export const TableProduct = () => {
       price: selectedProduct.price,
       categoryCode: selectedProduct.categoryCode,
       images: selectedProduct.images,
-      inventory: selectedProduct.inventory,
+      // inventory: selectedProduct.inventory,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
@@ -307,9 +307,9 @@ export const TableProduct = () => {
     if (!selectedProduct.images || selectedProduct.images.length === 0) {
       err = { ...err, images: true };
     }
-    if (!selectedProduct.inventory) {
-      err = { ...err, inventory: true };
-    }
+    // if (!selectedProduct.inventory) {
+    //   err = { ...err, inventory: true };
+    // }
     if (Object.keys(err).length > 0) {
       setError(err);
       return;
@@ -322,7 +322,7 @@ export const TableProduct = () => {
       price: selectedProduct.price,
       categoryCode: selectedProduct.categoryCode,
       images: selectedProduct.images,
-      inventory: selectedProduct.inventory,
+      // inventory: selectedProduct.inventory,
     }).then((res) => {
       setAlert(true);
       setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
