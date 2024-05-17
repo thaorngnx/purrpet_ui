@@ -10,6 +10,7 @@ import {
   MenuItem,
   FormHelperText,
   Box,
+  FormControlLabel, FormGroup, Switch ,
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
@@ -21,6 +22,8 @@ import {
   validatePhone,
 } from "../../utils/validationData";
 import { formatCurrency } from "../../utils/formatData";
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { set } from "date-fns";
 
 export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) => {
   const customerState = useStore((state) => state.customerState.data);
@@ -51,8 +54,15 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
     },
     customerNote: "",
     customerCode: "",
-    customerUserPoint: 0,
+    userPoint: 0,
+    useCoin: 0,
   });
+  const [showCoin, setShowCoin] = useState(
+    {
+      coin: 0,
+      showCoin: false,
+    }
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -422,18 +432,66 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
   };
   const handleChangePoint = (e) => {
     if (e.target.value > customerState.point || e.target.value < 0 || e.target.value > totalPrice * 0.1) {
-      setError({ ...error, customerUserPoint: true });
+      setError({ ...error, userPoint: true });
       e.target.value = 0;
     } else {
-      setError({ ...error, customerUserPoint: false });
+      setError({ ...error, userPoint: false });
+      setCustomerInfo({
+        ...customerInfo,
+        userPoint: e.target.value,
+      });
+      
       customer({
         ...customerInfo,
         userPoint: e.target.value,
       });
     }
-    
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const total = totalPrice - customerInfo.userPoint;
+      if (customerState.coin > total)
+        {
+          setShowCoin({
+            coin: total,
+            showCoin: true,
+          });
+          
+        }
+      else {
+        setShowCoin({
+          coin: customerState.coin,
+          showCoin: true,
+        });
+       
+      }
+    };
+    fetchData();
+  }, [customer]);
+  const handleChangeCoin = (e) => {
+    if (e.target.checked) {
+      setCustomerInfo({
+        ...customerInfo,
+        useCoin: showCoin.coin,
+      });
+      customer({
+        ...customerInfo,
+        useCoin: showCoin.coin,
+      });
+    } else {
+      setCustomerInfo({
+        ...customerInfo,
+        useCoin: 0,
+      });
+      customer({
+        ...customerInfo,
+        useCoin: 0,
+      });
+    }
+  }
+ 
+ 
   return (
     <Paper
       sx={{
@@ -758,6 +816,17 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
           </FormControl>
         </>
       )}
+      {
+        showCoin.showCoin &&
+        <FormGroup className="flex flex-row items-center mt-10 justify-end">
+            <Typography className=" text-[18px] font-bold text-black">
+            Sử dụng {(formatCurrency(showCoin.coin))} từ ví:<MonetizationOnIcon className="text-[#f6a700]"/>
+          </Typography>
+        <FormControlLabel control={<Switch />} label= {showCoin.coin} onChange={handleChangeCoin} />
+        Xu
+      </FormGroup>
+
+      }
     </Paper>
   );
 };

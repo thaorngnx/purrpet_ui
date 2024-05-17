@@ -53,6 +53,7 @@ import { NotificationStaff } from "./pages/Staff/NotificationStaff";
 import { RefundProcessing } from "./pages/Admin/RefundProcessing";
 import { Comsignment } from "./pages/Admin/Comsignment";
 import { Supplier } from "./pages/Admin/Supplier";
+import { CoinWalletPage } from "./pages/Customer/CoinWalletPage";
 
 function App() {
   const {
@@ -110,6 +111,7 @@ function App() {
           <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="notification" element={<NotificationPage/>} />
+          <Route path = "wallet" element = {<CoinWalletPage/>}/>
           <Route path="lookup" element={<LookUpOrderPage />} />
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />

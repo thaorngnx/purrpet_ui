@@ -18,6 +18,7 @@ import {
 import { getSpaByCode } from "../../api/spa";
 import { createPaymentUrl } from "../../api/pay";
 import * as CONST from "../../constants";
+import dayjs from "dayjs";
 
 export const BookingSpaDetail = () => {
   const { bookingSpaCode } = useParams();
@@ -35,6 +36,7 @@ export const BookingSpaDetail = () => {
     status: "",
     createdAt: "",
     pointUsed: 0,
+    useCoin: 0,
     payMethod:"", 
     totalPayment: 0,
     spa: {
@@ -46,6 +48,7 @@ export const BookingSpaDetail = () => {
       categoryCode: "",
     },
   });
+  const [cancel, setCancel] = useState(false);
 
   useEffect(() => {
     getBookingSpaByCode(bookingSpaCode).then((res) => {
@@ -68,6 +71,7 @@ export const BookingSpaDetail = () => {
               status: bookingSpaInfo.status,
               createdAt: bookingSpaInfo.createdAt,
               pointUsed: bookingSpaInfo.pointUsed,
+              useCoin: bookingSpaInfo.useCoin,
               payMethod: bookingSpaInfo.payMethod,
               totalPayment: bookingSpaInfo.totalPayment,
               spa: {
@@ -83,10 +87,32 @@ export const BookingSpaDetail = () => {
         });
       }
     });
-  }, []);
+  }, [bookingSpaCode]);
+  useEffect(() => {
+   const checkedTimeCancel =()=>{
+    const timeNow = dayjs();
+    const bookingTime = dayjs(bookingSpa.bookingTime, 'HH:mm'); // Chuyển đổi chuỗi thời gian thành đối tượng dayjs
+    // Chuyển đổi chuỗi ngày thành đối tượng dayjs
+   
+    const bookingDate = dayjs(bookingSpa.bookingDate);
+    bookingDate.set('hour', bookingTime.hour());
+    bookingDate.set('minute', bookingTime.minute());
+    bookingDate.set('second', 0);
+    bookingDate.set('millisecond', 0);
+    const timeDiff = bookingDate.diff(timeNow); // Tính khoảng thời gian giữa thời gian hiện tại và thời gian check-in
+
+    
+
+    const fourHours = 4 * 60 * 60 * 1000; // 4 giờ expressed in milliseconds
+
+    if (timeDiff > fourHours && bookingSpa.status === CONST.STATUS_BOOKING.PAID) {
+      setCancel(true);
+    }
+  }
+   checkedTimeCancel();
+  }, [bookingSpa]);
 
   const handlePaymentClick = () => {
-    console.log("payment");
     createPaymentUrl({ orderCode: bookingSpa.purrPetCode }).then((res) => {
       console.log(res);
       if (res.err === 0) {
@@ -103,10 +129,13 @@ export const BookingSpaDetail = () => {
     ).then((res) => {
       console.log(res);
       if (res.err === 0) {
+        setCancel(false);
         window.location.reload();
+
       }
     });
   };
+  console.log("cancel", cancel);
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -126,6 +155,17 @@ export const BookingSpaDetail = () => {
             <Divider className="my-3" />
           </>
         )}
+         {bookingSpa.status === CONST.STATUS_BOOKING.PAID && (
+          <>
+            <Typography
+              variant="body1"
+              className="text-base italic text-green-800"
+            >
+              Đơn hàng chỉ được hủy trước 4h so với thời gian check-in. Sẽ hoàn lại 90% số tiền đã thanh toán vào ví xu của bạn.
+            </Typography>
+            <Divider className="my-3" />
+          </>
+        )}
         <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -135,10 +175,6 @@ export const BookingSpaDetail = () => {
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingSpa.createdAt)}
-            </Typography>
-            <Typography variant="body1">
-              <span className="font-bold">Điểm sử dụng: </span>
-              { formatCurrency(bookingSpa.pointUsed) }
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Phương thức thanh toán: </span>
@@ -232,7 +268,13 @@ export const BookingSpaDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
+          <Typography variant="body1" className="text-end text-md ">
+          Điểm sử dụng:   { formatCurrency(bookingSpa.pointUsed) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-md ">
+          Xu sử dụng:   { formatCurrency(bookingSpa.useCoin) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
             Tổng tiền: {formatCurrency(bookingSpa.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
@@ -253,6 +295,15 @@ export const BookingSpaDetail = () => {
                   Thanh toán
                 </Button>
               </>
+            )}
+               { cancel === true && (
+              <Button
+              variant="contained"
+              className="mr-3 bg-black"
+              onClick={handleChangeStatus}
+            >
+              Hủy đơn
+            </Button>
             )}
           </Box>
         </Box>

@@ -17,6 +17,10 @@ import {
   validatePhone,
 } from "../../utils/validationData";
 import { formatCurrency } from "../../utils/formatData";
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import { FormGroup, FormControlLabel, Switch } from "@mui/material";
+import { el } from "date-fns/locale";
+
 
 
 export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
@@ -31,6 +35,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   const [editInfo, setEditInfo] = useState(true);
   //backup customer info when cancel edit
   const [backupCustomerInfo, setBackupCustomerInfo] = useState({});
+  const [showCoin, setShowCoin] = useState({ show: false, coin: 0 });
   const [customerInfo, setCustomerInfo] = useState({
     customerPhone: "",
     otp: "",
@@ -38,7 +43,8 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
     customerEmail: "",
     customerNote: "",
     customerCode: "",
-    customerUserPoint: 0,
+    userPoint: 0,
+    useCoin: 0,
   });
 
   useEffect(() => {
@@ -65,6 +71,16 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
       setBackupCustomerInfo({ ...customerInfo });
     }
   }, [editInfo]);
+  useEffect(() => {
+    const total = totalPrice - customerInfo.userPoint;
+    if (customerState.coin > total ) {
+      setShowCoin({ showCoin: true, coin: total });
+    }else{
+      setShowCoin({ showCoin: true, coin: customerState.coin });
+    }
+  }
+  ), [showCoin];
+ 
 
   const handleChangeCustomerInfo = (event) => {
     if (!event.target.value) {
@@ -206,16 +222,42 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
 
   const handleChangePoint = (event) => {
     if (event.target.value > 0.1 * totalPrice || event.target.value > customerState.point || event.target.value < 0) {
-      setError({ ...error, customerUserPoint: true });
+      setError({ ...error, userPoint: true });
       event.target.value = 0;
     } else {
-      setError({ ...error, customerUserPoint: false });
+      setError({ ...error, userPoint: false });
+      setCustomerInfo({
+        ...customerInfo,
+        userPoint: event.target.value,
+      });
       customer({
         ...customerInfo,
         userPoint: event.target.value,
       });
     }
    
+  };
+  const handleChangeCoin = (event) => {
+    if(event.target.checked){
+      setCustomerInfo({
+        ...customerInfo,
+        useCoin: showCoin.coin,
+      });
+      customer({
+        ...customerInfo,
+        useCoin: showCoin.coin,
+      });
+    }
+    else{
+      setCustomerInfo({
+        ...customerInfo,
+        useCoin: 0,
+      });
+      customer({
+        ...customerInfo,
+        useCoin: 0,
+      });
+    }
   };
 
   return (
@@ -376,7 +418,19 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             variant="outlined"
           />
         </FormControl>
+
       )}
+      {
+        showCoin.showCoin &&
+        <FormGroup className="flex flex-row items-center mt-10 justify-end">
+            <Typography className=" text-[18px] font-bold text-black">
+            Sử dụng {(formatCurrency(showCoin.coin))} từ ví:<MonetizationOnIcon className="text-[#f6a700]"/>
+          </Typography>
+        <FormControlLabel control={<Switch />} label= {showCoin.coin} onChange={handleChangeCoin} />
+        Xu
+      </FormGroup>
+
+      }
     </Paper>
   );
 };

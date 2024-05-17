@@ -10,6 +10,7 @@ import {
   Typography,
   Paper,
   Box,
+
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getActiveCategories } from "../../api/category";
@@ -46,6 +47,12 @@ export const BookingSpaForm = () => {
     size: "",
     petType: "",
     userPoint: 0,
+    useCoin: 0,
+    payMethod: CONST.PAYMENT_METHOD.VNPAY,
+  });
+  const [disableRadio, setDisableRadio] = useState({
+    VNPAY: false,
+    COIN: false,
   });
 
   useEffect(() => {
@@ -149,12 +156,31 @@ export const BookingSpaForm = () => {
   };
 
   const handleCustomerInfo = (customerInfo) => {
-    setBookingInfo({
-      ...bookingInfo,
-      customerCode: customerInfo.customerCode,
-      customerNote: customerInfo.customerNote,
-      userPoint: customerInfo.userPoint,
-    });
+    const total = bookingInfo.bookingSpaPrice - customerInfo.useCoin - customerInfo.userPoint;
+    if(total === 0){
+      setDisableRadio({ VNPAY: true, COIN: false });
+      setBookingInfo({
+        ...bookingInfo,
+        customerCode: customerInfo.customerCode,
+        customerNote: customerInfo.customerNote,
+        userPoint: customerInfo.userPoint,
+        useCoin: customerInfo.useCoin,
+        payMethod: CONST.PAYMENT_METHOD.COIN,
+      });
+    }else
+    {
+      setDisableRadio({ VNPAY: false, COIN: true });
+      setBookingInfo({
+        ...bookingInfo,
+        customerCode: customerInfo.customerCode,
+        customerNote: customerInfo.customerNote,
+        userPoint: customerInfo.userPoint,
+        useCoin: customerInfo.useCoin,
+        payMethod: CONST.PAYMENT_METHOD.VNPAY,
+      });
+    }
+
+   
   };
 
   const handleConfirmInfo = (confirm) => {
@@ -171,21 +197,27 @@ export const BookingSpaForm = () => {
       customerNote: bookingInfo.customerNote,
       bookingDate: bookingInfo.bookingDate,
       bookingTime: bookingInfo.bookingTime,
-      payMethod: CONST.PAYMENT_METHOD.VNPAY,
+      payMethod: bookingInfo.payMethod,
       userPoint: bookingInfo.userPoint,
+      useCoin: bookingInfo.useCoin,
     }).then((res) => {
-      console.log(res);
+ 
       if (res.err === 0) {
-        navigate(`/bookingHome/${res.data.purrPetCode}`);
-        navigate("/");
+      if(res.data.payMethod === CONST.PAYMENT_METHOD.VNPAY){
         createPaymentUrl({
-          orderCode: res.data.purrPetCode,
+          bookingCode: res.data.bookingCode,
+          totalAmount: res.data.bookingSpaPrice,
         }).then((res) => {
           if (res.err === 0) {
-            window.location.href = res.data.paymentUrl;
+            window.location.href = res.data;
           }
         });
+
+      }else{
+        setMessage(res.message);
+        navigate(`/bookingSpa/${res.data.purrPetCode}`);
       }
+    }
       setMessage(res.message);
     });
   };
@@ -344,6 +376,84 @@ export const BookingSpaForm = () => {
           totalPrice = {bookingInfo.bookingSpaPrice}
         />
       )}
+       {
+        validateObject(bookingInfo) && showBtnConfirmBook && (
+          <FormControl>
+          <FormControl    sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          ml: 20,
+          mt:5,
+        }}>
+          <FormLabel className="mb-2 font-bold text-black">
+            Phương thức thanh toán:
+          </FormLabel>
+          <RadioGroup
+            name="payMethod"
+            value={bookingInfo.payMethod}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <FormControlLabel
+              value={CONST.PAYMENT_METHOD.VNPAY}
+              control={<Radio />}
+              label="VNPAY"
+               disabled = {disableRadio.VNPAY}
+            />
+             <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COIN}
+              control={<Radio />}
+              label="Ví xu"
+               disabled = {disableRadio.COIN}
+            />
+          </RadioGroup>
+        </FormControl >
+        <FormControl   sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          ml: 15,
+          p:5
+        }}>
+          <FormLabel className="mt-2 font-bold text-black text-[18px]">
+            Thanh toán:
+          </FormLabel>
+          <FormControl  sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "cloumn",
+          mr:7
+          
+        }} >
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Tổng tiền dịch vụ: 
+              <Typography variant="body1" className="m-1 text-end">
+               {formatCurrency(bookingInfo.bookingSpaPrice)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng điểm:
+              <Typography variant="body1" className="m-1 text-end">
+              - {formatCurrency( bookingInfo.userPoint)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng ví xu:   
+              <Typography variant="body1" className="m-1 text-end">
+              -  {formatCurrency( bookingInfo.useCoin)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center font-bold text-black text-[17px] justify-between">
+              Thành tiền: 
+              <Typography variant="body1" className="m-1 text-end text-[#800000] font-bold">
+              {formatCurrency(bookingInfo.bookingSpaPrice - bookingInfo.userPoint - bookingInfo.useCoin)}
+               </Typography>
+            </Typography>
+            </FormControl>
+            </FormControl>
+          </FormControl>
+        )
+      }
       {validateObject(bookingInfo) && showBtnConfirmBook && (
         <BigHoverTransformButton
           onClick={handleConfirmBooking}

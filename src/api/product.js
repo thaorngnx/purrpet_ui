@@ -83,3 +83,19 @@ export async function getProductStaff(params) {
     console.error(error);
   }
 }
+export async function createDiscount(data) {
+  try {
+    const response = await api.post("product/create-promotion", data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function cancelDiscount(data) {
+  try {
+    const response = await api.post("product/cancel-promotion", data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

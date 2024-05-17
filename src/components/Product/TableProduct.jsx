@@ -26,6 +26,7 @@ import {
 import { getCategories } from "../../api/category";
 import { UpdateProduct } from "./UpdateProduct";
 import * as CONST from "../../constants";
+import { ro } from "date-fns/locale";
 
 export const TableProduct = () => {
   const [rows, setRows] = useState([]);
@@ -60,11 +61,11 @@ export const TableProduct = () => {
       setRows(res.data);
     });
     const params = { categoryType: CONST.CATEGORY_TYPE.PRODUCT };
-    getCategories(params).then((res) => {
-      console.log(res.data);
+    getCategories(params).then((res) => { 
       setCategories(res.data);
     });
   }, [alert]);
+
 
   useEffect(() => {
     if (categories.length > 0) {
@@ -111,6 +112,15 @@ export const TableProduct = () => {
       headerAlign: "center",
       align: "right",
       minWidth: 120,
+      type: "number",
+    },
+    {
+      field: "priceDiscount",
+      headerName: "Giá khuyến mãi",
+      flex: 1,
+      headerAlign: "center",
+      align: "right",
+      minWidth: 140,
       type: "number",
     },
     {
@@ -239,6 +249,7 @@ export const TableProduct = () => {
       productType: selectedProduct.productType,
       description: selectedProduct.description,
       price: selectedProduct.price,
+      discount: selectedProduct.priceDiscount,
       categoryCode: selectedProduct.categoryCode,
       images: selectedProduct.images,
       // inventory: selectedProduct.inventory,

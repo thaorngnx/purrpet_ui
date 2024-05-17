@@ -29,7 +29,7 @@ export async function getBookingSpaByCustomer() {
 
 export async function createBookingSpa(bookingSpa) {
   try {
-    const response = await api.post("bookingSpa/create", bookingSpa);
+    const response = await api.post("bookingSpa/create", bookingSpa)
     return response.data;
   } catch (error) {
     console.error(error);

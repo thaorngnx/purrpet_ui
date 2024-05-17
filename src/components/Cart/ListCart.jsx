@@ -26,8 +26,6 @@ import { BigHoverTransformButton } from "../Button/StyledButton";
 import { validateObject } from "../../utils/validationData";
 import * as CONST from "../../constants";
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
-import PaymentsIcon from '@mui/icons-material/Payments';
-
 
 export const ListCart = () => {
   const navigate = useNavigate();
@@ -40,6 +38,11 @@ export const ListCart = () => {
   const [alert, setAlert] = useState(false);
   const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
   const [message, setMessage] = useState("");
+  const [disableRadio, setDisableRadio] = useState({
+    COD: false,
+    VNPAY: false,
+    COIN: true,
+  });
   const [orderInfo, setOrderInfo] = useState({
     customerCode: "",
     customerAddress: {
@@ -52,6 +55,7 @@ export const ListCart = () => {
     orderItems: [],
     payMethod: CONST.PAYMENT_METHOD.COD,
     userPoint: 0,
+    useCoin: 0,
   });
 
   useEffect(() => {
@@ -147,7 +151,6 @@ export const ListCart = () => {
         (item) => item.purrPetCode !== product.purrPetCode,
       );
       setProductCart(newProductCart);
-      console.log(product.purrPetCode);
       deleteProductCart({ productCode: product.purrPetCode });
     }
   };
@@ -157,14 +160,45 @@ export const ListCart = () => {
   };
 
   const handleCustomerInfo = (customerInfo) => {
-    setOrderInfo({
-      ...orderInfo,
-      customerCode: customerInfo.customerCode,
-      customerAddress: customerInfo.customerAddress,
-      customerNote: customerInfo.customerNote,
-      userPoint: customerInfo.userPoint,
-    });
+    const totalPayment = productCart.reduce((a, b) => a + b.totalPrice, 0) - customerInfo.useCoin - customerInfo.userPoint;
+   
+    if(totalPayment === 0){
+      setOrderInfo({
+        ...orderInfo,
+        customerCode: customerInfo.customerCode,
+        customerAddress: customerInfo.customerAddress,
+        customerNote: customerInfo.customerNote,
+        userPoint: customerInfo.userPoint,
+        useCoin: customerInfo.useCoin,
+        payMethod: CONST.PAYMENT_METHOD.COIN,
+      });
+      setDisableRadio({
+        ...disableRadio,
+        COD: true,
+        VNPAY: true,
+        COIN: false,
+      });
+    }
+    else{
+      setOrderInfo({
+        ...orderInfo,
+        customerCode: customerInfo.customerCode,
+        customerAddress: customerInfo.customerAddress,
+        customerNote: customerInfo.customerNote,
+        userPoint: customerInfo.userPoint,
+        useCoin: customerInfo.useCoin,
+        payMethod: CONST.PAYMENT_METHOD.COD,
+      });
+      setDisableRadio({
+        ...disableRadio,
+        COD: false,
+        VNPAY: false,
+        COIN: true,
+      });
+
+    }
   };
+   console.log(orderInfo);
 
   const handleConfirmInfo = (confirm) => {
     setShowBtnConfirmOrder(confirm);
@@ -183,7 +217,7 @@ export const ListCart = () => {
         console.log("order success", res);
         //delete cart
         deleteCart();
-        if(res.data.payMethod === CONST.PAYMENT_METHOD.COD){
+        if(res.data.payMethod === CONST.PAYMENT_METHOD.COD || res.data.payMethod === CONST.PAYMENT_METHOD.COIN){
           console.log(res.data.purrPetCode);
           navigate(`/order/${res.data.purrPetCode}`);
           return;
@@ -397,17 +431,23 @@ export const ListCart = () => {
           customer={handleCustomerInfo}
           confirmInfo={handleConfirmInfo}
           totalPrice = {productCart.reduce((a, b) => a + b.totalPrice, 0)} 
+          disableRadio = {setDisableRadio}
         />
       )} {
         productCart.length > 0 && showBtnConfirmOrder && (
-        <FormControl   sx={{
-          width: "90%",
-          ml: "auto",
-          mr: "auto",
+          <FormControl>
+            <FormControl   sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "cloumn",
+          mr:7
+          
+        }}>
+            <FormControl   sx={{
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          p: 5,
+          ml: 10,
         }}>
           <FormLabel className="mt-2 font-bold text-black">
             Phương thức thanh toán:
@@ -422,19 +462,62 @@ export const ListCart = () => {
               value={CONST.PAYMENT_METHOD.COD}
               control={<Radio />}
               label="Tiền mặt"
-              icon={<PaymentsIcon />}
+             disabled = {disableRadio.COD}
             />
             
             <FormControlLabel
               value={CONST.PAYMENT_METHOD.VNPAY}
               control={<Radio />}
-              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
               label="VNPAY"
+              disabled = {disableRadio.VNPAY}
+            />
+             <FormControlLabel
+              value={CONST.PAYMENT_METHOD.COIN}
+              control={<Radio />}
+              label="Ví xu"
+              disabled = {disableRadio.COIN}
             />
           </RadioGroup>
-        </FormControl>)
-         
+        </FormControl>
+        <FormControl   sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          ml: 10,
+        }}>
+          <FormLabel className="mt-2 font-bold text-black text-[18px]">
+            Thanh toán:
+          </FormLabel>
+          <FormControl >
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Tổng tiền hàng: 
+              <Typography variant="body1" className="m-1 text-end">
+               {formatCurrency(productCart.reduce((a, b) => a + b.totalPrice, 0))}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng điểm:
+              <Typography variant="body1" className="m-1 text-end">
+              - {formatCurrency(orderInfo.userPoint)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng ví xu:   
+              <Typography variant="body1" className="m-1 text-end">
+              -  {formatCurrency( orderInfo.useCoin)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center font-bold text-black text-[17px] justify-between">
+              Thành tiền: 
+              <Typography variant="body1" className="m-1 text-end text-[#800000] font-bold">
+              {formatCurrency(productCart.reduce((a, b) => a + b.totalPrice, 0) - orderInfo.userPoint - orderInfo.useCoin)}
+               </Typography>
+            </Typography>
+            </FormControl>
+            </FormControl>
         
+          </FormControl>
+        </FormControl>)
       }
         
       {productCart.length > 0 &&

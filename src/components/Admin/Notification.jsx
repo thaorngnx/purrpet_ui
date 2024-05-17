@@ -54,6 +54,8 @@ export const Notification = ()=>
 
       } else if (notification.type === NOTIFICATION_TYPE.BOOKING_HOME) {
         navigate(`${link}/bookingHome/${notification.orderCode}`);
+      }else if (notification.type === NOTIFICATION_TYPE.PRODUCT) {
+        navigate(`${link}/consignment`);
       }
     };
     const handleViewAll = () => {

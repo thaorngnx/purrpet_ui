@@ -41,6 +41,7 @@ export const OrderDetail = () => {
     payMethod: "",
     paymentStatus: "",
     pointUsed: 0,
+    useCoin: 0,
   });
 
   useEffect(() => {
@@ -90,6 +91,7 @@ export const OrderDetail = () => {
               paymentStatus: order.paymentStatus,
               pointUsed: order.pointUsed,
               totalPayment: order.totalPayment,
+              useCoin: order.useCoin,
             });
           }
         });
@@ -160,10 +162,6 @@ export const OrderDetail = () => {
             <Typography variant="body1">
               <span className="font-bold">Trạng thái thanh toán: </span>
               {order.paymentStatus}
-            </Typography>
-            <Typography variant="body1">
-              <span className="font-bold">Điểm sử dụng: </span>
-              {formatCurrency(order.pointUsed)}
             </Typography>
             
           </Box>
@@ -264,9 +262,16 @@ export const OrderDetail = () => {
               );
             })}
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
+          <Typography variant="body1" className="text-end text-md ">
+          Điểm sử dụng:   { formatCurrency(order.pointUsed) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-md ">
+          Xu sử dụng:   { formatCurrency(order.useCoin) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
             Tổng tiền: {formatCurrency(order.totalPayment)}
           </Typography>
+        
           <Box className="mt-3 flex flex-row justify-end">
             {order.paymentStatus === CONST.STATUS_ORDER.WAITING_FOR_PAY  && (
               <>

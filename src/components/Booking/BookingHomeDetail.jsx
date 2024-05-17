@@ -17,6 +17,7 @@ import {
 import { getHomestayByCode } from "../../api/homestay";
 import { createPaymentUrl } from "../../api/pay";
 import * as CONST from "../../constants";
+import dayjs from "dayjs";
 
 export const BookingHomeDetail = () => {
   const { bookingHomeCode } = useParams();
@@ -35,6 +36,7 @@ export const BookingHomeDetail = () => {
     status: "",
     createdAt: "",
     pointUsed: 0,
+    useCoin: 0,
     payMethod: "",
     totalPayment: 0,
     homestay: {
@@ -45,7 +47,8 @@ export const BookingHomeDetail = () => {
       price: 0,
     },
   });
-  const [homestay, setHomestay] = useState({});
+  const [cancel, setCancel] = useState(false);
+
 
   useEffect(() => {
     getBookingHomeByCode(bookingHomeCode).then((res) => {
@@ -69,6 +72,7 @@ export const BookingHomeDetail = () => {
               status: bookingHomeInfo.status,
               createdAt: bookingHomeInfo.createdAt,
               pointUsed: bookingHomeInfo.pointUsed,
+              useCoin: bookingHomeInfo.useCoin,
               payMethod: bookingHomeInfo.payMethod,
               totalPayment: bookingHomeInfo.totalPayment,
               homestay: {
@@ -85,9 +89,22 @@ export const BookingHomeDetail = () => {
     });
   }, [bookingHomeCode]);
 
+  useEffect(() => {
+   
+    const checkedTimeCancel = () => {
+      const timeNow = dayjs();
+      const timeCheckin = dayjs(bookingHome.dateCheckIn);
+      const timeDiff = timeCheckin.diff(timeNow );
+      const twentyFourHours = 24 * 60 * 60 * 1000; // 24 giờ expressed in milliseconds
+      if (timeDiff > twentyFourHours && bookingHome.status === CONST.STATUS_BOOKING.PAID) {
+        setCancel(true);
+      }
+    };
+    checkedTimeCancel();
+  }, [bookingHome]);
+
   const handlePaymentClick = () => {
     createPaymentUrl({ orderCode: bookingHome.purrPetCode }).then((res) => {
-      console.log(res);
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
       }
@@ -95,17 +112,18 @@ export const BookingHomeDetail = () => {
   };
 
   const handleChangeStatus = () => {
-    console.log("cancel");
     updateStatusBookingHome(
       bookingHome.purrPetCode,
       CONST.STATUS_BOOKING.CANCEL,
     ).then((res) => {
       console.log(res);
       if (res.err === 0) {
+        setCancel(false);
         window.location.reload();
       }
     });
   };
+ 
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -125,6 +143,17 @@ export const BookingHomeDetail = () => {
             <Divider className="my-3" />
           </>
         )}
+        {bookingHome.status === CONST.STATUS_BOOKING.PAID && (
+          <>
+            <Typography
+              variant="body1"
+              className="text-base italic text-green-800"
+            >
+              Đơn hàng chỉ được hủy trước 24h so với thời gian check-in. Sẽ hoàn lại 90% số tiền đã thanh toán vào ví xu của bạn.
+            </Typography>
+            <Divider className="my-3" />
+          </>
+        )}
         <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -135,13 +164,10 @@ export const BookingHomeDetail = () => {
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingHome.createdAt)}
             </Typography>
-            <Typography variant="body1">
-              <span className="font-bold">Điểm sử dụng: </span>
-              { formatCurrency(bookingSpa.pointUsed) }
-            </Typography>
+            
             <Typography variant="body1">
               <span className="font-bold">Phương thức thanh toán: </span>
-              {bookingSpa.payMethod}
+              {bookingHome.payMethod}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
@@ -256,7 +282,13 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
+          <Typography variant="body1" className="text-end text-md ">
+          Điểm sử dụng:   { formatCurrency(bookingHome.pointUsed) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-md ">
+          Xu sử dụng:   { formatCurrency(bookingHome.useCoin) }
+          </Typography>
+          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
             Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
@@ -277,6 +309,15 @@ export const BookingHomeDetail = () => {
                   Thanh toán
                 </Button>
               </>
+            )}
+            { cancel === true && (
+              <Button
+              variant="contained"
+              className="mr-3 bg-black"
+              onClick={handleChangeStatus}
+            >
+              Hủy đơn
+            </Button>
             )}
           </Box>
         </Box>

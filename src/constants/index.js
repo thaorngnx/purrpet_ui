@@ -98,6 +98,7 @@ export const PREFIX = {
 export const PAYMENT_METHOD = {
   COD: 'Tiền mặt',
   VNPAY: 'VNPAY',
+  COIN: 'Xu',
 };
 export const STATUS_PAYMENT = {
   WAITING_FOR_PAY: 'Chờ thanh toán',
@@ -108,6 +109,7 @@ export const NOTIFICATION_TYPE = {
   BOOKING_HOME: 'bookingHome',
   BOOKING_SPA: 'bookingSpa',
   REVIEW: 'review',
+  PRODUCT: 'product',
 
 };
 

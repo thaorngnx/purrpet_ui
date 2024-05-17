@@ -2,8 +2,9 @@
 import { useEffect } from "react";
 import { createComsignment, getComsignments, getAllMerchandise, UpdateStatusMerchandise } from "../../api/comsignment";
 import PropTypes from 'prop-types';
-import { Button, Switch } from "@mui/material";
-import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, FormControlLabel } from '@mui/material';
+import { Button, Switch, TextField, Typography } from "@mui/material";
+import { Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, FormControlLabel, 
+ } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import React from 'react';
@@ -11,10 +12,12 @@ import { useState } from "react";
 import { Add as AddIcon } from "@mui/icons-material";
 import { set } from "date-fns";
 import { CreateComsignment } from "./CreateComsignment";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from "@mui/material";
 import * as CONST from "../../constants";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
+import { formatDateTime } from "../../utils/formatData";
+import { cancelDiscount, createDiscount } from "../../api/product";
 
 async function createData(code, count, supplier, productList) {
   let data = [];
@@ -28,6 +31,8 @@ async function createData(code, count, supplier, productList) {
       const res = await getAllMerchandise(params);
       const inventory = res.data[0].inventory;
       const status = res.data[0].status;
+      const expired = res.data[0].expired;
+      const promotion = res.data[0].promotion;
 
       data.push({
         expiryDate: product.expiryDate,
@@ -36,6 +41,8 @@ async function createData(code, count, supplier, productList) {
         cost: product.cost,
         inventory: inventory,
         status: status,
+        expired: expired,
+        promotion: promotion,
       });
     } catch (error) {
       // Xử lý lỗi nếu có
@@ -50,7 +57,7 @@ async function createData(code, count, supplier, productList) {
     const [alert, setAlert] = useState(false);
     const [severity, setSeverity] = useState(CONST.ALERT_SEVERITY.SUCCESS);
     const [message, setMessage] = useState("");
-
+    const [discount, setDiscount] = useState(0);
     const fetchData = async () => {
       try {
         const resolvedData = await row; // Chờ Promise hoàn thành và lấy kết quả
@@ -98,6 +105,46 @@ async function createData(code, count, supplier, productList) {
       );
     });
   }
+  const handleClickDiscount = (productCode) => {
+    const merchandiseCode = productCode + '+' + rowData.code;
+    createDiscount({
+      merchandiseCode: merchandiseCode,
+      discount: discount,
+    }).then((res) => {
+      if(res.err === 0){
+        setAlert(true);
+        setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
+        setMessage("Khuyến mãi thành công");
+        window.location.reload();
+      }else{
+        setAlert(true);
+        setSeverity(CONST.ALERT_SEVERITY.ERROR);
+        setMessage("Khuyến mãi thất bại");
+      }
+    });
+ 
+  }
+ const handleChangeDiscount = (e) => {
+    setDiscount(e.target.value);
+  }
+const handleCancelDiscount = (productCode) => {
+  const merchandiseCode = productCode + '+' + rowData.code;
+  cancelDiscount({
+    merchandiseCode: merchandiseCode,
+  }).then((res) => {
+    if(res.err === 0){
+      setAlert(true);
+      setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
+      setMessage("Hủy khuyến mãi thành công");
+      window.location.reload();
+    }else{
+      setAlert(true);
+      setSeverity(CONST.ALERT_SEVERITY.ERROR);
+      setMessage("Hủy khuyến mãi thất bại");
+
+    }
+  });
+}
     return (
       <React.Fragment>
         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -130,6 +177,7 @@ async function createData(code, count, supplier, productList) {
                       <TableCell align="center" className="font-bold">Giá nhập</TableCell>
                       <TableCell align="center" className="font-bold">Tồn kho</TableCell>
                       <TableCell align="center" className="font-bold">Trạng thái</TableCell>
+                      <TableCell align="center" className="font-bold">Khuyến mãi</TableCell>
                       
                     </TableRow>
                   </TableHead>
@@ -137,7 +185,7 @@ async function createData(code, count, supplier, productList) {
                     { rowData.data && rowData.data.map((DetailRow) => (
                       <TableRow key={DetailRow.productCode}>
                         <TableCell component="th" scope="row">
-                          {DetailRow.expiryDate}
+                          {formatDateTime(DetailRow.expiryDate) }
                         </TableCell>
                         <TableCell >{DetailRow.productCode}</TableCell>
                         <TableCell align="center">{DetailRow.quantity}</TableCell>
@@ -159,6 +207,23 @@ async function createData(code, count, supplier, productList) {
                           }
                         />
                           </TableCell>
+                          <TableCell align="center">
+                           { (DetailRow.expired === true && DetailRow.promotion === false  && DetailRow.status === CONST.STATUS_PRODUCT.ACTIVE )&&(
+                            <Box className= "flex flex-row items-center">
+                              <TextField placeholder="Nhập % khuyến mãi" type="Number" onChange={handleChangeDiscount} />
+                           <Button variant="outlined" className="bg-green-500 text-white ml-2 " onClick={()=>handleClickDiscount(DetailRow.productCode)}>Khuyến mãi</Button>                      
+                            </Box>
+                                )
+                             } 
+                             {
+                              DetailRow.promotion === true &&(
+                                <Box>
+                                  <Typography className="text-red-500">Đang khuyến mãi</Typography>
+                                  <Button variant="outlined" className="bg-red-500 text-white " onClick={()=> handleCancelDiscount(DetailRow.productCode)} >Huỷ khuyển mãi</Button>
+                                </Box>
+                              )
+                             }
+                          </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -173,6 +238,7 @@ async function createData(code, count, supplier, productList) {
         severity={severity}
       >
         <Alert severity={severity}>{message}</Alert>
+      
       </Snackbar>
       </React.Fragment>
     );
