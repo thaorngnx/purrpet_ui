@@ -71,16 +71,17 @@ export function HeaderCustomer() {
       socketClient.on('connect', () => {
         console.log('socket connected');
       });
-
       socketClient.on(accessToken, onTradeEvent);
-
       return () => {
-        socketClient.off(accessToken, onTradeEvent);
+        socketClient.off(accessToken, onTradeEvent);    
+
       };
     }
   }, [customer?.accessToken]);
-
-  
+ 
+  const onPaymentSuccessful = (value) => {
+    navigate('/order');
+  }
 
   const handleCategorySelect = (categoryCode) => {
     navigate(`/product?category=${categoryCode}`);

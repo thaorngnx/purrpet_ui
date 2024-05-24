@@ -49,7 +49,6 @@ export const BookingHomeDetail = () => {
   });
   const [cancel, setCancel] = useState(false);
 
-
   useEffect(() => {
     getBookingHomeByCode(bookingHomeCode).then((res) => {
       console.log(res);

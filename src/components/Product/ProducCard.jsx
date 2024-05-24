@@ -13,6 +13,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
+import StarRateIcon from '@mui/icons-material/StarRate';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export const ProductCard = ({ product }) => {
   const { addToCart } = useStore();
 
   const [isHover, setIsHover] = useState(false);
+  console.log(product);
 
   const handleProductClick = () => {
     navigate(`/product/${product.purrPetCode}`);
@@ -43,10 +45,18 @@ export const ProductCard = ({ product }) => {
   return (
     <Card sx={{ width: "200px", m: 2 }}>
       <CardActionArea
-        sx={{ display: "flex", flexDirection: "column" }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      sx={{ display: "flex", flexDirection: "column", position: "relative" }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+        {product.priceDiscount > 0 && (
+          <Typography
+            variant="body2"
+            className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 font-bold"
+          >
+            - {((product.price - product.priceDiscount) / product.price) * 100}%
+          </Typography>
+        )}
         <CardMedia
           component="img"
           key={product.purrPetCode}
@@ -55,6 +65,7 @@ export const ProductCard = ({ product }) => {
           sx={{ height: "200px" }}
         />
         <CardContent className="w-full p-1">
+        
           <Typography
             component="div"
             className=" my-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm"
@@ -63,19 +74,39 @@ export const ProductCard = ({ product }) => {
           </Typography>
           <Box className="flex flex-row justify-between">
             {product.inventory > 0 ? (
-              <Typography variant="body2" className="text-green-600">
-                Còn hàng
+              <Typography variant="body2" className={product.discountQuantity > 0 ? "text-[#ed8821]" :"text-green-600"}>
+               {product.discountQuantity > 0 ? `Số lượng ${product.discountQuantity} ` : 'Còn hàng'} 
               </Typography>
             ) : (
               <Typography variant="body2" className="text-red-600">
                 Hết hàng
               </Typography>
             )}
+            <Box className="flex flex-col">
+            {product.priceDiscount > 0 && (
+              <Typography
+                variant="body2"
+                className="text-red-600 font-bold"
+              >
+                {formatCurrency(product.priceDiscount)}
+              </Typography>
+            )}
 
-            <Typography variant="body2" className="font-bold">
+            <Typography variant="body2" className= { product.discountQuantity > 0 ? 'line-through text-gray-500 ' : 'font-bold'}>
               {formatCurrency(product.price)}
             </Typography>
+           
+            </Box>
           </Box>
+          <Box className="flex flex-row justify-between">
+              <Typography variant="body2" className="text-gray-500">
+                Đã bán: {product.orderQuantity}
+                </Typography>
+                <Typography variant="body2" className="text-gray-500">
+                  {product.averageRating}
+                <StarRateIcon style={{color: '#f17359'}}/>
+                </Typography>
+              </Box>
         </CardContent>
         {isHover && (
           <div className="absolute z-0 flex h-full w-full items-center justify-center bg-white bg-opacity-10">

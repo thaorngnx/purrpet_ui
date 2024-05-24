@@ -6,7 +6,14 @@ import {
   ListItem,
   Divider,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  TextareaAutosize
 } from "@mui/material";
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { formatCurrency, formatDateTime } from "../../utils/formatData";
@@ -14,12 +21,26 @@ import { getOrderByCode, updateStatusOrder } from "../../api/order";
 import { getProducts } from "../../api/product";
 import { createPaymentUrl } from "../../api/pay";
 import { MiniHoverButton } from "../Button/StyledButton";
+import { FormControl } from "@mui/material";
 import * as CONST from "../../constants";
+import { UploadImage, UploadImageRefund } from "../Image/UploadImage";
 
 export const OrderDetail = () => {
   const navigate = useNavigate();
 
   const { orderCode } = useParams();
+  const [open, setOpen] = useState(false);
+  const [request, setRequest] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+ 
+
 
   const [order, setOrder] = useState({
     purrPetCode: "",
@@ -38,6 +59,7 @@ export const OrderDetail = () => {
     orderPrice: 0,
     orderItems: [],
     productOrder: [],
+    totalPrice: 0,
     payMethod: "",
     paymentStatus: "",
     pointUsed: 0,
@@ -262,16 +284,35 @@ export const OrderDetail = () => {
               );
             })}
           </List>
-          <Typography variant="body1" className="text-end text-md ">
-          Điểm sử dụng:   { formatCurrency(order.pointUsed) }
-          </Typography>
-          <Typography variant="body1" className="text-end text-md ">
-          Xu sử dụng:   { formatCurrency(order.useCoin) }
-          </Typography>
-          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
-            Tổng tiền: {formatCurrency(order.totalPayment)}
-          </Typography>
         
+          <FormControl className="  w-1/2 flex justify-end ml-[auto] " >
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Tổng tiền hàng: 
+              <Typography variant="body1" className="m-1 text-end">
+               {formatCurrency(order.orderPrice)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng điểm:
+              <Typography variant="body1" className="m-1 text-end">
+              - {formatCurrency(order.pointUsed)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+              Sử dụng ví xu:   
+              <Typography variant="body1" className="m-1 text-end">
+              -  {formatCurrency( order.useCoin)}
+               </Typography>
+            </Typography>
+            <Typography variant="body1" className="m-1 text-end flex flex-row items-center font-bold text-black text-[17px] justify-between">
+              Thành tiền: 
+              <Typography variant="body1" className="m-1 text-end text-[#800000] font-bold">
+              {formatCurrency(order.totalPayment)}
+               </Typography>
+            </Typography>
+            </FormControl>
+       
+       
           <Box className="mt-3 flex flex-row justify-end">
             {order.paymentStatus === CONST.STATUS_ORDER.WAITING_FOR_PAY  && (
               <>
@@ -307,13 +348,43 @@ export const OrderDetail = () => {
                 <Button
                   variant="contained"
                   className="ml-3 bg-black"
-                  onClick={handleChangeStatus}
+                  onClick={handleClickOpen}
                 >
-                  Trả hàng/ hoán tiền
+                  Trả hàng/ hoàn tiền
                 </Button>
               )
             }
           </Box>
+          <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Gửi yêu cầu hoàn tiền?"}
+        </DialogTitle>
+        <DialogContent>
+       <TextareaAutosize
+        aria-label="minimum height"
+        minRows={3}
+        placeholder="Nhập lý do hoàn tiền"
+        style={{ width: '100%' }}
+      />
+      {/* <UploadImageRefund
+        request={request}
+        updateRequest={setRequest}
+        err={error}
+      /> */}
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Huỷ</Button>
+          <Button onClick={handleClose} autoFocus>
+          Gửi yêu cầu
+          </Button>
+        </DialogActions>
+      </Dialog>
         </Box>
       </Paper>
     </Box>

@@ -120,7 +120,16 @@ export const TableProduct = () => {
       flex: 1,
       headerAlign: "center",
       align: "right",
-      minWidth: 140,
+      minWidth: 120,
+      type: "number",
+    },
+    {
+      field: "discountQuantity",
+      headerName: "Số lượng KM",
+      flex: 1,
+      headerAlign: "center",
+      align: "right",
+      minWidth: 100,
       type: "number",
     },
     {

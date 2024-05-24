@@ -205,8 +205,7 @@ export const BookingSpaForm = () => {
       if (res.err === 0) {
       if(res.data.payMethod === CONST.PAYMENT_METHOD.VNPAY){
         createPaymentUrl({
-          bookingCode: res.data.bookingCode,
-          totalAmount: res.data.bookingSpaPrice,
+          orderCode: res.data.purrPetCode,
         }).then((res) => {
           if (res.err === 0) {
             window.location.href = res.data;

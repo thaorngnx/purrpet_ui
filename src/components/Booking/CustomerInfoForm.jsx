@@ -73,10 +73,10 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   }, [editInfo]);
   useEffect(() => {
     const total = totalPrice - customerInfo.userPoint;
-    if (customerState.coin > total ) {
+    if (customerState?.coin > total ) {
       setShowCoin({ showCoin: true, coin: total });
     }else{
-      setShowCoin({ showCoin: true, coin: customerState.coin });
+      setShowCoin({ showCoin: true, coin: customerState?.coin });
     }
   }
   ), [showCoin];
@@ -420,7 +420,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
         </FormControl>
 
       )}
-      {
+      { customerState?.coin > 0 &&
         showCoin.showCoin &&
         <FormGroup className="flex flex-row items-center mt-10 justify-end">
             <Typography className=" text-[18px] font-bold text-black">

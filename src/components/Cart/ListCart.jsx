@@ -26,6 +26,7 @@ import { BigHoverTransformButton } from "../Button/StyledButton";
 import { validateObject } from "../../utils/validationData";
 import * as CONST from "../../constants";
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { de, el } from "date-fns/locale";
 
 export const ListCart = () => {
   const navigate = useNavigate();
@@ -68,12 +69,21 @@ export const ListCart = () => {
             deleteProductCart({ productCode: cart[i].productCode });
             continue;
           }
+          if(productData.data.discountQuantity > 0){
+            productList.push({
+              ...productData.data,
+              quantity: cart[i].quantity,
+              totalPrice: productData.data.priceDiscount * cart[i].quantity,
+            });
+          }
+          else{
 
           productList.push({
             ...productData.data,
             quantity: cart[i].quantity,
             totalPrice: productData.data.price * cart[i].quantity,
           });
+        }
         }
         setProductCart(productList);
       } catch (error) {
@@ -95,7 +105,34 @@ export const ListCart = () => {
   }, [cart]);
 
   const handleAddQuantity = (product) => {
-    if (product.quantity < product.inventory) {
+      if ( product.discountQuantity > 0 && product.quantity < product.discountQuantity) {
+        const newProductCart = productCart.map((item) => {
+          if (item.purrPetCode === product.purrPetCode) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+              totalPrice: item.priceDiscount * (item.quantity + 1),
+            };
+          }
+          return item;
+        });
+        setProductCart(newProductCart);
+        setOrderInfo({
+          ...orderInfo,
+          orderItems: newProductCart.map((item) => {
+            return {
+              productCode: item.purrPetCode,
+              quantity: item.quantity,
+            };
+          }),
+        });
+        updateCart({
+          productCode: product.purrPetCode,
+          quantity: product.quantity + 1,
+        });
+      }else{
+  if (product.quantity < product.inventory && product.discountQuantity === null) {
+  
       const newProductCart = productCart.map((item) => {
         if (item.purrPetCode === product.purrPetCode) {
           return {
@@ -121,26 +158,46 @@ export const ListCart = () => {
         quantity: product.quantity + 1,
       });
     }
+  }
   };
 
   const handleSubtractQuantity = (product) => {
     if (product.quantity > 1) {
-      const newProductCart = productCart.map((item) => {
-        if (item.purrPetCode === product.purrPetCode) {
-          return {
-            ...item,
-            quantity: item.quantity - 1,
-            totalPrice: item.price * (item.quantity - 1),
-          };
-        }
-        return item;
-      });
-      setProductCart(newProductCart);
-      updateCart({
-        productCode: product.purrPetCode,
-        quantity: product.quantity - 1,
-      });
-    }
+      if (product.discountQuantity > 0 && product.quantity <= product.discountQuantity){
+        const newProductCart = productCart.map((item) => {
+          if (item.purrPetCode === product.purrPetCode) {
+            return {
+              ...item,
+              quantity: item.quantity - 1,
+              totalPrice: item.priceDiscount * (item.quantity - 1),
+            };
+          }
+          return item;
+        });
+        setProductCart(newProductCart);
+        updateCart({
+          productCode: product.purrPetCode,
+          quantity: product.quantity - 1,
+        });
+      }else{
+        const newProductCart = productCart.map((item) => {
+          if (item.purrPetCode === product.purrPetCode) {
+            return {
+              ...item,
+              quantity: item.quantity - 1,
+              totalPrice: item.price * (item.quantity - 1),
+            };
+          }
+          return item;
+        });
+        setProductCart(newProductCart);
+        updateCart({
+          productCode: product.purrPetCode,
+          quantity: product.quantity - 1,
+        });
+      }
+      }
+      
   };
 
   const handleDeleteCart = (product) => {
@@ -345,9 +402,18 @@ export const ListCart = () => {
                     <Typography variant="body1" className="w-1/3 p-2">
                       {item.productName}
                     </Typography>
-                    <Typography variant="body1" className="m-2 w-1/6 text-end">
+                    <Box className="flex flex-col w-1/6">
+                    <Typography variant="body1" className={item.discountQuantity > 0 ? 'line-through text-gray-500':"m-2 w-1/6 text-end"}>
                       {formatCurrency(item.price)}
                     </Typography>
+                    {
+                      item.discountQuantity > 0 && (
+                        <Typography variant="body1" className="m-2 w-1/6 text-end text-red-600 font-bold">
+                          {formatCurrency(item.priceDiscount)}
+                        </Typography>
+                      )
+                    }
+                    </Box>
                     <Box className="flex w-1/4 justify-center">
                       <Button
                         variant="contained"

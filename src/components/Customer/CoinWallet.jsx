@@ -92,13 +92,13 @@ export const CoinWallet = () => {
                 return (
                     <Box className="flex flex-row justify-between items-center border-b-2 border-gray-200 p-2">
                         <img src={coin.status === "cộng" ? image : imageCoin} alt="coin" className="w-1/15" />
-                        <Typography variant="body1" className="w-1/5">
+                        <Typography variant="body1" className="w-3/5">
                             {coin.status === "cộng" ? `Bạn được cộng ${coin?.coin} xu vì huỷ đơn hàng đã thanh toán cho đơn hàng ${coin?.orderCode}` : `Bạn đã dùng ${coin?.coin} xu để thanh toán cho đơn hàng ${coin?.orderCode}`}
                             <br/>
                            Ngày {formatDateTime(coin?.createdAt) }
                         </Typography>
-                        <Typography variant="body1"  className={`text-[24px] ${coin.status === "cộng" ? "text-[#f6a700]" : "text-black"} text-end`}>
-                            {coin.status === "cộng" ? `+ ${coin?.coin} ` : ` - ${coin?.coin}`}
+                        <Typography variant="body1"  className={`text-[20px] ${coin.status === "cộng" ? "text-[#f6a700]" : "text-black"} text-end w-1/5` }>
+                            { coin.status === "cộng" ? `+ ${formatCurrency(coin?.coin)} ` : ` - ${formatCurrency(coin?.coin)}`}
                         </Typography>
                        
                         

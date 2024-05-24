@@ -16,6 +16,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { BigHoverTransformButton } from "../Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
+import StarRateIcon from '@mui/icons-material/StarRate';
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export const ProductDetail = () => {
       setProduct(res.data);
     });
   }, [productCode]);
+ 
 
   const handleDescriptionTab = () => {
     setReviewTab(false);
@@ -79,8 +81,17 @@ export const ProductDetail = () => {
           </Box>
           <Box className="m-2">
             <Typography variant="h4" className="mb-2 text-2xl font-bold">
-              {product.productName}
+              {product.productName} 
             </Typography>
+            <Box className="mb-2 flex flex-row justify-between">
+              <Typography variant="body1" >
+                {product.averageRating ? product.averageRating :  "Chưa có đánh giá" }   <StarRateIcon style={{color: '#f17359'}} />
+              </Typography>
+              <Typography variant="body1" >
+                {product.orderQuantity} đã mua
+              </Typography>
+            </Box>
+            <hr className="w-full" />
             <Box className="mb-2 flex flex-row">
               <Typography variant="body1" className="text-lg font-bold">
                 Tình trạng: &nbsp;
@@ -89,16 +100,31 @@ export const ProductDetail = () => {
                 {product.inventory > 0 ? "Còn hàng" : "Hết hàng"}
               </Typography>
             </Box>
-            <Box className="mb-2 flex flex-row">
-              <Typography variant="body1" className="text-lg font-bold">
-                Giá: &nbsp;
-              </Typography>
-              <Typography
+            <Box >
+              {product.discountQuantity > 0 && (
+                <Box className="mb-2 flex flex-row">
+                <Typography variant="body1" className="text-lg font-bold">
+                  Đang khuyến mãi với giá: &nbsp;
+                </Typography>
+                <Typography
                 variant="body1"
                 className="text-lg font-bold text-red-700"
               >
-                {formatCurrency(product.price)}
+               {formatCurrency(product.priceDiscount)}
               </Typography>
+              </Box>
+              )}
+              <Box className="mb-2 flex flex-row">
+              <Typography variant="body1" className="text-lg font-bold">
+                {product.discountQuantity > 0 ? "Giá gốc: " : "Giá: "} 
+              </Typography>
+              <Typography
+                variant="body1"
+                className={product.discountQuantity > 0 ? " ml-2 text-md " :"ml-2 text-green-600 text-lg font-bold"}
+              >
+                { product.discountQuantity > 0 ? ` ${formatCurrency(product.price)} - Tiết kiệm ${((product.price - product.priceDiscount) / product.price) * 100} %`:  formatCurrency(product.price)} 
+              </Typography>
+              </Box>
             </Box>
             {product.inventory > 0 && (
               <>

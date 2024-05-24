@@ -16,7 +16,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } 
 import * as CONST from "../../constants";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
-import { formatDateTime } from "../../utils/formatData";
+import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { cancelDiscount, createDiscount } from "../../api/product";
 
 async function createData(code, count, supplier, productList) {
@@ -33,6 +33,7 @@ async function createData(code, count, supplier, productList) {
       const status = res.data[0].status;
       const expired = res.data[0].expired;
       const promotion = res.data[0].promotion;
+      const priceDiscount = res.data[0].priceDiscount;
 
       data.push({
         expiryDate: product.expiryDate,
@@ -43,6 +44,7 @@ async function createData(code, count, supplier, productList) {
         status: status,
         expired: expired,
         promotion: promotion,
+        priceDiscount: priceDiscount,
       });
     } catch (error) {
       // Xử lý lỗi nếu có
@@ -218,7 +220,7 @@ const handleCancelDiscount = (productCode) => {
                              {
                               DetailRow.promotion === true &&(
                                 <Box>
-                                  <Typography className="text-red-500">Đang khuyến mãi</Typography>
+                                  <Typography className="text-red-500">Đang KM với giá {formatCurrency(DetailRow.priceDiscount)}</Typography>
                                   <Button variant="outlined" className="bg-red-500 text-white " onClick={()=> handleCancelDiscount(DetailRow.productCode)} >Huỷ khuyển mãi</Button>
                                 </Box>
                               )
