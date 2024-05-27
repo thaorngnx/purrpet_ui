@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductByCode } from "../../api/product";
+import { getActiveProducts, getProductByCode } from "../../api/product";
 import {
   Box,
   Paper,
@@ -10,13 +10,18 @@ import {
   FormControl,
   TextField,
   Button,
+  Rating,
+  Stack,
+  Pagination,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { BigHoverTransformButton } from "../Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
-import StarRateIcon from '@mui/icons-material/StarRate';
+import StarRateIcon from "@mui/icons-material/StarRate";
+import { HorizontalSlider } from "../Slider/HorizontalSlider";
+import { getReviewByProduct } from "../../api/review";
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
@@ -27,8 +32,15 @@ export const ProductDetail = () => {
 
   const [product, setProduct] = useState({});
   const [descriptionTab, setDescriptionTab] = useState(true);
-  // const [reviewTab, setReviewTab] = useState(false);
+  const [reviewTab, setReviewTab] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [recommendProducts, setRecommendProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [reviewPagination, setReviewPagination] = useState({
+    limit: 10,
+    page: 1,
+    total: 0,
+  });
 
   useEffect(() => {
     getProductByCode(productCode).then((res) => {
@@ -36,17 +48,41 @@ export const ProductDetail = () => {
       setProduct(res.data);
     });
   }, [productCode]);
- 
+
+  useEffect(() => {
+    const params = {
+      limit: 10,
+      page: 1,
+      categoryCode: product?.categoryCode,
+    };
+    getActiveProducts(params).then((res) => {
+      if (res.err === 0) {
+        setRecommendProducts(res.data);
+      }
+    });
+  }, [product]);
+
+  useEffect(() => {
+    const params = {
+      limit: 10,
+      page: reviewPagination.page,
+    };
+    getReviewByProduct(productCode, params).then((res) => {
+      console.log("re", res);
+      setReviews(res.data);
+      setReviewPagination(res.pagination);
+    });
+  }, [productCode, reviewPagination.page]);
 
   const handleDescriptionTab = () => {
     setReviewTab(false);
     setDescriptionTab(true);
   };
 
-  // const handleReviewTab = () => {
-  //   setDescriptionTab(false);
-  //   setReviewTab(true);
-  // };
+  const handleReviewTab = () => {
+    setDescriptionTab(false);
+    setReviewTab(true);
+  };
 
   const handleAddQuantity = () => {
     if (quantity < product.inventory) {
@@ -65,131 +101,198 @@ export const ProductDetail = () => {
     addToCart({ productCode: productCode, quantity: quantity });
   };
 
+  const handleChangeReviewPage = (event, value) => {
+    setReviewPagination({ ...reviewPagination, page: value });
+  };
+
   return (
-    <Box className="my-5 flex flex-col items-center">
-      <Typography variant="h3" className="mb-5 text-3xl font-bold">
-        Chi tiết sản phẩm
-      </Typography>
-      <Paper className="flex w-[97%] flex-col items-center justify-center p-5">
-        <Box sx={{ display: "flex", flexDirection: "row", height: "300px" }}>
-          <Box sx={{ width: "50%" }}>
-            <img
-              src={product.images?.[0]?.path}
-              alt=""
-              style={{ width: "100%", height: "100%", objectFit: "contain" }}
-            />
-          </Box>
-          <Box className="m-2">
-            <Typography variant="h4" className="mb-2 text-2xl font-bold">
-              {product.productName} 
-            </Typography>
-            <Box className="mb-2 flex flex-row justify-between">
-              <Typography variant="body1" >
-                {product.averageRating ? product.averageRating :  "Chưa có đánh giá" }   <StarRateIcon style={{color: '#f17359'}} />
-              </Typography>
-              <Typography variant="body1" >
-                {product.orderQuantity} đã mua
-              </Typography>
+    <>
+      <Box className="my-5 flex flex-col items-center">
+        <Typography variant="h3" className="mb-5 text-3xl font-bold">
+          Chi tiết sản phẩm
+        </Typography>
+        <Paper className="flex w-[97%] flex-col items-center justify-center p-5">
+          <Box sx={{ display: "flex", flexDirection: "row", height: "300px" }}>
+            <Box sx={{ width: "50%" }}>
+              <img
+                src={product.images?.[0]?.path}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              />
             </Box>
-            <hr className="w-full" />
-            <Box className="mb-2 flex flex-row">
-              <Typography variant="body1" className="text-lg font-bold">
-                Tình trạng: &nbsp;
+            <Box className="m-2">
+              <Typography variant="h4" className="mb-2 text-2xl font-bold">
+                {product.productName}
               </Typography>
-              <Typography variant="body1" className="text-lg">
-                {product.inventory > 0 ? "Còn hàng" : "Hết hàng"}
-              </Typography>
-            </Box>
-            <Box >
-              {product.discountQuantity > 0 && (
-                <Box className="mb-2 flex flex-row">
-                <Typography variant="body1" className="text-lg font-bold">
-                  Đang khuyến mãi với giá: &nbsp;
+              <Box className="mb-2 flex flex-row justify-between">
+                <Typography variant="body1">
+                  {product.averageRating
+                    ? product.averageRating
+                    : "Chưa có đánh giá"}{" "}
+                  <StarRateIcon style={{ color: "#f17359" }} />
                 </Typography>
-                <Typography
-                variant="body1"
-                className="text-lg font-bold text-red-700"
-              >
-               {formatCurrency(product.priceDiscount)}
-              </Typography>
+                <Typography variant="body1">
+                  {product.orderQuantity} đã mua
+                </Typography>
               </Box>
-              )}
+              <hr className="w-full" />
               <Box className="mb-2 flex flex-row">
-              <Typography variant="body1" className="text-lg font-bold">
-                {product.discountQuantity > 0 ? "Giá gốc: " : "Giá: "} 
-              </Typography>
-              <Typography
-                variant="body1"
-                className={product.discountQuantity > 0 ? " ml-2 text-md " :"ml-2 text-green-600 text-lg font-bold"}
-              >
-                { product.discountQuantity > 0 ? ` ${formatCurrency(product.price)} - Tiết kiệm ${((product.price - product.priceDiscount) / product.price) * 100} %`:  formatCurrency(product.price)} 
-              </Typography>
+                <Typography variant="body1" className="text-lg font-bold">
+                  Tình trạng: &nbsp;
+                </Typography>
+                <Typography variant="body1" className="text-lg">
+                  {product.inventory > 0 ? "Còn hàng" : "Hết hàng"}
+                </Typography>
               </Box>
-            </Box>
-            {product.inventory > 0 && (
-              <>
-                <FormControl className="flex flex-row items-center">
-                  <Typography variant="body1" className="text-lg font-bold">
-                    Số lượng: &nbsp;
-                  </Typography>
-                  <Box>
-                    <Button
-                      variant="contained"
-                      className="min-w-min bg-gray-300 p-2 text-black"
-                      onClick={handleSubtractQuantity}
+              <Box>
+                {product.discountQuantity > 0 && (
+                  <Box className="mb-2 flex flex-row">
+                    <Typography variant="body1" className="text-lg font-bold">
+                      Đang khuyến mãi với giá: &nbsp;
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      className="text-lg font-bold text-red-700"
                     >
-                      <RemoveIcon />
-                    </Button>
-                    <TextField
-                      type="number"
-                      variant="outlined"
-                      size="small"
-                      value={quantity}
-                      disabled
-                      sx={{ width: "100px" }}
-                      inputProps={{
-                        style: { textAlign: "center" },
-                      }}
-                    />
-                    <Button
-                      variant="contained"
-                      className="min-w-min bg-gray-300 p-2 text-black"
-                      onClick={handleAddQuantity}
-                    >
-                      <AddIcon />
-                    </Button>
+                      {formatCurrency(product.priceDiscount)}
+                    </Typography>
                   </Box>
-                </FormControl>
+                )}
+                <Box className="mb-2 flex flex-row">
+                  <Typography variant="body1" className="text-lg font-bold">
+                    {product.discountQuantity > 0 ? "Giá gốc: " : "Giá: "}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    className={
+                      product.discountQuantity > 0
+                        ? " text-md ml-2 "
+                        : "ml-2 text-lg font-bold text-green-600"
+                    }
+                  >
+                    {product.discountQuantity > 0
+                      ? ` ${formatCurrency(product.price)} - Tiết kiệm ${
+                          ((product.price - product.priceDiscount) /
+                            product.price) *
+                          100
+                        } %`
+                      : formatCurrency(product.price)}
+                  </Typography>
+                </Box>
+              </Box>
+              {product.inventory > 0 && (
+                <>
+                  <FormControl className="flex flex-row items-center">
+                    <Typography variant="body1" className="text-lg font-bold">
+                      Số lượng: &nbsp;
+                    </Typography>
+                    <Box>
+                      <Button
+                        variant="contained"
+                        className="min-w-min bg-gray-300 p-2 text-black"
+                        onClick={handleSubtractQuantity}
+                      >
+                        <RemoveIcon />
+                      </Button>
+                      <TextField
+                        type="number"
+                        variant="outlined"
+                        size="small"
+                        value={quantity}
+                        disabled
+                        sx={{ width: "100px" }}
+                        inputProps={{
+                          style: { textAlign: "center" },
+                        }}
+                      />
+                      <Button
+                        variant="contained"
+                        className="min-w-min bg-gray-300 p-2 text-black"
+                        onClick={handleAddQuantity}
+                      >
+                        <AddIcon />
+                      </Button>
+                    </Box>
+                  </FormControl>
+                  <BigHoverTransformButton
+                    onClick={handleAddToCart}
+                    className="mt-3"
+                  >
+                    Thêm vào giỏ hàng
+                  </BigHoverTransformButton>
+                </>
+              )}
+              {product?.inventory <= 0 && (
                 <BigHoverTransformButton
-                  onClick={handleAddToCart}
                   className="mt-3"
+                  onClick={() => navigate("/product")}
                 >
-                  Thêm vào giỏ hàng
+                  Tiếp tục mua hàng
                 </BigHoverTransformButton>
-              </>
-            )}
-            {product.inventory <= 0 && (
-              <BigHoverTransformButton
-                className="mt-3"
-                onClick={() => navigate("/product")}
-              >
-                Tiếp tục mua hàng
-              </BigHoverTransformButton>
-            )}
+              )}
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ width: "100%" }}>
-          <Tabs value={0} textColor="primary" indicatorColor="primary">
-            <Tab label="Mô tả" onClick={handleDescriptionTab} />
-            {/* <Tab label="Đánh giá" onClick={handleReviewTab} /> */}
-          </Tabs>
-          <Box sx={{ p: 2 }}>
-            {descriptionTab && (
-              <Typography variant="body1">{product.description}</Typography>
-            )}
+          <Box sx={{ width: "100%" }}>
+            <Tabs
+              value={descriptionTab ? 0 : 1}
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab label="Mô tả" onClick={handleDescriptionTab} />
+              <Tab label="Đánh giá" onClick={handleReviewTab} />
+            </Tabs>
+            <Box sx={{ p: 2 }}>
+              {descriptionTab && (
+                <Typography variant="body1">{product?.description}</Typography>
+              )}
+              {reviewTab && (
+                <>
+                  {reviews.map((review) => (
+                    <Box className="my-3" key={review._id}>
+                      <Typography variant="body1" className="text-lg font-bold">
+                        {review.user.username}
+                      </Typography>
+                      <Rating
+                        name="read-only"
+                        value={review.star}
+                        readOnly
+                        size="small"
+                      />
+                      <Typography variant="body1" className="text-lg">
+                        {review.comment}
+                      </Typography>
+                    </Box>
+                  ))}
+                  {reviews.length > 0 ? (
+                    <Stack spacing={2}>
+                      <Pagination
+                        onChange={handleChangeReviewPage}
+                        page={reviewPagination.page}
+                        count={Math.ceil(
+                          reviewPagination.total / reviewPagination.limit,
+                        )}
+                        shape="rounded"
+                        className="mb-2 flex justify-end"
+                      />
+                    </Stack>
+                  ) : (
+                    <Typography
+                      variant="body1"
+                      className="text-center text-lg italic"
+                    >
+                      Chưa có đánh giá nào
+                    </Typography>
+                  )}
+                </>
+              )}
+            </Box>
           </Box>
-        </Box>
-      </Paper>
-    </Box>
+        </Paper>
+      </Box>
+      <HorizontalSlider
+        products={recommendProducts}
+        title="Sản phẩm liên quan"
+      />
+    </>
   );
 };

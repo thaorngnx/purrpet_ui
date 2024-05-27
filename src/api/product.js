@@ -87,13 +87,34 @@ export async function createDiscount(data) {
   try {
     const response = await api.post("product/create-promotion", data);
     return response.data;
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+export async function cancelDiscount(data) {
+  try {
+    const response = await api.post("product/cancel-promotion", data);
+    return response.data;
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getProductBestSeller(params) {
+  try {
+    const response = await api.get('product/best-seller', { params });
+    return response.data;
   } catch (error) {
     console.error(error);
   }
 }
-export async function cancelDiscount(data) {
+
+export async function getProductDetailByCode(code) {
   try {
-    const response = await api.post("product/cancel-promotion", data);
+    const response = await api.get(`product/detail/${code}`);
     return response.data;
   } catch (error) {
     console.error(error);

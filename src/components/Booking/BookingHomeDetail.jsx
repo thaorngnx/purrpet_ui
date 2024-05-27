@@ -89,13 +89,15 @@ export const BookingHomeDetail = () => {
   }, [bookingHomeCode]);
 
   useEffect(() => {
-   
     const checkedTimeCancel = () => {
       const timeNow = dayjs();
       const timeCheckin = dayjs(bookingHome.dateCheckIn);
-      const timeDiff = timeCheckin.diff(timeNow );
+      const timeDiff = timeCheckin.diff(timeNow);
       const twentyFourHours = 24 * 60 * 60 * 1000; // 24 giờ expressed in milliseconds
-      if (timeDiff > twentyFourHours && bookingHome.status === CONST.STATUS_BOOKING.PAID) {
+      if (
+        timeDiff > twentyFourHours &&
+        bookingHome.status === CONST.STATUS_BOOKING.PAID
+      ) {
         setCancel(true);
       }
     };
@@ -103,9 +105,10 @@ export const BookingHomeDetail = () => {
   }, [bookingHome]);
 
   const handlePaymentClick = () => {
-    createPaymentUrl({ orderCode: bookingHome.purrPetCode,
-      returnUrl: 'vnpay-returnForCus'
-     }).then((res) => {
+    createPaymentUrl({
+      orderCode: bookingHome.purrPetCode,
+      returnUrl: "vnpay-returnForCus",
+    }).then((res) => {
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
       }
@@ -124,7 +127,6 @@ export const BookingHomeDetail = () => {
       }
     });
   };
- 
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -150,7 +152,8 @@ export const BookingHomeDetail = () => {
               variant="body1"
               className="text-base italic text-green-800"
             >
-              Đơn hàng chỉ được hủy trước 24h so với thời gian check-in. Sẽ hoàn lại 90% số tiền đã thanh toán vào ví xu của bạn.
+              Đơn hàng chỉ được hủy trước 24h so với thời gian check-in. Sẽ hoàn
+              lại 90% số tiền đã thanh toán vào ví xu của bạn.
             </Typography>
             <Divider className="my-3" />
           </>
@@ -165,7 +168,7 @@ export const BookingHomeDetail = () => {
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingHome.createdAt)}
             </Typography>
-            
+
             <Typography variant="body1">
               <span className="font-bold">Phương thức thanh toán: </span>
               {bookingHome.payMethod}
@@ -192,7 +195,6 @@ export const BookingHomeDetail = () => {
               <span className="font-bold">Ghi chú: </span>
               {bookingHome.customerNote}
             </Typography>
-          
           </Box>
         </Box>
         <Divider className="my-3" />
@@ -283,13 +285,16 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-md ">
-          Điểm sử dụng:   { formatCurrency(bookingHome.pointUsed) }
+          <Typography variant="body1" className="text-md text-end ">
+            Điểm sử dụng: {formatCurrency(bookingHome.pointUsed)}
           </Typography>
-          <Typography variant="body1" className="text-end text-md ">
-          Xu sử dụng:   { formatCurrency(bookingHome.useCoin) }
+          <Typography variant="body1" className="text-md text-end ">
+            Xu sử dụng: {formatCurrency(bookingHome.useCoin)}
           </Typography>
-          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
+          <Typography
+            variant="body1"
+            className="text-end text-lg font-bold text-[#ee4d2d]"
+          >
             Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
@@ -311,14 +316,14 @@ export const BookingHomeDetail = () => {
                 </Button>
               </>
             )}
-            { cancel === true && (
+            {cancel === true && (
               <Button
-              variant="contained"
-              className="mr-3 bg-black"
-              onClick={handleChangeStatus}
-            >
-              Hủy đơn
-            </Button>
+                variant="contained"
+                className="mr-3 bg-black"
+                onClick={handleChangeStatus}
+              >
+                Hủy đơn
+              </Button>
             )}
           </Box>
         </Box>

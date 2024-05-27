@@ -55,6 +55,9 @@ import { Comsignment } from "./pages/Admin/Comsignment";
 import { Supplier } from "./pages/Admin/Supplier";
 import { CoinWalletPage } from "./pages/Customer/CoinWalletPage";
 import { ResponeVNPAY } from "./components/Pay/ResponeVNPAY";
+import { HorizontalSlider } from "./components/Slider/HorizontalSlider";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   const {
@@ -111,10 +114,10 @@ function App() {
           <Route path="booking/spa" element={<BookingSpaPage />} />
           <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="notification" element={<NotificationPage/>} />
-          <Route path = "wallet" element = {<CoinWalletPage/>}/>
+          <Route path="notification" element={<NotificationPage />} />
+          <Route path="wallet" element={<CoinWalletPage />} />
           <Route path="lookup" element={<LookUpOrderPage />} />
-         
+
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />
             <Route path="order" element={<OrderHistoryPage />} />
@@ -123,12 +126,13 @@ function App() {
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailPage />}
             />
-             <Route path = "resultvnpay" element = {<ResponeVNPAY/>}/>
+            <Route path="resultvnpay" element={<ResponeVNPAY />} />
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}
             />
           </Route>
+          <Route path="test" element={<HorizontalSlider />} />
         </Route>
         <Route path="/admin">
           <Route path="login" element={<LoginAdmin />} />
@@ -146,8 +150,11 @@ function App() {
             <Route path="bookingSpa" element={<BookingSpaAdmin />} />
             <Route path="notification" element={<NotificationAdmin />} />
             <Route path="consignment" element={<Comsignment />} />
-            <Route path="supplier" element = {<Supplier/>}/>
-            <Route path = "refundProcessing/:orderCode" element = {<RefundProcessing/>}/>
+            <Route path="supplier" element={<Supplier />} />
+            <Route
+              path="refundProcessing/:orderCode"
+              element={<RefundProcessing />}
+            />
             <Route
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailAdmin />}
@@ -163,13 +170,16 @@ function App() {
           <Route path="login" element={<LoginStaff />} />
           <Route element={<ProtectedStaffRoutes />}>
             <Route index element={<CreateOrder />} />
-            <Route path="notification" element={<NotificationStaff/>} />
+            <Route path="notification" element={<NotificationStaff />} />
             <Route path="create/order" element={<CreateOrder />} />
             <Route path="create/bookingSpa" element={<CreateBookingSpa />} />
             <Route path="create/bookingHome" element={<CreateBookingHome />} />
             <Route path="order" element={<OrderStaff />} />
             <Route path="order/:orderCode" element={<OrderDetailStaff />} />
-            <Route path = "refundProcessing/:orderCode" element = {<RefundProcessing/>}/>
+            <Route
+              path="refundProcessing/:orderCode"
+              element={<RefundProcessing />}
+            />
             <Route path="bookingSpa" element={<BookingSpaStaff />} />
             <Route
               path="bookingSpa/:bookingSpaCode"
