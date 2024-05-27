@@ -37,7 +37,7 @@ export const OrderHistory = () => {
 
   useEffect(() => {
     const params = {
-      limit: 10,
+      limit: 1000,
       page: page,
       key: searchKey,
       fromDate: rangeDate.fromDate,
@@ -86,7 +86,6 @@ export const OrderHistory = () => {
     });
   };
 
-  console.log("searchKey", searchKey);
 
   return (
     <>

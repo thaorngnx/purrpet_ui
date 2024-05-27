@@ -282,6 +282,7 @@ export const ListCart = () => {
         else{
           createPaymentUrl({
             orderCode: res.data.purrPetCode,
+            returnUrl: '/vnpay-returnForCus'
           }).then((res) => {
             if (res.err === 0) {
               window.location.href = res.data.paymentUrl;

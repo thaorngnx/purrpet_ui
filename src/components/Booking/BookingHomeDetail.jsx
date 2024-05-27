@@ -103,7 +103,9 @@ export const BookingHomeDetail = () => {
   }, [bookingHome]);
 
   const handlePaymentClick = () => {
-    createPaymentUrl({ orderCode: bookingHome.purrPetCode }).then((res) => {
+    createPaymentUrl({ orderCode: bookingHome.purrPetCode,
+      returnUrl: 'vnpay-returnForCus'
+     }).then((res) => {
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
       }

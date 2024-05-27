@@ -206,6 +206,7 @@ export const BookingSpaForm = () => {
       if(res.data.payMethod === CONST.PAYMENT_METHOD.VNPAY){
         createPaymentUrl({
           orderCode: res.data.purrPetCode,
+          returnUrl: 'vnpay-returnForCus',
         }).then((res) => {
           if (res.err === 0) {
             window.location.href = res.data;

@@ -1,6 +1,7 @@
 import { HeaderAdmin } from "../../components/Header/HeaderAdmin";
 import { SideNavAdmin } from "../../components/Nav/SideNavAdmin";
 import { OrderHistory } from "../../components/Admin/OrderHistory";
+import {OrderRefund  } from "../../pages/Admin/OrderRefund";
 import { Box } from "@mui/material";
 
 export const OrderAdmin = () => {
@@ -19,6 +20,7 @@ export const OrderAdmin = () => {
           }}
         >
           <OrderHistory />
+          <OrderRefund />
         </Box>
       </Box>
     </>

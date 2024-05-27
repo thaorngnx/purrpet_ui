@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 import { Notification } from "../../components/Admin/Notification";
 
 export const NotificationAdmin = () => {
+    
     return (
         <>
         <HeaderAdmin />

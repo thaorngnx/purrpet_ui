@@ -36,6 +36,7 @@ export const STATUS_ORDER = {
   DELIVERING: 'Đang giao hàng',
   CANCEL: 'Đã hủy',
   DONE: 'Đã hoàn thành',
+  RETURN: 'Trả hàng',
 };
 
 export const STATUS_BOOKING = {
@@ -122,4 +123,10 @@ export const NOTIFICATION_ACTION = {
   BOOKING_SPA_UPDATE: 'bookingSpaUpdate',
   NEW_REVIEW: 'newReview',
   REFUND_ORDER: 'orderRefund',
+};
+export const STATUS_REFUND = {
+  WAITING: 'Chờ xử lý',
+  ACCEPT: 'Đã chấp nhận',
+  CANCEL: 'Đã hủy',
+  REFUND: 'Đã hoàn tiền',
 };

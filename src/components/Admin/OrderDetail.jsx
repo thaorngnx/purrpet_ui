@@ -91,6 +91,7 @@ export const OrderDetail = () => {
               paymentStatus: order.paymentStatus,
               pointUsed: order.pointUsed,
               totalPayment: order.totalPayment,
+              statusRefund: order.statusRefund,
             });
           }
         });
@@ -113,7 +114,6 @@ export const OrderDetail = () => {
   };
 
   const handleDeliveredClick = () => {
-    console.log("delivered");
     updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.DONE).then(
       (res) => {
         console.log(res);
@@ -178,7 +178,14 @@ export const OrderDetail = () => {
               <span className="font-bold">Điểm sử dụng: </span>
               {formatCurrency(order.pointUsed)}
             </Typography>
-           
+           {
+            order.statusRefund && (
+              <Typography variant="body1">
+                <span className="font-bold">Trạng thái hoàn tiền: </span>
+                {order.statusRefund}
+              </Typography>
+            )
+           }
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -293,7 +300,7 @@ export const OrderDetail = () => {
                 
               </>
             )}
-             { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.COD || order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.PAID )  &&(
+             { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.COIN ||order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.COD || order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.PAID )  &&(
               <>  
                 <Button
                 variant="contained"

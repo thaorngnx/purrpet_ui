@@ -54,6 +54,7 @@ import { RefundProcessing } from "./pages/Admin/RefundProcessing";
 import { Comsignment } from "./pages/Admin/Comsignment";
 import { Supplier } from "./pages/Admin/Supplier";
 import { CoinWalletPage } from "./pages/Customer/CoinWalletPage";
+import { ResponeVNPAY } from "./components/Pay/ResponeVNPAY";
 
 function App() {
   const {
@@ -113,6 +114,7 @@ function App() {
           <Route path="notification" element={<NotificationPage/>} />
           <Route path = "wallet" element = {<CoinWalletPage/>}/>
           <Route path="lookup" element={<LookUpOrderPage />} />
+         
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />
             <Route path="order" element={<OrderHistoryPage />} />
@@ -121,6 +123,7 @@ function App() {
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailPage />}
             />
+             <Route path = "resultvnpay" element = {<ResponeVNPAY/>}/>
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}

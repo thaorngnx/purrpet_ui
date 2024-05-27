@@ -24,6 +24,7 @@ import { MiniHoverButton } from "../Button/StyledButton";
 import { FormControl } from "@mui/material";
 import * as CONST from "../../constants";
 import { UploadImage, UploadImageRefund } from "../Image/UploadImage";
+import { requestRefund } from "../../api/pay";
 
 export const OrderDetail = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ export const OrderDetail = () => {
   const { orderCode } = useParams();
   const [open, setOpen] = useState(false);
   const [request, setRequest] = useState("");
+  const [error, setError] = useState({});
+  const [sendRequest, setSendRequest] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -114,6 +117,7 @@ export const OrderDetail = () => {
               pointUsed: order.pointUsed,
               totalPayment: order.totalPayment,
               useCoin: order.useCoin,
+              statusRefund: order.statusRefund,
             });
           }
         });
@@ -125,7 +129,8 @@ export const OrderDetail = () => {
 
   const handlePaymentClick = () => {
     console.log("payment");
-    createPaymentUrl({ orderCode: order.purrPetCode }).then((res) => {
+    createPaymentUrl({ orderCode: res.data.purrPetCode,
+      returnUrl: '/vnpay-returnForCus' }).then((res) => {
       console.log(res);
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
@@ -144,6 +149,23 @@ export const OrderDetail = () => {
       },
     );
   };
+  
+  const handleRefund = () => {
+    console.log("refund");
+    requestRefund({
+      orderCode: order.purrPetCode,
+      message: request.message,
+      images: request.images,
+    }).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        setSendRequest(true);
+        handleClose();
+      }
+    });
+    
+  }
+  console.log(order);
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -185,6 +207,14 @@ export const OrderDetail = () => {
               <span className="font-bold">Trạng thái thanh toán: </span>
               {order.paymentStatus}
             </Typography>
+            {
+            order.statusRefund && (
+              <Typography variant="body1">
+                <span className="font-bold">Trạng thái hoàn tiền: </span>
+                {order.statusRefund}
+              </Typography>
+            )
+           }
             
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
@@ -314,7 +344,7 @@ export const OrderDetail = () => {
        
        
           <Box className="mt-3 flex flex-row justify-end">
-            {order.paymentStatus === CONST.STATUS_ORDER.WAITING_FOR_PAY  && (
+            {(order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY )&& (
               <>
                 <Button
                   variant="contained"
@@ -333,7 +363,7 @@ export const OrderDetail = () => {
               </>
             )}
             {
-              order.status === CONST.STATUS_ORDER.NEW && (
+              order.status === CONST.STATUS_ORDER.NEW   && (
                 <Button
                   variant="contained"
                   className="ml-3 bg-black"
@@ -347,10 +377,11 @@ export const OrderDetail = () => {
               order.status === CONST.STATUS_ORDER.DONE && (
                 <Button
                   variant="contained"
-                  className="ml-3 bg-black"
+                  className={sendRequest ? "bg-gray-500 text-white" : "bg-black text-white"}
                   onClick={handleClickOpen}
+                  disabled={sendRequest}
                 >
-                  Trả hàng/ hoàn tiền
+                  {sendRequest ? "Đã gửi yêu cầu" : "Yêu cầu hoàn tiền"}
                 </Button>
               )
             }
@@ -360,6 +391,7 @@ export const OrderDetail = () => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        
       >
         <DialogTitle id="alert-dialog-title">
           {"Gửi yêu cầu hoàn tiền?"}
@@ -370,17 +402,18 @@ export const OrderDetail = () => {
         minRows={3}
         placeholder="Nhập lý do hoàn tiền"
         style={{ width: '100%' }}
+        onChange={(e) => setRequest({...request,message: e.target.value})}
       />
-      {/* <UploadImageRefund
+      <UploadImageRefund
         request={request}
         updateRequest={setRequest}
         err={error}
-      /> */}
+      />
 
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Huỷ</Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleRefund} autoFocus>
           Gửi yêu cầu
           </Button>
         </DialogActions>
