@@ -68,3 +68,12 @@ export async function RefundByAdmin(body) {
     console.error(error);
   }
 }
+
+export async function getSpendingStatistic() {
+  try {
+    const response = await api.get("pay/spendingstatistic");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

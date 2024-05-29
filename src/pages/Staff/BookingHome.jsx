@@ -346,7 +346,10 @@ export const BookingHome = () => {
     );
   }
   else{
-    createPaymentUrl(order.purrPetCode).then((res) => {
+    createPaymentUrl({
+      orderCode: order.purrPetCode,
+      returnUrl: "vnpay-returnForStaff",
+    }).then((res) => {
       if (res.err === 0) {
         window.location.href = res.data;
       }

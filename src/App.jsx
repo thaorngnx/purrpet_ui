@@ -58,6 +58,7 @@ import { ResponeVNPAY } from "./components/Pay/ResponeVNPAY";
 import { HorizontalSlider } from "./components/Slider/HorizontalSlider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { SpendingStatisticsPage } from "./pages/Customer/SpendingStatisticsPage";
 
 function App() {
   const {
@@ -120,17 +121,18 @@ function App() {
 
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />
+            <Route path="spending" element = {<SpendingStatisticsPage/>}/>
             <Route path="order" element={<OrderHistoryPage />} />
             <Route path="order/:orderCode" element={<OrderDetailPage />} />
             <Route
               path="bookingSpa/:bookingSpaCode"
               element={<BookingSpaDetailPage />}
             />
-            <Route path="resultvnpay" element={<ResponeVNPAY />} />
             <Route
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}
             />
+          
           </Route>
           <Route path="test" element={<HorizontalSlider />} />
         </Route>

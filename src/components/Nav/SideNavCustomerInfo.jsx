@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { BigHoverButton } from "../Button/StyledButton";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SavingsIcon from '@mui/icons-material/Savings';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 export const SideNavCustomerInfo = () => {
   const navigate = useNavigate();
@@ -81,6 +82,22 @@ export const SideNavCustomerInfo = () => {
           className="m-0 text-base"
         >
           Ví xu của bạn
+        </Typography>
+      </Link>
+      <Link
+        to={"/spending"}
+        underline="none"
+        color={"inherit"}
+        className="m-2 flex flex-row"
+      >
+        < AnalyticsIcon className="mr-1" />
+        <Typography
+          variant="h2"
+          gutterBottom
+          component="div"
+          className="m-0 text-base"
+        >
+          Thống kê chi tiêu
         </Typography>
       </Link>
       <BigHoverButton onClick={handleLogout} className="my-5">

@@ -272,7 +272,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
      if(paymentMethod === CONST.PAYMENT_METHOD.VNPAY){
         createPaymentUrl({
           orderCode: order.purrPetCode,
-          urlReturn: "vnpay-returnForStaff",
+          returnUrl: "vnpay-returnForStaff",
         }).then((res) => {
          
            window.location.href = res.data.paymentUrl;

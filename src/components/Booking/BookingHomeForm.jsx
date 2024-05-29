@@ -290,7 +290,8 @@ export const BookingHomeForm = () => {
         }else{
           createPaymentUrl({
             orderCode: res.data.purrPetCode,
-            returnUrl: 'vnpay-returnForMoblie'
+            returnUrl: 'vnpay-returnForCus'
+            
           }).then((res) => {
             console.log(res);
             if (res.err === 0) {
