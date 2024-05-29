@@ -54,7 +54,6 @@ import { RefundProcessing } from "./pages/Admin/RefundProcessing";
 import { Comsignment } from "./pages/Admin/Comsignment";
 import { Supplier } from "./pages/Admin/Supplier";
 import { CoinWalletPage } from "./pages/Customer/CoinWalletPage";
-import { ResponeVNPAY } from "./components/Pay/ResponeVNPAY";
 import { HorizontalSlider } from "./components/Slider/HorizontalSlider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
