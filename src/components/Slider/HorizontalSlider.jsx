@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ProductCard } from "../Product/ProducCard";
 import { Box, Typography } from "@mui/material";
 import Slider from "react-slick";
@@ -39,6 +39,8 @@ export const HorizontalSlider = ({ products, title }) => {
       },
     ],
   };
+
+
   return (
     <Box className=" my-6 items-center justify-center">
       <Box className="slider-container">
@@ -47,7 +49,7 @@ export const HorizontalSlider = ({ products, title }) => {
         </Typography>
         <Slider {...settings}>
           {products.map((product) => (
-            <ProductCard key={product.purrPetCode} product={product} />
+              <ProductCard key={product.purrPetCode} product={product} />
           ))}
         </Slider>
       </Box>

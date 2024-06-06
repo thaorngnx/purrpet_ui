@@ -2,6 +2,9 @@ import { Box, TextField, MenuItem, TextareaAutosize } from "@mui/material";
 import { useEffect, useState } from "react";
 import "../../api/product";
 import { UploadImage } from "../Image/UploadImage";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 
 export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
   const [productUpdate, setProductUpdate] = useState(product);
@@ -19,6 +22,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
   }, [err]);
 
   const handleChangeProduct = (event) => {
+   
     if (!event.target.value) {
       setError({ ...error, [event.target.name]: true });
     } else {
@@ -57,7 +61,17 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
     setProductUpdate(updateData);
     updateProduct(updateData);
   };
-
+  const handleChangeDescription = (value) => {
+    console.log("value", value);
+    setProductUpdate({
+      ...productUpdate,
+      description: value,
+    });
+    updateProduct({
+      ...productUpdate,
+      description: value,
+    });
+  }
   const getCategoryName = (categoryCode) => {
     const category = categories.find(
       (category) => category.purrPetCode === categoryCode,
@@ -79,7 +93,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
         helperText={error.productName && "Tên sản phẩm không được để trống"}
         className="mb-3"
       />
-      <TextField
+      {/* <TextField
         required
         id="outlined-multiline-static"
         label="Mô tả"
@@ -94,7 +108,15 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
         InputProps={{
           inputComponent: TextareaAutosize,
         }}
+      /> */}
+      <ReactQuill 
+      name="description"
+       value={product.description}
+       onChange={handleChangeDescription}
+       error={error.description}
+       helperText={error.description && "Mô tả sản phẩm không được để trống"}
       />
+     
       <TextField
         required
         id="outlined-required"
@@ -106,7 +128,7 @@ export const UpdateProduct = ({ categories, product, updateProduct, err }) => {
         onChange={handleChangeProduct}
         error={error.price}
         helperText={error.price && "Giá sản phẩm không được để trống"}
-        className="mb-3"
+        className="mb-3 mt-3"
       />
       <TextField
         label="Danh mục sản phẩm"

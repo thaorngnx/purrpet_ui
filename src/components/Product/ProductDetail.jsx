@@ -85,7 +85,8 @@ export const ProductDetail = () => {
   };
 
   const handleAddQuantity = () => {
-    if (quantity < product.inventory) {
+    const inventory = product.discountQuantity ? product.discountQuantity : product.inventory;
+    if (quantity <  inventory) {
       setQuantity(quantity + 1);
     }
   };
@@ -243,7 +244,7 @@ export const ProductDetail = () => {
             </Tabs>
             <Box sx={{ p: 2 }}>
               {descriptionTab && (
-                <Typography variant="body1">{product?.description}</Typography>
+                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: product.description }} />
               )}
               {reviewTab && (
                 <>

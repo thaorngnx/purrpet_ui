@@ -120,3 +120,20 @@ export async function getProductDetailByCode(code) {
     console.error(error);
   }
 }
+
+export async function getProductPromotionForCus(params) {
+  try {
+    const response = await api.get("product/query-customer-promotion", { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function getNewProduct(params) {
+  try {
+    const response = await api.get("product/new-product", { params });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

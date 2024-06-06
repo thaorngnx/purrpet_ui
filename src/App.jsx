@@ -58,6 +58,7 @@ import { HorizontalSlider } from "./components/Slider/HorizontalSlider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { SpendingStatisticsPage } from "./pages/Customer/SpendingStatisticsPage";
+import { ScrollToTop } from "./components/Button/ScrollToTop";
 
 function App() {
   const {
@@ -102,6 +103,7 @@ function App() {
 
   return (
     <BrowserRouter>
+  <ScrollToTop />
       <Routes>
         <Route path="/">
           <Route index element={<HomePage />} />
@@ -194,6 +196,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
+     
     </BrowserRouter>
   );
 }

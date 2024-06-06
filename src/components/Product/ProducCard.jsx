@@ -14,6 +14,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import Cookie from "js-cookie";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export const ProductCard = ({ product }) => {
   const [isHover, setIsHover] = useState(false);
 
   const handleProductClick = () => {
+    Cookie.set("producRecently", JSON.stringify(product));
     navigate(`/product/${product.purrPetCode}`);
   };
 
