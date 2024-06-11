@@ -70,3 +70,12 @@ export async function getAvailableTime(params) {
     console.error(error);
   }
 }
+
+export async function BookingSpaByStaff( bookingSpa) {
+  try {
+    const response = await api.post("bookingSpa/create-staff", bookingSpa);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

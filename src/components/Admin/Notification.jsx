@@ -2,9 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import { useNotificationStore } from '../../zustand/notificationStore';
 import { useEffect, useCallback } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Pagination } from '@mui/material';
 import { NOTIFICATION_TYPE } from '../../constants';
-import { markAllAsRead, viewNotification } from '../../api/notification';
+import { markAllAsRead, viewNotification, getAllNotifications } from '../../api/notification';
 import { useNavigate } from 'react-router-dom';
 import { formatTimeToNow } from '../../utils/formatData';
 import Cookies from 'js-cookie';
@@ -14,12 +14,24 @@ import { el } from 'date-fns/locale';
 
 export const Notification = ()=>
 {
-  const { notificationState, getAllNotifications } = useNotificationStore();
+  const [notificationState, setNotificationState] = useState({loading: false, error: null, data: null});
+  const [pagination, setPagination] = useState('');
+  const [page, setPage] = useState(1);
   const [link, setLink] = useState('');
   const navigate = useNavigate();
   const accessToken = Cookies.get('access_token');
     useEffect(() => {
-          getAllNotifications();
+      const params = {
+        page: page,
+        limit: 10,
+      };
+          getAllNotifications(params).then((res) => {
+            console.log(res);
+            setNotificationState({loading: false, error: null, data: res.data});
+            setPagination(res.pagination);
+          }).catch((error) => {
+            setNotificationState({loading: false, error: error, data: null});
+          });
           if (accessToken) {
             const decoded = jwtDecode(accessToken);
     
@@ -35,7 +47,8 @@ export const Notification = ()=>
             }
           }
        
-    }, [ accessToken ]);
+    }, [ accessToken, page ]);
+    
     
     const handleViewNotification = (notification) => {
       viewNotification(notification._id);
@@ -62,6 +75,7 @@ export const Notification = ()=>
       markAllAsRead();
       window.location.reload();
     }
+    
   
     return(
       <>
@@ -87,7 +101,9 @@ export const Notification = ()=>
             <p className=" ml-5 mb-3 ">{ formatTimeToNow(item.createdAt)}</p>
           </Box>
         ))}
-        
+        <Box className="flex justify-end mt-2">
+       {pagination &&  <Pagination color="secondary" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
+          </Box>
       </Box>
       </>
     )

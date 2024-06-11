@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Switch,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getActiveCategories } from "../../api/category";
@@ -27,6 +28,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import {
+  bookingHomeStaff,
   createBookingHome,
   getUnavailableDay,
   updateStatusBookingHome,
@@ -74,6 +76,7 @@ export const BookingHome = () => {
     homePrice: 0,
     payMethod: CONST.PAYMENT_METHOD.COD,
   });
+  const [point, setPoint] = useState(0);
 
   useEffect(() => {
     getActiveCategories({
@@ -258,7 +261,7 @@ export const BookingHome = () => {
   const handleConfirmBooking = () => {
     setShowBtnConfirmBook(false);
     console.log("book", bookingInfo);
-    createBookingHome({
+    bookingHomeStaff({
       petName: bookingInfo.petName,
       homeCode: bookingInfo.homeCode,
       bookingHomePrice: bookingInfo.bookingHomePrice,
@@ -267,6 +270,7 @@ export const BookingHome = () => {
       dateCheckIn: bookingInfo.dateCheckIn,
       dateCheckOut: bookingInfo.dateCheckOut,
       payMethod: bookingInfo.payMethod,
+      userPoint: point,
     }).then((res) => {
       if (res.err === 0) {
         setOrder(res.data);
@@ -396,6 +400,18 @@ export const BookingHome = () => {
     });
     setShowNameInput(false);
   };
+  const handleChangeUsePoint = (event) => {
+    if(event.target.checked){
+      if(customer.point > bookingInfo.bookingHomePrice * 0.1){
+      setPoint(bookingInfo.bookingHomePrice * 0.1);
+      }else{
+        setPoint(customer.point);
+      }
+    }else{
+      setPoint(0);
+    }
+  };
+
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -640,6 +656,14 @@ export const BookingHome = () => {
                 {customer.phoneNumber}
               </Typography>
             </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Điểm tích lũy:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {formatCurrency(customer.point)}
+              </Typography>
+            </Box>
           </FormControl>
           <FormControl>
             <FormLabel className="mt-2 font-bold text-black">
@@ -665,6 +689,42 @@ export const BookingHome = () => {
               label="VNPAY"
             />
           </RadioGroup>
+          <FormControl>
+      
+      <Box className="mt-3 flex flex-row justify-between">
+        <Typography variant="body1" className="font-bold">
+          Tiền dịch vụ:
+        </Typography>
+        <Typography variant="body1" className="ml-2">
+          {formatCurrency(bookingInfo.bookingHomePrice)}
+        </Typography>
+      </Box>
+      <Box className="mt-3 flex flex-row justify-between">
+        <Typography variant="body1" className="font-bold">
+          Sử dung điểm tích lũy:  
+        </Typography>
+        <Box className="flex flex-row">
+        <Switch
+          checked={point}
+          onChange={handleChangeUsePoint}
+          inputProps={{ 'aria-label': 'controlled' }}
+          className="mb-2"
+        />
+        <Typography variant="body1" className="ml-2">
+        { customer.point > bookingInfo.bookingHomePrice * 0.1 ?formatCurrency(bookingInfo.bookingHomePrice * 0.1) : formatCurrency(customer.point)}
+        </Typography>
+        </Box>
+        
+      </Box>
+      <Box className="mt-3 flex flex-row justify-between">
+        <Typography variant="body1" className="font-bold">
+          Thành tiền:
+        </Typography>
+        <Typography variant="body1" className="ml-2 font-bold text-red-600">
+          {formatCurrency(bookingInfo.bookingHomePrice - point)}
+        </Typography>
+      </Box>
+      </FormControl>
               </FormControl>
         </Paper>
       )}
@@ -694,7 +754,7 @@ export const BookingHome = () => {
               Khách hàng: {customer.name}
             </Typography>
             <Typography className="text-black">
-              Tổng tiền: {formatCurrency(order.bookingHomePrice)}
+              Tổng tiền: {formatCurrency(order.bookingHomePrice - point)}
             </Typography>
           </Box>
         </DialogContent>

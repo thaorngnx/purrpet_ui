@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { VerticalAlignBottom } from '@mui/icons-material';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -73,6 +74,7 @@ export const VerticalBarChart = ({data}) => {
           hoverBorderColor: dataset.borderColor,
           hoverBorderWidth: dataset.borderWidth + 2,
           hoverOffset: 4,
+
           tooltip: {
             callbacks: {
               label: (context) => {

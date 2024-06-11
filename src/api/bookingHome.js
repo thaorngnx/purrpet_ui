@@ -70,3 +70,12 @@ export async function getUnavailableDay(params) {
     console.error(error);
   }
 }
+
+export async function bookingHomeStaff(bookingHome) {
+  try {
+    const response = await api.post("bookingHome/create-staff", bookingHome);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

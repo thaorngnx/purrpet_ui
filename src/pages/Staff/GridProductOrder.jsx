@@ -14,12 +14,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Switch,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { createOrder, updateStatusOrder } from "../../api/order";
+import { createOrder, createOrderStaff, updateStatusOrder } from "../../api/order";
 import {
   MiniIconRoundButton,
   BigHoverTransformButton,
@@ -43,6 +44,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   const [showBtnConfirmOrder, setShowBtnConfirmOrder] = useState(false);
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState(CONST.PAYMENT_METHOD.COD);
+  const [point, setPoint] = useState(0);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
@@ -56,7 +58,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
       }
     };
     const totalPrice = selectedProducts.reduce((total, product) => {
-      return total + product.price * product.quantity;
+      return product.discountQuantity > 0 ? total + product.priceDiscount * product.quantity : total + product.price * product.quantity;
     }, 0);
     setTotalPrice(totalPrice);
     const quantity = selectedProducts.reduce((total, product) => {
@@ -122,6 +124,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
       );
     });
   };
+ 
   const columns = [
     { field: "productName", headerName: "Tên sản phẩm", minWidth: 150 },
     {
@@ -195,8 +198,8 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
   const rows = selectedProducts.map((product, index) => ({
     id: index + 1,
     productName: product.productName,
-    productPrice: product.price,
-    totalPrice: product.price * product.quantity,
+    productPrice: product.discountQuantity > 0 ? product.priceDiscount : product.price,
+    totalPrice: product.discountQuantity > 0 ? product.priceDiscount * product.quantity : product.price * product.quantity,
     quantity: product.quantity,
   }));
 
@@ -247,19 +250,19 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
       customerCode: customer.purrPetCode,
       customerAddress: customer.address,
       payMethod: paymentMethod,
-      useCoin: 0,
+      userPoint: point,
     };
-    createOrder(orderData)
-      .then((res) => {
-        if (res.err === 0) {
-          setOrder(res.data);
-          setShowPaymentMethod(false);
-          setOpen(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    createOrderStaff(orderData).then((res) => {
+      if (res.err === 0) {
+        setOrder(res.data);
+        setShowPaymentMethod(false);
+        setOpen(true);
+        setPoint(0);
+      }
+    }).catch((err) => {
+      console.log(err);
+    }
+    );
     
   };
   const handleCancelOrder = (purrPetCode) => {
@@ -279,18 +282,31 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
         });
 
       }else{
-        updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.PAID).then(
+        updateStatusOrder(order.purrPetCode, CONST.STATUS_ORDER.DONE).then(
           (res) => {
             setOpen(false);
             setSelectedProducts([]);
           },
-        );
+        ).catch((err) => {
+          console.log(err);
+        } );
       }
       
   };
+  const handleChangeUsePoint = (event) => {
+    if(event.target.checked){
+      if(customer.point > totalPrice * 0.1){
+      setPoint(totalPrice * 0.1);
+      }else{
+        setPoint(customer.point);
+      }
+    }else{
+      setPoint(0);
+    }
+  }
   return (
     <Box className="flex w-full flex-col items-center justify-center p-5">
-      <Box className="flex h-96 w-full justify-between">
+      <Box className="flex h-120 w-full justify-between">
         <Box className="flex w-3/5 flex-col">
           <Autocomplete
             inputValue={inputValue}
@@ -339,7 +355,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             />
           </Box>
         </Box>
-        <Paper className="ml-5 w-2/5 px-5">
+        <Paper className="ml-5 w-2/5 px-5 ">
           <Typography className="mt-5 text-center text-lg font-bold">
             Thông tin đơn hàng
           </Typography>
@@ -347,9 +363,18 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             <Typography className="font-bold">Tổng sản phẩm:</Typography>
             <Typography>{quantity}</Typography>
           </Box>
+          
           <Box className="mt-5 flex justify-between">
-            <Typography className="font-bold">Tổng tiền:</Typography>
+            <Typography className="font-bold">Tổng tiền hàng:</Typography>
             <Typography>{formatCurrency(totalPrice)}</Typography>
+          </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography className="font-bold">Điểm sử dụng:</Typography>
+            <Typography> - {formatCurrency(point)}</Typography>
+          </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography className="font-bold">Tổng thanh toán:</Typography>
+            <Typography className="font-bold text-red-600"> {formatCurrency(totalPrice - point)}</Typography>
           </Box>
           <Divider className="mt-5" />
           <Typography className="mt-5 text-center text-lg font-bold">
@@ -367,6 +392,16 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
             <Typography className="font-bold">Số điện thoại:</Typography>
             <Typography>{customer.phoneNumber}</Typography>
           </Box>
+          <Box className="mt-5 flex justify-between">
+            <Typography className="font-bold">Điểm tích luỹ:</Typography>
+            <Typography className=" flex justify-between">
+              <Typography>sử dụng</Typography>
+            <Switch  onChange={handleChangeUsePoint} className="mb-1"/>
+          <Typography > { customer.point > totalPrice * 0.1 ?formatCurrency(totalPrice * 0.1) : formatCurrency(customer.point)}</Typography>
+          
+            </Typography>
+           
+            </Box> 
         </Paper>
       </Box>
       {selectedProducts.length > 0 && showBtnConfirmOrder && (
@@ -431,7 +466,7 @@ export const GridProductOrder = ({ customer, updateCustomer }) => {
               Khách hàng: {customer.name}
             </Typography>
             <Typography className="text-black">
-              Tổng tiền: {formatCurrency(order.orderPrice)}
+              Tổng tiền: {formatCurrency(order.totalPayment)}
             </Typography>
             <Typography className="text-black">
               Phương thức thanh toán: {order.payMethod}

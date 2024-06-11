@@ -37,6 +37,16 @@ export async function createOrder(order) {
   }
 }
 
+export async function createOrderStaff(order) {
+  try {
+    const response = await api.post("order/create-staff", order);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 export async function updateOrder(order) {
   try {
     const response = await api.put(`order/update/${order.purrPetCode}`, order);

@@ -42,6 +42,8 @@ export const OrderDetail = () => {
     orderItems: [],
     productOrder: [],
     totalPayment: 0,
+    userPoint: 0,
+    useCoin: 0,
   });
 
   useEffect(() => {
@@ -92,6 +94,8 @@ export const OrderDetail = () => {
               pointUsed: order.pointUsed,
               totalPayment: order.totalPayment,
               statusRefund: order.statusRefund,
+              userPoint: order.userPoint,
+              useCoin: order.useCoin,
             });
           }
         });
@@ -284,7 +288,16 @@ export const OrderDetail = () => {
               );
             })}
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
+          <Typography variant="body1" className="text-md text-end ">
+            Điểm sử dụng: {formatCurrency(order.pointUsed)}
+          </Typography>
+          <Typography variant="body1" className="text-md text-end ">
+            Xu sử dụng: {formatCurrency(order.useCoin)}
+          </Typography>
+          <Typography
+            variant="body1"
+            className="text-end text-lg font-bold text-[#ee4d2d]"
+          >
             Tổng tiền: {formatCurrency(order.totalPayment)}
           </Typography>
           <Box className="mt-3  flex flex-row justify-end">

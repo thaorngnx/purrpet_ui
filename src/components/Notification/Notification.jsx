@@ -1,24 +1,36 @@
 import React from 'react';
-import { useNotificationStore } from '../../zustand/notificationStore';
 import { useStore } from '../../zustand/store';
 import { useEffect, useCallback } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Pagination } from '@mui/material';
 import { NOTIFICATION_TYPE } from '../../constants';
-import { markAllAsRead, viewNotification } from '../../api/notification';
+import { getAllNotifications, markAllAsRead, viewNotification } from '../../api/notification';
 import { useNavigate } from 'react-router-dom';
 import { formatTimeToNow } from '../../utils/formatData';
+import { useState } from 'react';
 
 
 export const Notification = ()=>
 {
   const customer = useStore((state) => state.customerState.data);
-  const { notificationState, getAllNotifications } = useNotificationStore();
+  const [notificationState, setNotificationState] = useState({loading: false, error: null, data: null});
+  const [pagination, setPagination] = useState('');
+  const [page, setPage] = useState(1);
   const navigateTo = useNavigate();
     useEffect(() => {
       
        if(customer && customer.accessToken)
         {
-          getAllNotifications();
+          const params = {
+            page: page,
+            limit: 10,
+          };
+          getAllNotifications(params).then((res) => {
+            setNotificationState({loading: false, error: null, data: res.data});
+            setPagination(res.pagination);
+          }).catch((error) => {
+            setNotificationState({loading: false, error: error, data: null});
+          }
+          );
         }else{
           return () => {
             // cleanup
@@ -74,6 +86,9 @@ export const Notification = ()=>
             <Button onClick={()=>navigateTo('/lookup')}>Xác thực tài khoản</Button>
           </Box>
         }
+         <Box className="flex justify-end mt-2">
+       {pagination &&  <Pagination color="secondary" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
+          </Box>
       </Box>
       </>
     )

@@ -41,6 +41,8 @@ export const BookingHomeDetail = () => {
       masterDataName: "",
       price: 0,
     },
+    pointUsed: 0,
+    useCoin: 0,
   });
   const [homestay, setHomestay] = useState({});
 
@@ -72,6 +74,8 @@ export const BookingHomeDetail = () => {
                 masterDataName: res.data.masterDataName,
                 price: res.data.price,
               },
+              pointUsed: bookingHomeInfo.pointUsed,
+              useCoin: bookingHomeInfo.useCoin,
             });
           }
         });
@@ -233,8 +237,17 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(bookingHome.bookingHomePrice)}
+          <Typography variant="body1" className="text-md text-end ">
+            Điểm sử dụng: {formatCurrency(bookingHome.pointUsed)}
+          </Typography>
+          <Typography variant="body1" className="text-md text-end ">
+            Xu sử dụng: {formatCurrency(bookingHome.useCoin)}
+          </Typography>
+          <Typography
+            variant="body1"
+            className="text-end text-lg font-bold text-[#ee4d2d]"
+          >
+            Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (

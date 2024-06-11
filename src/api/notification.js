@@ -1,8 +1,8 @@
 import api from './token';
 
-export const getAllNotifications = async () => {
+export const getAllNotifications = async (params) => {
   try {
-    const response = await api.get('notification/get-all');
+    const response = await api.get('notification/get-all', {params});
     return response.data;
   } catch (error) {
     console.error(error);

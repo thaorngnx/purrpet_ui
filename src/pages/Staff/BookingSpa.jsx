@@ -16,13 +16,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Switch,
 } from "@mui/material";
 import * as CONST from "../../constants";
 import { getActiveCategories } from "../../api/category";
 import { getActiveSpas } from "../../api/spa";
 import { getCustomerByEmail, createCustomerByStaff } from "../../api/customer";
 import { TimeSpaForm } from "../../components/Booking/TimeSpaForm";
-import { createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
+import { BookingSpaByStaff, createBookingSpa, updateStatusBookingSpa } from "../../api/bookingSpa";
 import { BigHoverTransformButton } from "../../components/Button/StyledButton";
 import { formatCurrency } from "../../utils/formatData";
 import { validateObject, validateEmail } from "../../utils/validationData";
@@ -45,6 +46,7 @@ export const BookingSpa = () => {
   const [order, setOrder] = useState({});
   const [showNameInput, setShowNameInput] = useState(false);
   const [nameValue, setNameValue] = useState("");
+  const [point, setPoint] = useState(0);
  // const [showPaymentMethod, setShowPaymentMethod] = useState(false);
 
   const [bookingInfo, setBookingInfo] = useState({
@@ -177,8 +179,8 @@ export const BookingSpa = () => {
   };
 
   const handleConfirmBooking = () => {
-    setShowBtnConfirmBook(false);
-    createBookingSpa({
+    // setShowBtnConfirmBook(false);
+   BookingSpaByStaff({
       petName: bookingInfo.petName,
       spaCode: bookingInfo.spaCode,
       bookingSpaPrice: bookingInfo.bookingSpaPrice,
@@ -187,8 +189,9 @@ export const BookingSpa = () => {
       bookingDate: bookingInfo.bookingDate,
       bookingTime: bookingInfo.bookingTime,
       payMethod: bookingInfo.payMethod,
+      userPoint: point,
     }).then((res) => {
-      console.log(res);
+      console.log("res", res);
       if (res.err === 0) {
         // navigate(`/bookingSpa/${res.data.purrPetCode}`);
         setOrder(res.data);
@@ -238,7 +241,8 @@ export const BookingSpa = () => {
     );
   };
   const handlePayOrder = () => {
-    if (order.paymentMethod === CONST.PAYMENT_METHOD.COD) {
+    if (order.payMethod === CONST.PAYMENT_METHOD.COD) {
+
     updateStatusBookingSpa(order.purrPetCode, CONST.STATUS_BOOKING.PAID).then(
       (res) => {
         if (res.err === 0) {
@@ -324,6 +328,17 @@ export const BookingSpa = () => {
     setShowNameInput(false);
   };
 
+  const handleChangeUsePoint = (event) => {
+    if(event.target.checked){
+      if(customer.point > bookingInfo.bookingSpaPrice * 0.1){
+      setPoint(bookingInfo.bookingSpaPrice * 0.1);
+      }else{
+        setPoint(customer.point);
+      }
+    }else{
+      setPoint(0);
+    }
+  };
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", width: "100%" }}
@@ -529,6 +544,14 @@ export const BookingSpa = () => {
                 {customer.phoneNumber}
               </Typography>
             </Box>
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Điểm tích lũy:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {formatCurrency(customer.point)}
+              </Typography>
+            </Box>
             <FormControl>
             <FormLabel className="mt-2 font-bold text-black">
             Phương thức thanh toán:
@@ -549,10 +572,46 @@ export const BookingSpa = () => {
             <FormControlLabel
               value={CONST.PAYMENT_METHOD.VNPAY}
               control={<Radio />}
-              icon={<image src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" />}
+              startIcon={<img src="https://vnpay.vn/wp-content/uploads/2020/07/logo-vnpay.png" alt="VNPAY" sx={{ width: 24, height: 24 }} />}
               label="VNPAY"
             />
           </RadioGroup>
+          <FormControl>
+      
+            <Box className="mt-3 flex flex-row">
+              <Typography variant="body1" className="font-bold">
+                Tiền dịch vụ:
+              </Typography>
+              <Typography variant="body1" className="ml-2">
+                {formatCurrency(bookingInfo.bookingSpaPrice)}
+              </Typography>
+            </Box>
+            <Box className="mt-3 flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Sử dung điểm tích lũy:  
+              </Typography>
+              <Box className="flex flex-row">
+              <Switch
+                checked={point}
+                onChange={handleChangeUsePoint}
+                inputProps={{ 'aria-label': 'controlled' }}
+              />
+              <Typography variant="body1" className="ml-2">
+              { customer.point > bookingInfo.bookingSpaPrice * 0.1 ?formatCurrency(bookingInfo.bookingSpaPrice * 0.1) : formatCurrency(customer.point)}
+              </Typography>
+              </Box>
+              
+            </Box>
+            <Box className="mt-3 flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Thành tiền:
+              </Typography>
+              <Typography variant="body1" className="font-bold text-red-600">
+                {formatCurrency(bookingInfo.bookingSpaPrice - point)}
+              </Typography>
+            </Box>
+            </FormControl>
+
               </FormControl>
           </FormControl>
         </Paper>
@@ -587,8 +646,8 @@ export const BookingSpa = () => {
             <Typography className="text-black">
               Phương thức thanh toán: {order.payMethod}
             </Typography>
-            <Typography className="text-black">
-              Tổng tiền: {formatCurrency(order.bookingSpaPrice)}
+            <Typography className="font-bold text-red-600">
+              Tổng tiền: {formatCurrency(order.bookingSpaPrice - point)}
             </Typography>
           </Box>
         </DialogContent>

@@ -42,6 +42,8 @@ export const BookingSpaDetail = () => {
       price: 0,
       categoryCode: "",
     },
+    pointUsed: 0,
+    useCoin: 0,
   });
 
   useEffect(() => {
@@ -72,6 +74,8 @@ export const BookingSpaDetail = () => {
                 price: res.data.price,
                 categoryCode: res.data.categoryCode,
               },
+              pointUsed: bookingSpaInfo.pointUsed,
+              useCoin: bookingSpaInfo.useCoin,
             });
           }
         });
@@ -209,8 +213,17 @@ export const BookingSpaDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-lg font-bold">
-            Tổng tiền: {formatCurrency(bookingSpa.bookingSpaPrice)}
+          <Typography variant="body1" className="text-md text-end ">
+            Điểm sử dụng: {formatCurrency(bookingSpa.pointUsed)}
+          </Typography>
+          <Typography variant="body1" className="text-md text-end ">
+            Xu sử dụng: {formatCurrency(bookingSpa.useCoin)}
+          </Typography>
+          <Typography
+            variant="body1"
+            className="text-end text-lg font-bold text-[#ee4d2d]"
+          >
+            Tổng tiền: {formatCurrency(bookingSpa.totalPayment)}
           </Typography>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
