@@ -11,7 +11,9 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  TextareaAutosize
+  TextareaAutosize,
+  DialogContentText,
+  Rating,
 } from "@mui/material";
 
 import { useState, useEffect } from "react";
@@ -25,15 +27,38 @@ import { FormControl } from "@mui/material";
 import * as CONST from "../../constants";
 import { UploadImage, UploadImageRefund } from "../Image/UploadImage";
 import { requestRefund } from "../../api/pay";
+import { createReview, getReviewByCodeAndCustomer } from "../../api/review";
 
 export const OrderDetail = () => {
   const navigate = useNavigate();
 
   const { orderCode } = useParams();
   const [open, setOpen] = useState(false);
+  const [openRating, setOpenRating] = useState(false);
   const [request, setRequest] = useState("");
   const [error, setError] = useState({});
   const [sendRequest, setSendRequest] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState({
+    productCode: "",
+    images: [],
+    name: "",
+    quantity: 0,
+    price: 0,
+    totalPrice: 0,
+    review: {
+      productCode: "",
+      orderCode: "",
+      rating: 0,
+      comment: "",
+    },
+    reviewed: false,
+  });
+  const [review, setReview] = useState({
+    productCode: "",
+    orderCode: "",
+    rating: 0,
+    comment: "",
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,8 +67,20 @@ export const OrderDetail = () => {
   const handleClose = () => {
     setOpen(false);
   };
- 
 
+  const handleClickOpenRating = (product) => {
+    setSelectedProduct(product);
+    setOpenRating(true);
+  };
+
+  const handleCloseRating = () => {
+    setOpenRating(false);
+    setReview({
+      ...review,
+      rating: 0,
+      comment: "",
+    });
+  };
 
   const [order, setOrder] = useState({
     purrPetCode: "",
@@ -69,8 +106,8 @@ export const OrderDetail = () => {
     useCoin: 0,
   });
 
-  useEffect(() => {
-    getOrderByCode(orderCode).then((res) => {
+  const fetchOrderDetail = async () => {
+    getOrderByCode(orderCode).then(async (res) => {
       console.log(res);
       if (res.err === 0) {
         const order = res.data;
@@ -79,13 +116,24 @@ export const OrderDetail = () => {
         res.data.orderItems.forEach((item) => {
           productCodes.push(item.productCode);
         });
-        getProducts({ productCodes: productCodes.toString() }).then((res) => {
-          console.log(res);
-          if (res.err === 0) {
-            let productOrder = [];
-            res.data.forEach((item) => {
-              orderItems.forEach((orderItem) => {
-                if (item.purrPetCode === orderItem.productCode) {
+        const productsRes = await getProducts({
+          productCodes: productCodes.toString(),
+        });
+        console.log(productsRes);
+        if (productsRes.err === 0) {
+          let productOrder = [];
+          for (const item of productsRes.data) {
+            for (const orderItem of orderItems) {
+              if (item.purrPetCode === orderItem.productCode) {
+                const reviewRes = await getReviewByCodeAndCustomer(
+                  order.purrPetCode,
+                  orderItem.productCode,
+                );
+                if (reviewRes.err === 0) {
+                  let reviewed = false;
+                  if (reviewRes.data.rating > 0) {
+                    reviewed = true;
+                  }
                   let product = {
                     productCode: orderItem.productCode,
                     images: item.images,
@@ -93,44 +141,51 @@ export const OrderDetail = () => {
                     quantity: orderItem.quantity,
                     price: orderItem.productPrice,
                     totalPrice: orderItem.totalPrice,
+                    review: reviewRes.data,
+                    reviewed: reviewed,
                   };
                   console.log(product);
                   productOrder.push(product);
                 }
-              });
-            });
-            console.log(order);
-            setOrder({
-              purrPetCode: order.purrPetCode,
-              createdAt: order.createdAt,
-              status: order.status,
-              customerName: order.customerName,
-              customerPhone: order.customerPhone,
-              customerEmail: order.customerEmail,
-              customerAddress: order.customerAddress,
-              customerNote: order.customerNote,
-              orderPrice: order.orderPrice,
-              orderItems: order.orderItems,
-              productOrder: productOrder,
-              payMethod: order.payMethod,
-              paymentStatus: order.paymentStatus,
-              pointUsed: order.pointUsed,
-              totalPayment: order.totalPayment,
-              useCoin: order.useCoin,
-              statusRefund: order.statusRefund,
-            });
+              }
+            }
           }
-        });
+          console.log("order", productOrder);
+          setOrder({
+            purrPetCode: order.purrPetCode,
+            createdAt: order.createdAt,
+            status: order.status,
+            customerName: order.customerName,
+            customerPhone: order.customerPhone,
+            customerEmail: order.customerEmail,
+            customerAddress: order.customerAddress,
+            customerNote: order.customerNote,
+            orderPrice: order.orderPrice,
+            orderItems: order.orderItems,
+            productOrder: productOrder,
+            payMethod: order.payMethod,
+            paymentStatus: order.paymentStatus,
+            pointUsed: order.pointUsed,
+            totalPayment: order.totalPayment,
+            useCoin: order.useCoin,
+            statusRefund: order.statusRefund,
+          });
+        }
       }
     });
-  }, []);
+  };
 
+  useEffect(() => {
+    fetchOrderDetail();
+  }, []);
   const productOrder = order?.productOrder;
 
   const handlePaymentClick = () => {
     console.log("payment");
-    createPaymentUrl({ orderCode: res.data.purrPetCode,
-      returnUrl: '/vnpay-returnForCus' }).then((res) => {
+    createPaymentUrl({
+      orderCode: res.data.purrPetCode,
+      returnUrl: "/vnpay-returnForCus",
+    }).then((res) => {
       console.log(res);
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
@@ -149,7 +204,7 @@ export const OrderDetail = () => {
       },
     );
   };
-  
+
   const handleRefund = () => {
     console.log("refund");
     requestRefund({
@@ -163,9 +218,25 @@ export const OrderDetail = () => {
         handleClose();
       }
     });
-    
-  }
-  console.log(order);
+  };
+
+  const handleRating = () => {
+    console.log("rating");
+    createReview({
+      ...review,
+      orderCode: order.purrPetCode,
+      productCode: selectedProduct.productCode,
+    }).then((res) => {
+      console.log(res);
+      if (res.err === 0) {
+        fetchOrderDetail();
+        handleCloseRating();
+      }
+    });
+  };
+
+  console.log("selectedProduct", selectedProduct);
+  console.log(review);
 
   return (
     <Box className="mt-5 flex min-h-screen flex-col items-center">
@@ -207,15 +278,12 @@ export const OrderDetail = () => {
               <span className="font-bold">Trạng thái thanh toán: </span>
               {order.paymentStatus}
             </Typography>
-            {
-            order.statusRefund && (
+            {order.statusRefund && (
               <Typography variant="body1">
                 <span className="font-bold">Trạng thái hoàn tiền: </span>
                 {order.statusRefund}
               </Typography>
-            )
-           }
-            
+            )}
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -309,115 +377,198 @@ export const OrderDetail = () => {
                     >
                       Chi tiết
                     </MiniHoverButton>
+                    {order.status === CONST.STATUS_ORDER.DONE && (
+                      <MiniHoverButton
+                        className="ml-2"
+                        onClick={() => {
+                          handleClickOpenRating(item);
+                        }}
+                      >
+                        {item.reviewed ? "Đã đánh giá" : "Đánh giá"}
+                      </MiniHoverButton>
+                    )}
                   </Box>
                 </ListItem>
               );
             })}
           </List>
-        
-          <FormControl className="  w-1/2 flex justify-end ml-[auto] " >
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
-              Tổng tiền hàng: 
+
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
+              Tổng tiền hàng:
               <Typography variant="body1" className="m-1 text-end">
-               {formatCurrency(order.orderPrice)}
-               </Typography>
+                {formatCurrency(order.orderPrice)}
+              </Typography>
             </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
               Sử dụng điểm:
               <Typography variant="body1" className="m-1 text-end">
-              - {formatCurrency(order.pointUsed)}
-               </Typography>
+                - {formatCurrency(order.pointUsed)}
+              </Typography>
             </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
-              Sử dụng ví xu:   
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
+              Sử dụng ví xu:
               <Typography variant="body1" className="m-1 text-end">
-              -  {formatCurrency( order.useCoin)}
-               </Typography>
+                - {formatCurrency(order.useCoin)}
+              </Typography>
             </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center font-bold text-black text-[17px] justify-between">
-              Thành tiền: 
-              <Typography variant="body1" className="m-1 text-end text-[#800000] font-bold">
-              {formatCurrency(order.totalPayment)}
-               </Typography>
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end text-[17px] font-bold text-black"
+            >
+              Thành tiền:
+              <Typography
+                variant="body1"
+                className="m-1 text-end font-bold text-[#800000]"
+              >
+                {formatCurrency(order.totalPayment)}
+              </Typography>
             </Typography>
-            </FormControl>
-       
-       
-          <Box className="mt-3 flex flex-row justify-end">
-            {(order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY )&& (
-              <>
-                <Button
-                  variant="contained"
-                  className="mr-3 bg-black"
-                  onClick={handleChangeStatus}
-                >
-                  Hủy đơn
-                </Button>
-                <Button
-                  variant="contained"
-                  className="ml-3 bg-black"
-                  onClick={handlePaymentClick}
-                >
-                  Thanh toán
-                </Button>
-              </>
-            )}
-            {
-              order.status === CONST.STATUS_ORDER.NEW   && (
-                <Button
-                  variant="contained"
-                  className="ml-3 bg-black"
-                  onClick={handleChangeStatus}
-                >
-                  Huỷ Đơn
-                </Button>
-              )
-            }
-            {
-              order.status === CONST.STATUS_ORDER.DONE && (
-                <Button
-                  variant="contained"
-                  className={sendRequest ? "bg-gray-500 text-white" : "bg-black text-white"}
-                  onClick={handleClickOpen}
-                  disabled={sendRequest}
-                >
-                  {sendRequest ? "Đã gửi yêu cầu" : "Yêu cầu hoàn tiền"}
-                </Button>
-              )
-            }
-          </Box>
-          <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Gửi yêu cầu hoàn tiền?"}
-        </DialogTitle>
-        <DialogContent>
-       <TextareaAutosize
-        aria-label="minimum height"
-        minRows={3}
-        placeholder="Nhập lý do hoàn tiền"
-        style={{ width: '100%' }}
-        onChange={(e) => setRequest({...request,message: e.target.value})}
-      />
-      <UploadImageRefund
-        request={request}
-        updateRequest={setRequest}
-        err={error}
-      />
+          </FormControl>
 
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Huỷ</Button>
-          <Button onClick={handleRefund} autoFocus>
-          Gửi yêu cầu
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <Box className="mt-3 flex flex-row justify-end">
+            {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY &&
+              order.status === CONST.STATUS_ORDER.NEW &&
+              order.payMethod === CONST.PAYMENT_METHOD.VNPAY && (
+                <>
+                  <Button
+                    variant="contained"
+                    className="mr-3 bg-black"
+                    onClick={handleChangeStatus}
+                  >
+                    Hủy đơn
+                  </Button>
+                  <Button
+                    variant="contained"
+                    className="ml-3 bg-black"
+                    onClick={handlePaymentClick}
+                  >
+                    Thanh toán
+                  </Button>
+                </>
+              )}
+            {order.status === CONST.STATUS_ORDER.NEW && (
+              <Button
+                variant="contained"
+                className="ml-3 bg-black"
+                onClick={handleChangeStatus}
+              >
+                Huỷ Đơn
+              </Button>
+            )}
+            {order.status === CONST.STATUS_ORDER.DONE && (
+              <Button
+                variant="contained"
+                className={
+                  sendRequest ? "bg-gray-500 text-white" : "bg-black text-white"
+                }
+                onClick={handleClickOpen}
+                disabled={sendRequest}
+              >
+                {sendRequest ? "Đã gửi yêu cầu" : "Yêu cầu hoàn tiền"}
+              </Button>
+            )}
+          </Box>
+          <Dialog open={openRating} onClose={handleCloseRating}>
+            <DialogTitle id="alert-dialog-title">
+              {"Đánh giá sản phẩm"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {selectedProduct && (
+                  <Box className="flex flex-col">
+                    <Box className="items-center justify-between">
+                      <Box className="flex flex-row items-center">
+                        <img
+                          src={selectedProduct?.images[0]?.path}
+                          alt={selectedProduct?.name}
+                          className="h-[100px] w-[100px] object-cover"
+                        />
+                        <Typography className=" ml-2 text-black">
+                          {selectedProduct?.name}
+                        </Typography>
+                      </Box>
+                      <Box className="flex flex-col justify-center">
+                        <Rating
+                          name="simple-controlled"
+                          value={
+                            selectedProduct.review.rating
+                              ? selectedProduct.review.rating
+                              : review.rating
+                          }
+                          onChange={(event, newValue) => {
+                            setReview({ ...review, rating: newValue });
+                          }}
+                          disabled={selectedProduct.reviewed}
+                          className="my-3 w-max"
+                        />
+                        <TextField
+                          id="outlined-multiline-static"
+                          label="Đánh giá"
+                          defaultValue={selectedProduct.review.comment}
+                          disabled={selectedProduct.reviewed}
+                          multiline
+                          rows={3}
+                          onChange={(e) =>
+                            setReview({ ...review, comment: e.target.value })
+                          }
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseRating}>Hủy</Button>
+              {!selectedProduct.reviewed && (
+                <Button onClick={handleRating} autoFocus>
+                  Gửi đánh giá
+                </Button>
+              )}
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Gửi yêu cầu hoàn tiền"}
+            </DialogTitle>
+            <DialogContent>
+              <TextareaAutosize
+                aria-label="minimum height"
+                minRows={3}
+                placeholder="Nhập lý do hoàn tiền"
+                style={{ width: "100%" }}
+                onChange={(e) =>
+                  setRequest({ ...request, message: e.target.value })
+                }
+              />
+              <UploadImageRefund
+                request={request}
+                updateRequest={setRequest}
+                err={error}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Huỷ</Button>
+              <Button onClick={handleRefund} autoFocus>
+                Gửi yêu cầu
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </Paper>
     </Box>

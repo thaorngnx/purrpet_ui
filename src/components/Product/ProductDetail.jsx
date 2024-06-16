@@ -85,8 +85,10 @@ export const ProductDetail = () => {
   };
 
   const handleAddQuantity = () => {
-    const inventory = product.discountQuantity ? product.discountQuantity : product.inventory;
-    if (quantity <  inventory) {
+    const inventory = product.discountQuantity
+      ? product.discountQuantity
+      : product.inventory;
+    if (quantity < inventory) {
       setQuantity(quantity + 1);
     }
   };
@@ -105,6 +107,8 @@ export const ProductDetail = () => {
   const handleChangeReviewPage = (event, value) => {
     setReviewPagination({ ...reviewPagination, page: value });
   };
+
+  console.log("re", reviews);
 
   return (
     <>
@@ -244,7 +248,10 @@ export const ProductDetail = () => {
             </Tabs>
             <Box sx={{ p: 2 }}>
               {descriptionTab && (
-                <Typography variant="body1" dangerouslySetInnerHTML={{ __html: product.description }} />
+                <Typography
+                  variant="body1"
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
               )}
               {reviewTab && (
                 <>
@@ -255,7 +262,7 @@ export const ProductDetail = () => {
                       </Typography>
                       <Rating
                         name="read-only"
-                        value={review.star}
+                        value={review.rating}
                         readOnly
                         size="small"
                       />
