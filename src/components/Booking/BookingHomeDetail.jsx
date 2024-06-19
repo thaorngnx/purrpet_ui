@@ -6,6 +6,7 @@ import {
   ListItem,
   Divider,
   Button,
+  FormControl,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -285,18 +286,29 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-md text-end ">
-            Điểm sử dụng: {formatCurrency(bookingHome.pointUsed)}
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
+            Điểm sử dụng: 
+            <Typography variant="body1" className="text-md text-end ">
+           - {formatCurrency(bookingHome.pointUsed)}
           </Typography>
-          <Typography variant="body1" className="text-md text-end ">
-            Xu sử dụng: {formatCurrency(bookingHome.useCoin)}
+          </Typography>
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
+            Xu sử dụng: 
+            <Typography>
+          -  {formatCurrency(bookingHome.useCoin)}
+              </Typography>
           </Typography>
           <Typography
             variant="body1"
-            className="text-end text-lg font-bold text-[#ee4d2d]"
+            className="m-1 flex flex-row items-center justify-between text-end "
           >
-            Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
+            Tổng tiền: 
+            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
+            {formatCurrency(bookingHome.totalPayment)}
+            </Typography>
           </Typography>
+          </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>

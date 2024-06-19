@@ -6,6 +6,7 @@ import {
   ListItem,
   Divider,
   Button,
+  FormControl,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -156,7 +157,7 @@ export const OrderDetail = () => {
         Chi tiết đơn hàng
       </Typography>
       <Paper className="mb-10 flex w-[97%] flex-col justify-center p-8">
-        <Box className="flex flex-row items-start justify-start">
+      <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Mã đơn hàng: </span>
@@ -178,18 +179,12 @@ export const OrderDetail = () => {
               <span className="font-bold">Trạng thái thanh toán: </span>
               {order.paymentStatus}
             </Typography>
-            <Typography variant="body1">
-              <span className="font-bold">Điểm sử dụng: </span>
-              {formatCurrency(order.pointUsed)}
-            </Typography>
-           {
-            order.statusRefund && (
+            {order.statusRefund && (
               <Typography variant="body1">
                 <span className="font-bold">Trạng thái hoàn tiền: </span>
                 {order.statusRefund}
               </Typography>
-            )
-           }
+            )}
           </Box>
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
@@ -288,18 +283,47 @@ export const OrderDetail = () => {
               );
             })}
           </List>
-          <Typography variant="body1" className="text-md text-end ">
-            Điểm sử dụng: {formatCurrency(order.pointUsed)}
-          </Typography>
-          <Typography variant="body1" className="text-md text-end ">
-            Xu sử dụng: {formatCurrency(order.useCoin)}
-          </Typography>
-          <Typography
-            variant="body1"
-            className="text-end text-lg font-bold text-[#ee4d2d]"
-          >
-            Tổng tiền: {formatCurrency(order.totalPayment)}
-          </Typography>
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
+              Tổng tiền hàng:
+              <Typography variant="body1" className="m-1 text-end">
+                {formatCurrency(order.orderPrice)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
+              Sử dụng điểm:
+              <Typography variant="body1" className="m-1 text-end">
+                - {formatCurrency(order.pointUsed)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end"
+            >
+              Sử dụng ví xu:
+              <Typography variant="body1" className="m-1 text-end">
+                - {formatCurrency(order.useCoin)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              className="m-1 flex flex-row items-center justify-between text-end text-[17px] font-bold text-black"
+            >
+              Thành tiền:
+              <Typography
+                variant="body1"
+                className="m-1 text-end font-bold text-[#800000]"
+              >
+                {formatCurrency(order.totalPayment)}
+              </Typography>
+            </Typography>
+          </FormControl>
           <Box className="mt-3  flex flex-row justify-end">
           { (order.status === CONST.STATUS_ORDER.NEW && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY || order.status === CONST.STATUS_ORDER.PREPARE ) &&(
               <>  

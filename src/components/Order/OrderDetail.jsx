@@ -542,16 +542,18 @@ export const OrderDetail = () => {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            maxWidth="xl"
+            height="auto"
           >
             <DialogTitle id="alert-dialog-title">
               {"Gửi yêu cầu hoàn tiền"}
             </DialogTitle>
-            <DialogContent>
+            <DialogContent id="alert-dialog-description">
               <TextareaAutosize
                 aria-label="minimum height"
                 minRows={3}
                 placeholder="Nhập lý do hoàn tiền"
-                style={{ width: "100%" }}
+                style={{ width: "400px" }}
                 onChange={(e) =>
                   setRequest({ ...request, message: e.target.value })
                 }

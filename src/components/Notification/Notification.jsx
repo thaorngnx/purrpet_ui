@@ -87,7 +87,7 @@ export const Notification = ()=>
           </Box>
         }
          <Box className="flex justify-end mt-2">
-       {pagination &&  <Pagination color="secondary" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
+       {pagination.total > 0 &&  <Pagination color="secondary" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
           </Box>
       </Box>
       </>

@@ -6,6 +6,7 @@ import {
   ListItem,
   Divider,
   Button,
+  FormControl,
 } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -268,15 +269,29 @@ export const BookingSpaDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-end text-md ">
-          Điểm sử dụng:   { formatCurrency(bookingSpa.pointUsed) }
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
+            Điểm sử dụng: 
+            <Typography variant="body1" className="text-md text-end ">
+           - {formatCurrency(bookingSpa.pointUsed)}
           </Typography>
-          <Typography variant="body1" className="text-end text-md ">
-          Xu sử dụng:   { formatCurrency(bookingSpa.useCoin) }
           </Typography>
-          <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d]">
-            Tổng tiền: {formatCurrency(bookingSpa.totalPayment)}
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
+            Xu sử dụng: 
+            <Typography>
+          -  {formatCurrency(bookingSpa.useCoin)}
+              </Typography>
           </Typography>
+          <Typography
+            variant="body1"
+            className="m-1 flex flex-row items-center justify-between text-end "
+          >
+            Tổng tiền: 
+            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
+            {formatCurrency(bookingSpa.totalPayment)}
+            </Typography>
+          </Typography>
+          </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>

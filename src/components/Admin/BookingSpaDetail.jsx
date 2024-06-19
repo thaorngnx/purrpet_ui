@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   Divider,
+  FormControl,
   Button,
 } from "@mui/material";
 import { CircularProgress } from "@mui/material";
@@ -44,6 +45,8 @@ export const BookingSpaDetail = () => {
     },
     pointUsed: 0,
     useCoin: 0,
+    totalPayment: 0,
+    payMethod: "",
   });
 
   useEffect(() => {
@@ -76,6 +79,8 @@ export const BookingSpaDetail = () => {
               },
               pointUsed: bookingSpaInfo.pointUsed,
               useCoin: bookingSpaInfo.useCoin,
+              totalPayment: bookingSpaInfo.totalPayment,
+              payMethod: bookingSpaInfo.payMethod,
             });
           }
         });
@@ -115,7 +120,7 @@ export const BookingSpaDetail = () => {
         Chi tiết đơn đặt lịch spa
       </Typography>
       <Paper className="mb-10 flex w-[97%] flex-col justify-center p-8">
-        <Box className="flex flex-row items-start justify-start">
+      <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Mã đơn: </span>
@@ -124,6 +129,10 @@ export const BookingSpaDetail = () => {
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingSpa.createdAt)}
+            </Typography>
+            <Typography variant="body1">
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {bookingSpa.payMethod}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
@@ -213,18 +222,29 @@ export const BookingSpaDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-md text-end ">
-            Điểm sử dụng: {formatCurrency(bookingSpa.pointUsed)}
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
+            Điểm sử dụng: 
+            <Typography variant="body1" className="text-md text-end ">
+           - {formatCurrency(bookingSpa.pointUsed)}
           </Typography>
-          <Typography variant="body1" className="text-md text-end ">
-            Xu sử dụng: {formatCurrency(bookingSpa.useCoin)}
+          </Typography>
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
+            Xu sử dụng: 
+            <Typography>
+          -  {formatCurrency(bookingSpa.useCoin)}
+              </Typography>
           </Typography>
           <Typography
             variant="body1"
-            className="text-end text-lg font-bold text-[#ee4d2d]"
+            className="m-1 flex flex-row items-center justify-between text-end "
           >
-            Tổng tiền: {formatCurrency(bookingSpa.totalPayment)}
+            Tổng tiền: 
+            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
+            {formatCurrency(bookingSpa.totalPayment)}
+            </Typography>
           </Typography>
+          </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>

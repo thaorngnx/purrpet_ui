@@ -6,6 +6,7 @@ import {
   ListItem,
   Divider,
   Button,
+  FormControl,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -43,8 +44,9 @@ export const BookingHomeDetail = () => {
     },
     pointUsed: 0,
     useCoin: 0,
+    totalPayment: 0,
+    payMethod: "",
   });
-  const [homestay, setHomestay] = useState({});
 
   useEffect(() => {
     getBookingHomeByCode(bookingHomeCode).then((res) => {
@@ -76,6 +78,8 @@ export const BookingHomeDetail = () => {
               },
               pointUsed: bookingHomeInfo.pointUsed,
               useCoin: bookingHomeInfo.useCoin,
+              totalPayment: bookingHomeInfo.totalPayment,
+              payMethod: bookingHomeInfo.payMethod,
             });
           }
         });
@@ -115,7 +119,7 @@ export const BookingHomeDetail = () => {
         Chi tiết đơn đặt phòng
       </Typography>
       <Paper className="mb-10 flex w-[97%] flex-col justify-center p-8">
-        <Box className="flex flex-row items-start justify-start">
+      <Box className="flex flex-row items-start justify-start">
           <Box className="flex flex-1 flex-col items-start justify-start">
             <Typography variant="body1">
               <span className="font-bold">Mã đơn: </span>
@@ -124,6 +128,11 @@ export const BookingHomeDetail = () => {
             <Typography variant="body1">
               <span className="font-bold">Ngày đặt: </span>
               {formatDateTime(bookingHome.createdAt)}
+            </Typography>
+
+            <Typography variant="body1">
+              <span className="font-bold">Phương thức thanh toán: </span>
+              {bookingHome.payMethod}
             </Typography>
             <Typography variant="body1">
               <span className="font-bold">Trạng thái: </span>
@@ -237,18 +246,29 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <Typography variant="body1" className="text-md text-end ">
-            Điểm sử dụng: {formatCurrency(bookingHome.pointUsed)}
+          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
+            Điểm sử dụng: 
+            <Typography variant="body1" className="text-md text-end ">
+           - {formatCurrency(bookingHome.pointUsed)}
           </Typography>
-          <Typography variant="body1" className="text-md text-end ">
-            Xu sử dụng: {formatCurrency(bookingHome.useCoin)}
+          </Typography>
+          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
+            Xu sử dụng: 
+            <Typography>
+          -  {formatCurrency(bookingHome.useCoin)}
+              </Typography>
           </Typography>
           <Typography
             variant="body1"
-            className="text-end text-lg font-bold text-[#ee4d2d]"
+            className="m-1 flex flex-row items-center justify-between text-end "
           >
-            Tổng tiền: {formatCurrency(bookingHome.totalPayment)}
+            Tổng tiền: 
+            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
+            {formatCurrency(bookingHome.totalPayment)}
+            </Typography>
           </Typography>
+          </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
               <>

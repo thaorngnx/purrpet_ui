@@ -47,7 +47,7 @@ export const Refund = ({ notification }) => {
         });
     }
     return (
-        <Box className="flex items-center justify-center bg-[#e5e7eb]  mt-5">
+        <Box className="flex items-center justify-center bg-[#e5e7eb]  mt-5 m-[auto]">
             <FormControl className="form-control m-10">
                 <h1 className="text-center text-2xl font-bold text-gray-900 mb-4">{notification.title}</h1>
                 <h3 className="text-base font-bold text-gray-900 mb-2">Thông tin đơn hàng: {notification.orderCode}</h3>

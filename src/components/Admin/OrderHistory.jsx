@@ -37,7 +37,7 @@ export const OrderHistory = () => {
 
   useEffect(() => {
     const params = {
-      limit: 1000,
+      limit: 10,
       page: page,
       key: searchKey,
       fromDate: rangeDate.fromDate,
@@ -53,8 +53,7 @@ export const OrderHistory = () => {
   }, [page, searchKey, rangeDate]);
 
   const orders = resOrders.data;
-  let totalPage = resOrders.totalPage;
-
+  let totalPage = resOrders.pagination;
   let orderByStatus = [];
 
   if (tabOrder === 0) {
@@ -310,9 +309,9 @@ export const OrderHistory = () => {
           Không có dữ liệu
         </Typography>
       )}
-      {totalPage > 0 && (
+      {totalPage?.total > 0 && (
         <Box className="m-2 flex justify-end">
-          <Pagination count={totalPage} onChange={handleChangePage} />
+          <Pagination count={totalPage.total} onChange={handleChangePage} />
         </Box>
       )}
     </>

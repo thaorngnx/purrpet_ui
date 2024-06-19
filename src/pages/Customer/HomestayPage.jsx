@@ -124,7 +124,7 @@ export const HomestayPage = () => {
           </Typography>
           <Typography className="mb-[10px] text-xl font-black text-white text-white">
             {" "}
-            120.000 đến 140.000
+            120.000 VNĐ đến 140.000 VNĐ
           </Typography>
           <img
             src={img1}
@@ -148,7 +148,7 @@ export const HomestayPage = () => {
           </Typography>
           <Typography className="mb-[10px] text-xl font-black text-white text-white">
             {" "}
-            140.000 đến 160.000
+            140.000 VNĐ đến 160.000 VNĐ
           </Typography>
           <img
             src={img4}
@@ -170,9 +170,9 @@ export const HomestayPage = () => {
           <Typography className=" mt-[10px] text-2xl font-black text-white">
             Phòng Size L
           </Typography>
-          <Typography className="mb-[10px] text-xl font-black text-white text-white">
+          <Typography className="mb-[10px] text-xl font-black text-white ">
             {" "}
-            160.000 đến 180.000
+            160.000 VNĐ đến 180.000 VNĐ
           </Typography>
           <img
             src={img5}

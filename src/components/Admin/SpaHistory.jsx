@@ -28,7 +28,8 @@ import dayjs from "dayjs";
 export const SpaHistory = () => {
   const [resBSpas, setResBSpas] = useState([]);
   const [tabSpa, setTabSpa] = useState(0);
-  const [page, setPage] = useState(0);
+  const [pagination, setPagination] = useState('');
+  const [page, setPage] = useState(1);
   const [searchKey, setSearchKey] = useState("");
   const [rangeDate, setRangeDate] = useState({
     fromDate: null,
@@ -37,7 +38,6 @@ export const SpaHistory = () => {
 
   useEffect(() => {
     const params = {
-      limit: 10,
       page: page,
       key: searchKey,
       fromDate: rangeDate.fromDate,
@@ -48,12 +48,13 @@ export const SpaHistory = () => {
       console.log(res);
       if (res.err === 0) {
         setResBSpas(res);
+        setPagination(res.pagination);
       }
     });
   }, [page, searchKey, rangeDate]);
 
   const bSpas = resBSpas.data;
-  let totalPage = resBSpas.totalPage;
+ 
 
   let bSpaByStatus = [];
 
@@ -190,7 +191,7 @@ export const SpaHistory = () => {
             );
           })}
         </Tabs>
-        <Box className="flex max-h-96 flex-col overflow-auto">
+        <Box className="flex max-h-97 flex-col overflow-auto">
           <List>
             <ListItem key="title" className="flex">
               <Typography variant="body1" className="w-1/6 font-bold">
@@ -314,11 +315,8 @@ export const SpaHistory = () => {
           Không có dữ liệu
         </Typography>
       )}
-      {totalPage > 0 && (
-        <Box className="m-2 flex justify-end">
-          <Pagination count={totalPage} onChange={handleChangePage} />
-        </Box>
-      )}
+    
+       {pagination.total > 0 &&  <Pagination color="secondary" className="flex justify-end" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
     </>
   );
 };

@@ -28,7 +28,8 @@ import dayjs from "dayjs";
 export const HomeHistory = () => {
   const [resBHomes, setResBHomes] = useState([]);
   const [tabHome, setTabHome] = useState(0);
-  const [page, setPage] = useState(0);
+  const [pagination, setPagination] = useState('');
+  const [page, setPage] = useState(1);
   const [searchKey, setSearchKey] = useState("");
   const [rangeDate, setRangeDate] = useState({
     fromDate: null,
@@ -37,7 +38,7 @@ export const HomeHistory = () => {
 
   useEffect(() => {
     const params = {
-      limit: 10,
+      limit: 12,
       page: page,
       key: searchKey,
       fromDate: rangeDate.fromDate,
@@ -48,12 +49,12 @@ export const HomeHistory = () => {
       console.log(res);
       if (res.err === 0) {
         setResBHomes(res);
+        setPagination(res.pagination);
       }
     });
   }, [page, searchKey, rangeDate]);
 
   const bHomes = resBHomes.data;
-  let totalPage = resBHomes.totalPage;
 
   let bHomeByStatus = [];
 
@@ -190,7 +191,7 @@ export const HomeHistory = () => {
             );
           })}
         </Tabs>
-        <Box className="flex max-h-96 flex-col overflow-auto">
+        <Box className="flex max-h-97 flex-col overflow-auto">
           <List>
             <ListItem key="title" className="flex">
               <Typography
@@ -331,11 +332,7 @@ export const HomeHistory = () => {
           Không có dữ liệu
         </Typography>
       )}
-      {totalPage > 1 && (
-        <Box className="m-2 flex justify-end">
-          <Pagination count={totalPage} onChange={handleChangePage} />
-        </Box>
-      )}
+      {pagination.total > 0 &&  <Pagination color="secondary" className="flex justify-end" count={pagination.total} page={page} onChange={(event, value) => setPage(value)} />}
     </>
   );
 };
