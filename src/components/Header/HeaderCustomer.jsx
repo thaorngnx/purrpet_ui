@@ -8,15 +8,15 @@ import {
   Badge,
   TextField,
 } from "@mui/material";
-import { Socket } from 'socket.io-client';
-import { socket } from '../../../socket';
+import { Socket } from "socket.io-client";
+import { socket } from "../../../socket";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { useStore } from "../../zustand/store";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useNotificationStore } from "../../zustand/notificationStore";
 import { FormNotification } from "../Notification/FormNotification";
 import { useEffect } from "react";
@@ -42,19 +42,15 @@ export function HeaderCustomer() {
   const socketRef = useRef(Socket);
 
   useEffect(() => {
-  
-    if(customer && customer.accessToken){
+    if (customer && customer.accessToken) {
       getAllNotifications().then((res) => {
         setNotifications(res.data);
       });
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
-    if (customer &&
-      Object.keys(customer).length > 0 &&
-      customer.accessToken
-    ) {
+    if (customer && Object.keys(customer).length > 0 && customer.accessToken) {
       // Socket
       const accessToken = customer.accessToken;
       const socketClient = socket(accessToken);
@@ -68,20 +64,19 @@ export function HeaderCustomer() {
           }
         });
       }
-      socketClient.on('connect', () => {
-        console.log('socket connected');
+      socketClient.on("connect", () => {
+        console.log("socket connected");
       });
       socketClient.on(accessToken, onTradeEvent);
       return () => {
-        socketClient.off(accessToken, onTradeEvent);    
-
+        socketClient.off(accessToken, onTradeEvent);
       };
     }
   }, [customer?.accessToken]);
- 
+
   const onPaymentSuccessful = (value) => {
-    navigate('/order');
-  }
+    navigate("/order");
+  };
 
   const handleCategorySelect = (categoryCode) => {
     navigate(`/product?category=${categoryCode}`);
@@ -97,7 +92,7 @@ export function HeaderCustomer() {
     >
       <Container className="p-0">
         <Toolbar disableGutters>
-          <img src={img} alt="logo" width="15%" onClick={()=>navigate('/')}/>
+          <img src={img} alt="logo" width="15%" onClick={() => navigate("/")} />
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -120,7 +115,7 @@ export function HeaderCustomer() {
             >
               GIỚI THIỆU
             </Link>
-            <div
+            <Box
               className="relative inline-block"
               onMouseEnter={() => setStyle2(false) ?? setStyle3(false)}
             >
@@ -133,12 +128,12 @@ export function HeaderCustomer() {
                 SẢN PHẨM
               </Link>
               {style && (
-                <div
+                <Box
                   className=" t-[100%] l-[50%]  absolute z-10 mt-7  w-max translate-x-[-35%] rounded-md bg-white shadow-lg"
                   onMouseLeave={() => setStyle(false)}
                 >
                   {categories.map((category) => (
-                    <div
+                    <Box
                       key={category.categoryName}
                       className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100"
                     >
@@ -150,12 +145,12 @@ export function HeaderCustomer() {
                       >
                         {category.categoryName}
                       </Button>
-                    </div>
+                    </Box>
                   ))}
-                </div>
+                </Box>
               )}
-            </div>
-            <div
+            </Box>
+            <Box
               className="relative inline-block"
               onMouseEnter={() => setStyle(false) ?? setStyle3(false)}
             >
@@ -168,11 +163,11 @@ export function HeaderCustomer() {
               </Link>
 
               {style2 && (
-                <div
+                <Box
                   className="t-[100%] l-[50%] absolute z-10  mt-7  w-max translate-x-[-26%] rounded-md bg-white shadow-lg"
                   onMouseLeave={() => setStyle2(false)}
                 >
-                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                  <Box className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
                     <Button
                       className="text-black"
                       onClick={() => {
@@ -181,8 +176,8 @@ export function HeaderCustomer() {
                     >
                       Dịch vụ khách sạn
                     </Button>
-                  </div>
-                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                  </Box>
+                  <Box className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
                     <Button
                       className="text-black"
                       onClick={() => {
@@ -191,11 +186,11 @@ export function HeaderCustomer() {
                     >
                       Dịch vụ Spa
                     </Button>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
               )}
-            </div>
-            <div onMouseEnter={() => setStyle2(false) ?? setStyle(false)}>
+            </Box>
+            <Box onMouseEnter={() => setStyle2(false) ?? setStyle(false)}>
               <Link
                 underline="none"
                 className="s-{16px}  flex pb-[3px] font-bold text-black"
@@ -204,11 +199,11 @@ export function HeaderCustomer() {
                 ĐẶT LỊCH
               </Link>
               {style3 && (
-                <div
+                <Box
                   className="t-[100%] l-[50%] absolute z-10  mt-7  w-max translate-x-[-26%] rounded-md bg-white shadow-lg"
                   onMouseLeave={() => setStyle3(false)}
                 >
-                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                  <Box className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
                     <Button
                       className="text-black"
                       onClick={() => {
@@ -217,8 +212,8 @@ export function HeaderCustomer() {
                     >
                       Đặt lịch khách sạn
                     </Button>
-                  </div>
-                  <div className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
+                  </Box>
+                  <Box className="mx-3 flex h-[50px] flex-col items-center justify-center border-b-2 border-gray-200 hover:bg-gray-100">
                     <Button
                       className="text-black"
                       onClick={() => {
@@ -227,32 +222,35 @@ export function HeaderCustomer() {
                     >
                       Đặt lịch Spa
                     </Button>
-                  </div>
-                </div>
+                  </Box>
+                </Box>
               )}
-            </div>
+            </Box>
           </Box>
           <Box className="flex w-[35%] items-center justify-end text-center text-black">
-          <Box  className='mr-10' onMouseLeave={()=> setShowNotification(false)}> 
-              <Badge badgeContent={notiNotSeen  > 0 ? notiNotSeen  : null} color="error">
-                  <NotificationsIcon color= {showNotification ? 'disabled' : 'inherit'}
-                   onMouseEnter={() => setShowNotification(true)}
-                  />
-                </Badge>
-                {
-                  showNotification && (
-                   < FormNotification />
-                  )
-                }
-                </Box>
+            <Box
+              className="mr-10"
+              onMouseLeave={() => setShowNotification(false)}
+            >
+              <Badge
+                badgeContent={notiNotSeen > 0 ? notiNotSeen : null}
+                color="error"
+              >
+                <NotificationsIcon
+                  color={showNotification ? "disabled" : "inherit"}
+                  onMouseEnter={() => setShowNotification(true)}
+                />
+              </Badge>
+              {showNotification && <FormNotification />}
+            </Box>
             <Button
               sx={{
                 color: "black",
-                display: "block",
                 fontWeight: "bold",
                 border: "1px solid black",
                 textTransform: "none",
                 mr: 1,
+                display: { xs: "none", md: "block" },
               }}
               onClick={() => {
                 navigate("/lookup");
@@ -260,7 +258,14 @@ export function HeaderCustomer() {
             >
               Tra cứu đơn hàng
             </Button>
-            <Box className="flex items-center">
+            {/* <Box className="flex items-center"> */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
               <TextField
                 variant="outlined"
                 size="small"
@@ -280,7 +285,6 @@ export function HeaderCustomer() {
                   }}
                 />
               </Badge>
-             
             </Box>
           </Box>
         </Toolbar>

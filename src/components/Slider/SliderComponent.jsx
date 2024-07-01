@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import img1 from "../../assets/Banner.png";
 import img2 from "../../assets/Banner1.png";
 import img3 from "../../assets/Banner2.png";
@@ -7,48 +8,14 @@ import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 
 const SliderComponent = () => {
+  const images = [img1, img2, img3, img4];
   return (
     <Slide>
-      <div>
-        <div
-          className="flex h-[500px] max-h-full w-full items-center justify-center object-cover"
-          style={{
-            backgroundImage: `url(${img1})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-      </div>
-      <div>
-        <div
-          className="flex h-[500px] max-h-full w-full items-center justify-center object-cover"
-          style={{
-            backgroundImage: `url(${img2})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-      </div>
-      <div>
-        <div
-          className="flex h-[500px] max-h-full w-full items-center justify-center object-cover"
-          style={{
-            backgroundImage: `url(${img3})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-      </div>
-      <div>
-        <div
-          className="flex h-[500px] max-h-full w-full items-center justify-center object-cover"
-          style={{
-            backgroundImage: `url(${img4})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-      </div>
+      {images.map((image, index) => (
+        <Box>
+          <img src={image} alt={`img-${index}`} className="w-full" />
+        </Box>
+      ))}
     </Slide>
   );
 };
