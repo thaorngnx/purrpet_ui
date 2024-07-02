@@ -16,96 +16,154 @@ import img13 from "../../assets/meo.png";
 import img14 from "../../assets/husky.png";
 import img15 from "../../assets/husky-va-alaska-nen-nuoi-loai-nao.png";
 import MultipleSlides from "../../components/Slider/MultipleSlides";
+import { Box, Typography } from "@mui/material";
 
 export const IntroductionPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <div className="mb-[50px] grid grid-cols-2 gap-1">
-        <div>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: 1,
+          marginBottom: "50px",
+          justifyContent: "center",
+          padding: {
+            xs: "0 20px",
+            md: "0 50px",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            justifySelf: "center",
+            display: {
+              xs: "none",
+              md: "block",
+            },
+          }}
+        >
           <img
             src={img1}
             alt="Slide 3"
-            className="mr-[20px] h-[450px] max-h-full w-full object-fill"
+            sx={{
+              marginRight: "20px",
+              height: "450px",
+              maxHeight: "100%",
+              width: "100%",
+              objectFill: "fill",
+            }}
           />
-        </div>
-        <div className="ml-[20px]">
+        </Box>
+        <Box>
           <img src={img2} alt="Slide 3" />
-          <h1 className="text-center text-3xl font-bold text-[#ED952D]">
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{
+              color: "#ED952D",
+              fontSize: {
+                xs: "1.5rem",
+                md: "2rem",
+              },
+              fontWeight: "bold",
+            }}
+          >
             Giới thiệu về Petshop
-          </h1>
-          <div className="mx-auto my-0 w-[50%]  border-[1px] border-yellow-600"></div>
-          <br />
-          <p className="text-center text-xl">
+          </Typography>
+          <Box className="mx-auto mb-4 mt-2 w-[50%]  border-[1px] border-yellow-600"></Box>
+          <Typography
+            variant="body1"
+            align="center"
+            sx={{
+              fontSize: {
+                xs: "1rem",
+                md: "1.25rem",
+              },
+              textAlign: "justify",
+            }}
+          >
             Chào mừng đến với trang web của chúng tôi! Chúng tôi là nền tảng đa
             dịch vụ cho thú cưng, cung cấp sản phẩm chất lượng, dịch vụ spa và
             đặt phòng homestay tiện nghi. Hãy khám phá ngay hôm nay để chăm sóc
             tốt nhất cho thú cưng của bạn!
-          </p>
-        </div>
-      </div>
-      <h1 className="  text-center text-3xl font-bold text-[#ED952D]">
+          </Typography>
+        </Box>
+      </Box>
+      <Typography
+        variant="h4"
+        align="center"
+        sx={{
+          color: "#ED952D",
+          fontSize: {
+            xs: "1.5rem",
+            md: "2rem",
+          },
+          fontWeight: "bold",
+        }}
+      >
         CHÚNG TÔI CUNG CẤP
-      </h1>
-      <div className="relative">
-        <div className="relative z-[1] my-[60px] grid grid-cols-2 justify-items-center gap-[5rem]  ">
-          <div className="w-[400px]">
-            <div className="flex  justify-end">
+      </Typography>
+      <Box className="relative">
+        <Box className="relative z-[1] my-[60px] grid grid-cols-2 justify-items-center gap-[5rem]  ">
+          <Box className="w-[400px]">
+            <Box className="flex  justify-end">
               <h1 className="text-center text-xl font-bold ">
                 Cung Cấp Sản Phẩm Với Mức Gía Cả Phải Chăng
               </h1>
               <img src={img3} alt="Slide 3" className="hover:rotate-45" />
-            </div>
+            </Box>
             <p className="text-justify">
               Ngoài các yếu tố về chất lượng sản phẩm cửa hàng uy tín, chuyên
               nghiệp cần mang đến sản phẩm với mức giá cả phải chăng đến khách
               hàng. Bạn có thể tham...
             </p>
-          </div>
-          <div className="w-[400px]">
-            <div className="flex justify-end">
+          </Box>
+          <Box className="w-[400px]">
+            <Box className="flex justify-end">
               <h1 className="text-center text-xl font-bold ">
                 Nhân viên tư vấn nhiệt tình, am hiểu về thú cưng
               </h1>
               <img src={img4} alt="Slide 3" className="hover:rotate-45" />
-            </div>
+            </Box>
             <p className="text-justify">
               Bên cạnh các sản phẩm cung cấp đến khách hàng bạn có thể căn cứ
               vào thái độ của nhân viên để đánh giá cửa hàng uy tín. Nhân viên
               cửa hàng cần có thái...
             </p>
-          </div>
-          <div className="w-[400px]">
-            <div className="flex justify-end">
+          </Box>
+          <Box className="w-[400px]">
+            <Box className="flex justify-end">
               <h1 className="text-center text-xl font-bold ">
                 Cung cấp sản phẩm chất lượng
               </h1>
               <img src={img5} alt="Slide 3" className="hover:rotate-45" />
-            </div>
+            </Box>
             <p className="text-justify">
               Một trong những tiêu chí quan trọng để đánh giá nhà cung cấp thức
               ăn thú cưng uy tín chính là mang đến sản phẩm chất lượng. Các sản
               phẩm như thức ăn, sữa...
             </p>
-          </div>
-          <div className="w-[400px]">
-            <div className="flex justify-end">
+          </Box>
+          <Box className="w-[400px]">
+            <Box className="flex justify-end">
               <h1 className="text-center text-xl font-bold ">
                 Cung cấp sản phẩm đa dạng, phong phú
               </h1>
               <img src={img6} alt="Slide 3" className="hover:rotate-45" />
-            </div>
+            </Box>
             <p className="text-justify">
               Mỗi loại thú cưng lại có đặc điểm và thói quen riêng biệt. Các đơn
               vị cung cấp thức ăn chó mèo uy tín cần mang đến đầy đủ các sản
               phẩm đáp ứng nhu cầu...
             </p>
-          </div>
-        </div>
-        <div className="absolute left-0 top-0 flex w-full justify-center">
+          </Box>
+        </Box>
+        <Box className="absolute left-0 top-0 flex w-full justify-center">
           <img src={img7} alt="Slide 3" className="relative z-[10] " />
-        </div>
-      </div>
+        </Box>
+      </Box>
       <MultipleSlides
         img1={img8}
         img2={img9}

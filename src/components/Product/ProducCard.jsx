@@ -44,7 +44,20 @@ export const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card sx={{ width: "200px", m: 2 }}>
+    <Card
+      sx={{
+        width: {
+          xs: "150px",
+          sm: "170px",
+          md: "200px",
+        },
+        m: {
+          xs: "0 1px 1px 0",
+          sm: "0 2px 2px 0",
+          md: "0 4px 4px 0",
+        },
+      }}
+    >
       <CardActionArea
         sx={{ display: "flex", flexDirection: "column", position: "relative" }}
         onMouseEnter={handleMouseEnter}
@@ -63,7 +76,13 @@ export const ProductCard = ({ product }) => {
           key={product.purrPetCode}
           image={product.images[0]?.path}
           alt={product.productName}
-          sx={{ height: "200px" }}
+          sx={{
+            height: {
+              xs: "150px",
+              sm: "170px",
+              md: "200px",
+            },
+          }}
         />
         <CardContent className="w-full p-1">
           <Typography
@@ -110,14 +129,16 @@ export const ProductCard = ({ product }) => {
               </Typography>
             </Box>
           </Box>
-          <Box className="flex flex-row justify-between">
+          <Box className="flex flex-row items-center justify-between">
             <Typography variant="body2" className="text-gray-500">
               Đã bán: {product.orderQuantity}
             </Typography>
-            <Typography variant="body2" className="text-gray-500">
-              {product.averageRating}
+            <Box className="flex flex-row items-center">
+              <Typography variant="body2" className="text-gray-500">
+                {product.averageRating}
+              </Typography>
               <StarRateIcon style={{ color: "#f17359" }} />
-            </Typography>
+            </Box>
           </Box>
         </CardContent>
         {isHover && (
