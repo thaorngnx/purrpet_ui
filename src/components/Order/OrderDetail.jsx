@@ -28,6 +28,7 @@ import * as CONST from "../../constants";
 import { UploadImage, UploadImageRefund } from "../Image/UploadImage";
 import { requestRefund } from "../../api/pay";
 import { createReview, getReviewByCodeAndCustomer } from "../../api/review";
+import { el } from "date-fns/locale";
 
 export const OrderDetail = () => {
   const navigate = useNavigate();
@@ -35,7 +36,11 @@ export const OrderDetail = () => {
   const { orderCode } = useParams();
   const [open, setOpen] = useState(false);
   const [openRating, setOpenRating] = useState(false);
-  const [request, setRequest] = useState("");
+  const [request, setRequest] = useState({
+    message: "",
+    images: [],
+  
+  });
   const [error, setError] = useState({});
   const [sendRequest, setSendRequest] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({
@@ -206,7 +211,16 @@ export const OrderDetail = () => {
   };
 
   const handleRefund = () => {
-    console.log("refund");
+   
+   if (request.message === "") {
+      setError({ message: "Vui lòng nhập lý do !" });
+      console.log("error", error);
+      return;
+    }
+    else if (request.images.length === 0) {
+      setError({ images: "Vui lòng chọn hình ảnh !" });
+      return;
+    }
     requestRefund({
       orderCode: order.purrPetCode,
       message: request.message,
@@ -244,7 +258,7 @@ export const OrderDetail = () => {
         Chi tiết đơn hàng
       </Typography>
       <Paper className="mb-10 flex w-[90%] flex-col justify-center p-8">
-        {order.status === CONST.STATUS_ORDER.WAITING_FOR_PAY && (
+        {(order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.status === CONST.STATUS_ORDER.NEW) && (
           <>
             <Typography
               variant="body1"
@@ -436,9 +450,9 @@ export const OrderDetail = () => {
           </FormControl>
 
           <Box className="mt-3 flex flex-row justify-end">
-            {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY &&
+            {
               order.status === CONST.STATUS_ORDER.NEW &&
-              order.payMethod === CONST.PAYMENT_METHOD.VNPAY && (
+              (
                 <>
                   <Button
                     variant="contained"
@@ -447,16 +461,19 @@ export const OrderDetail = () => {
                   >
                     Hủy đơn
                   </Button>
-                  <Button
-                    variant="contained"
-                    className="ml-3 bg-black"
-                    onClick={handlePaymentClick}
-                  >
-                    Thanh toán
-                  </Button>
+                {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.payMethod === CONST.PAYMENT_METHOD.VNPAY &&(
+                      <Button
+                      variant="contained"
+                      className="ml-3 bg-black"
+                      onClick={handlePaymentClick}
+                    >
+                      Thanh toán
+                    </Button>
+                    )
+                }
                 </>
               )}
-            {order.status === CONST.STATUS_ORDER.NEW && (
+            {/* {order.status === CONST.STATUS_ORDER.NEW  (
               <Button
                 variant="contained"
                 className="ml-3 bg-black"
@@ -464,7 +481,7 @@ export const OrderDetail = () => {
               >
                 Huỷ Đơn
               </Button>
-            )}
+            )} */}
             {order.status === CONST.STATUS_ORDER.DONE && (
               <Button
                 variant="contained"
@@ -548,6 +565,15 @@ export const OrderDetail = () => {
             <DialogTitle id="alert-dialog-title">
               {"Gửi yêu cầu hoàn tiền"}
             </DialogTitle>
+            {
+             
+               error.message && (
+                <DialogContentText id="alert-dialog-description" className="text-[#FF0000] ml-5 w-[md] "> 
+
+                  {error.message}
+                </DialogContentText>
+              )
+            }
             <DialogContent id="alert-dialog-description">
               <TextareaAutosize
                 aria-label="minimum height"
@@ -555,8 +581,8 @@ export const OrderDetail = () => {
                 placeholder="Nhập lý do hoàn tiền"
                 style={{ width: "400px" }}
                 onChange={(e) =>
-                  setRequest({ ...request, message: e.target.value })
-                }
+                  setRequest({ ...request, message: e.target.value }) && setError({ message: "" })
+                 }
               />
               <UploadImageRefund
                 request={request}

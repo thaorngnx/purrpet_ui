@@ -122,6 +122,12 @@ export const TableProduct = () => {
       align: "right",
       minWidth: 120,
       type: "number",
+      valueGetter: (param) =>{
+        if(param.row.discountQuantity > 0)
+         {
+          return param.row.priceDiscount;
+         }
+      }
     },
     {
       field: "discountQuantity",
@@ -131,6 +137,12 @@ export const TableProduct = () => {
       align: "right",
       minWidth: 100,
       type: "number",
+      valueGetter: (param) =>{
+        if(param.row.discountQuantity > 0)
+         {
+          return param.row.discountQuantity;
+         }
+      }
     },
     {
       field: "categoryName",

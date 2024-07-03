@@ -50,7 +50,7 @@ export const ProductCard = ({ product }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {product.priceDiscount > 0 && (
+        {product.discountQuantity > 0 && (
           <Typography
             variant="body2"
             className="absolute right-2 top-2 bg-red-600 px-2 py-1 font-bold text-white"
@@ -92,7 +92,7 @@ export const ProductCard = ({ product }) => {
               </Typography>
             )}
             <Box className="flex flex-col">
-              {product.priceDiscount > 0 && (
+              {product.discountQuantity > 0 && (
                 <Typography variant="body2" className="font-bold text-red-600">
                   {formatCurrency(product.priceDiscount)}
                 </Typography>

@@ -131,7 +131,8 @@ export const ListCart = () => {
           quantity: product.quantity + 1,
         });
       }else{
-  if (product.quantity < product.inventory && product.discountQuantity === null) {
+        console.log(product.discountQuantity);
+  if (product.quantity < product.inventory && product.discountQuantity === undefined) {
   
       const newProductCart = productCart.map((item) => {
         if (item.purrPetCode === product.purrPetCode) {
