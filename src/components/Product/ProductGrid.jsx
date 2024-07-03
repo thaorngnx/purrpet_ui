@@ -37,12 +37,11 @@ export const ProductGrid = () => {
       key: categoryCode || searchKey,
       order: sort,
     };
-    getActiveProducts(params).then((res) =>
-   {  
+    getActiveProducts(params).then((res) => {
       setResProducts(res);
     });
   }, [page, categoryCode, sort, searchKey]);
- 
+
   const products = resProducts.data || [];
   const totalPage = resProducts.pagination.total || 0;
 
@@ -59,11 +58,10 @@ export const ProductGrid = () => {
   const handlePage = (event, value) => {
     setPage(value);
   };
-  
 
   return (
     <Box className="min-h-screen w-[100%] flex-col">
-      <Box className="mx-4 flex justify-end">
+      <Box className="mx-4 mb-2 flex justify-end">
         <FormControl className="w-[150px]">
           <InputLabel id="select-label" className="text-sm">
             Sắp xếp
@@ -86,9 +84,21 @@ export const ProductGrid = () => {
           </Select>
         </FormControl>
       </Box>
-      <Grid container spacing={2} className="flex justify-center">
+      <Grid
+        container
+        spacing={1}
+        //max columns
+        columns={{
+          xs: 1,
+          sm: 2,
+          md: 3,
+          lg: 4,
+          xl: 5,
+        }}
+        className="flex justify-start"
+      >
         {products.map((product) => (
-          <Grid item key={product.purrPetCode} className="flex justify-center">
+          <Grid item key={product.purrPetCode} className="">
             <ProductCard product={product} />
           </Grid>
         ))}

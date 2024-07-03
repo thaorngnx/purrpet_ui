@@ -113,20 +113,84 @@ export const ProductDetail = () => {
   return (
     <>
       <Box className="my-5 flex flex-col items-center">
-        <Typography variant="h3" className="mb-5 text-3xl font-bold">
+        <Typography
+          variant="h3"
+          // className="mb-5 text-3xl font-bold"
+          sx={{
+            marginBottom: {
+              xs: "10px",
+              md: "20px",
+            },
+            fontSize: {
+              xs: "28px",
+              md: "32px",
+            },
+            fontWeight: "bold",
+          }}
+        >
           Chi tiết sản phẩm
         </Typography>
-        <Paper className="flex w-[97%] flex-col items-center justify-center p-5">
-          <Box sx={{ display: "flex", flexDirection: "row", height: "300px" }}>
-            <Box sx={{ width: "50%" }}>
+        <Paper
+          // className="flex w-[97%] flex-col items-center justify-center p-5"
+          sx={{
+            width: {
+              xs: "92%",
+              sm: "97%",
+            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: {
+              xs: "10px",
+              md: "20px",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Box>
               <img
                 src={product.images?.[0]?.path}
                 alt=""
-                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                style={{
+                  maxHeight: "400px",
+                  objectFit: "contain",
+                }}
               />
             </Box>
-            <Box className="m-2">
-              <Typography variant="h4" className="mb-2 text-2xl font-bold">
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                padding: 2,
+              }}
+            >
+              <Typography
+                variant="h4"
+                // className="mb-2 text-2xl font-bold"
+                sx={{
+                  marginBottom: {
+                    xs: "10px",
+                    md: "20px",
+                  },
+                  fontSize: {
+                    xs: "20px",
+                    md: "28px",
+                  },
+                  fontWeight: "bold",
+                }}
+              >
                 {product.productName}
               </Typography>
               <Box className="mb-2 flex flex-row justify-between">
@@ -246,7 +310,11 @@ export const ProductDetail = () => {
               <Tab label="Mô tả" onClick={handleDescriptionTab} />
               <Tab label="Đánh giá" onClick={handleReviewTab} />
             </Tabs>
-            <Box sx={{ p: 2 }}>
+            <Box
+              sx={{
+                paddingY: 2,
+              }}
+            >
               {descriptionTab && (
                 <Typography
                   variant="body1"
@@ -257,8 +325,17 @@ export const ProductDetail = () => {
                 <>
                   {reviews.map((review) => (
                     <Box className="my-3" key={review._id}>
-                      <Typography variant="body1" className="text-lg font-bold">
-                        {review.user.username}
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: {
+                            xs: "0.75rem",
+                            md: "1rem",
+                          },
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {review.user.name}
                       </Typography>
                       <Rating
                         name="read-only"
@@ -266,7 +343,15 @@ export const ProductDetail = () => {
                         readOnly
                         size="small"
                       />
-                      <Typography variant="body1" className="text-lg">
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontSize: {
+                            xs: "0.75rem",
+                            md: "1rem",
+                          },
+                        }}
+                      >
                         {review.comment}
                       </Typography>
                     </Box>

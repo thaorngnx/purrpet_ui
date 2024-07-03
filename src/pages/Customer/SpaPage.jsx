@@ -24,7 +24,6 @@ import MultipleSlides from "../../components/Slider/MultipleSlides";
 export const SpaPage = () => {
   const navigate = useNavigate();
   const images = [
-  
     {
       imgPath: img11,
       alt: "Image 8",
@@ -56,19 +55,18 @@ export const SpaPage = () => {
       <SliderComponent />
 
       <img className=" mt-10" src={img10} alt="img10" />
-      <Typography className="mt-10 text-4xl font-bold text-[#ED952D] flex justify-center">
-          Dịch vụ Spa - PurrPet
-        </Typography>
-     
-        <img className="mt-10 w-[80%] m-[auto]" src={ing1} alt="img1" />
-      
-     
-        <Typography className="mt-10 text-center text-xl font-bold text-[#ED952D]">
-          Giá có thể bị thay đổi theo từng thời điểm
-          <br /> Để biết thêm thông tin chi tiết, bạn có thể vào mục đặt lịch để
-          xem giá cụ thể.
-        </Typography>
-    
+      <Typography className="mt-10 flex justify-center text-4xl font-bold text-[#ED952D]">
+        Dịch vụ Spa - PurrPet
+      </Typography>
+
+      <img className="m-[auto] mt-10 w-[80%]" src={ing1} alt="img1" />
+
+      <Typography className="mt-10 text-center text-xl font-bold text-[#ED952D]">
+        Giá có thể bị thay đổi theo từng thời điểm
+        <br /> Để biết thêm thông tin chi tiết, bạn có thể vào mục đặt lịch để
+        xem giá cụ thể.
+      </Typography>
+
       <Typography className="flex justify-center">
         <Button
           onClick={() => {
@@ -80,20 +78,18 @@ export const SpaPage = () => {
         </Button>
       </Typography>
       <Box>
-        <Typography className="mt-10 text-4xl font-bold text-[#ED952D] flex justify-center">
-          Một số hình ảnh before - after của khách hàng  
+        <Typography className="mt-10 flex justify-center text-4xl font-bold text-[#ED952D]">
+          Một số hình ảnh before - after của khách hàng
         </Typography>
-        <Box className="flex justify-center flex-wrap">
-          {
-            images.map((item) => (
-              <img
-                className="m-[20px] w-[40%] "
-                src={item.imgPath}
-                alt={item.alt}
-              />
-            ))
-          }
-          </Box>
+        <Box className="flex flex-wrap justify-center">
+          {images.map((item) => (
+            <img
+              className="m-[20px] w-[40%] "
+              src={item.imgPath}
+              alt={item.alt}
+            />
+          ))}
+        </Box>
       </Box>
       <MultipleSlides
         img1={img2}
