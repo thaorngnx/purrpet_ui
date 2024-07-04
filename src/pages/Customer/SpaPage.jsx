@@ -1,6 +1,6 @@
 import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import SliderComponent from "../../components/Slider/SliderComponent";
-import ing1 from "../../assets/Pricespa.png";
+import img1 from "../../assets/Pricespa.png";
 import { Button, Typography, Box } from "@mui/material";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
 import { useNavigate } from "react-router-dom";
@@ -54,17 +54,71 @@ export const SpaPage = () => {
       <HeaderCustomer />
       <SliderComponent />
 
-      <img className=" mt-10" src={img10} alt="img10" />
-      <Typography className="mt-10 flex justify-center text-4xl font-bold text-[#ED952D]">
+      <img
+        style={{
+          marginTop: {
+            sm: "10px",
+            md: "20px",
+          },
+        }}
+        src={img10}
+        alt="img10"
+      />
+      <Typography
+        sx={{
+          my: {
+            xs: "1rem",
+            sm: "2rem",
+            md: "2rem",
+          },
+          fontSize: {
+            xs: "1.5rem",
+            sm: "2rem",
+            md: "2.5rem",
+          },
+          fontWeight: "bold",
+          color: "#ED952D",
+          textAlign: "center",
+        }}
+      >
         Dịch vụ Spa - PurrPet
       </Typography>
 
-      <img className="m-[auto] mt-10 w-[80%]" src={ing1} alt="img1" />
+      <img
+        src={img1}
+        alt="img1"
+        style={{
+          height: "auto",
+          borderRadius: "30px",
+          paddingInline: "20px",
+        }}
+      />
 
-      <Typography className="mt-10 text-center text-xl font-bold text-[#ED952D]">
+      <Typography
+        sx={{
+          my: {
+            xs: "1rem",
+            sm: "2rem",
+            md: "2rem",
+          },
+          fontSize: {
+            xs: "1rem",
+            sm: "1.5rem",
+            md: "2rem",
+          },
+          fontWeight: "bold",
+          textAlign: "center",
+          px: {
+            xs: "10px",
+            sm: "20px",
+            md: "30px",
+          },
+        }}
+      >
         Giá có thể bị thay đổi theo từng thời điểm
-        <br /> Để biết thêm thông tin chi tiết, bạn có thể vào mục đặt lịch để
-        xem giá cụ thể.
+        <br />
+        Để biết thêm thông tin chi tiết, bạn có thể vào mục đặt lịch để xem giá
+        cụ thể.
       </Typography>
 
       <Typography className="flex justify-center">
@@ -72,19 +126,44 @@ export const SpaPage = () => {
           onClick={() => {
             navigate(`/booking/spa`);
           }}
-          className="my-10 bg-[#ED952D] text-center text-xl  font-bold  text-white hover:bg-violet-600 "
+          className="bg-[#ED952D] text-center text-xl font-bold text-white hover:bg-violet-600"
         >
           Đặt lịch ngay!
         </Button>
       </Typography>
       <Box>
-        <Typography className="mt-10 flex justify-center text-4xl font-bold text-[#ED952D]">
+        <Typography
+          sx={{
+            textAlign: "center",
+            fontSize: {
+              xs: "1.5rem",
+              sm: "2rem",
+              md: "2.5rem",
+            },
+            fontWeight: "bold",
+            color: "#ED952D",
+            mt: {
+              xs: "20px",
+              sm: "30px",
+              md: "30px",
+            },
+          }}
+        >
           Một số hình ảnh before - after của khách hàng
         </Typography>
-        <Box className="flex flex-wrap justify-center">
+        <Box className="my-2 flex flex-wrap justify-center">
           {images.map((item) => (
             <img
-              className="m-[20px] w-[40%] "
+              style={{
+                margin: {
+                  xs: "10px",
+                  sm: "20px",
+                  md: "30px",
+                },
+                width: "25%",
+                height: "auto",
+                borderRadius: "20px",
+              }}
               src={item.imgPath}
               alt={item.alt}
             />

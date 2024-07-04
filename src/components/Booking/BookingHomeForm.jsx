@@ -56,8 +56,8 @@ export const BookingHomeForm = () => {
     dateCheckIn: null,
     dateCheckOut: null,
     homePrice: 0,
-    userPoint:0,
-    useCoin:0,
+    userPoint: 0,
+    useCoin: 0,
     payMethod: CONST.PAYMENT_METHOD.VNPAY,
   });
   const [disableRadio, setDisableRadio] = useState({
@@ -199,7 +199,7 @@ export const BookingHomeForm = () => {
   const handleDateCheckInChange = (event) => {
     const newDate = dayjs(event).startOf("day");
     let checkOut = dayjs(bookingInfo.dateCheckOut);
-    
+
     if (newDate.isAfter(checkOut) || newDate.isSame(checkOut)) {
       checkOut = null;
     }
@@ -234,8 +234,11 @@ export const BookingHomeForm = () => {
   };
 
   const handleCustomerInfo = (customerInfo) => {
-    const total = bookingInfo.bookingHomePrice - customerInfo.useCoin - customerInfo.userPoint;
-    if(total === 0){
+    const total =
+      bookingInfo.bookingHomePrice -
+      customerInfo.useCoin -
+      customerInfo.userPoint;
+    if (total === 0) {
       setBookingInfo({
         ...bookingInfo,
         customerCode: customerInfo.customerCode,
@@ -248,7 +251,7 @@ export const BookingHomeForm = () => {
         VNPAY: true,
         COIN: false,
       });
-    }else{
+    } else {
       setBookingInfo({
         ...bookingInfo,
         customerCode: customerInfo.customerCode,
@@ -262,7 +265,6 @@ export const BookingHomeForm = () => {
         COIN: true,
       });
     }
-   
   };
 
   const handleConfirmInfo = (confirm) => {
@@ -284,14 +286,13 @@ export const BookingHomeForm = () => {
       useCoin: bookingInfo.useCoin,
     }).then((res) => {
       if (res.err === 0) {
-        if(bookingInfo.payMethod === CONST.PAYMENT_METHOD.COIN){
+        if (bookingInfo.payMethod === CONST.PAYMENT_METHOD.COIN) {
           navigate(`/bookingHome/${res.data.purrPetCode}`);
           return;
-        }else{
+        } else {
           createPaymentUrl({
             orderCode: res.data.purrPetCode,
-            returnUrl: 'vnpay-returnForCus'
-            
+            returnUrl: "vnpay-returnForCus",
           }).then((res) => {
             console.log(res);
             if (res.err === 0) {
@@ -299,34 +300,54 @@ export const BookingHomeForm = () => {
             }
           });
         }
-        }
-        // navigate(`/bookingHome/${res.data.purrPetCode}`);
-        // navigate("/");
+      }
+      // navigate(`/bookingHome/${res.data.purrPetCode}`);
+      // navigate("/");
       setMessage(res.message);
     });
   };
 
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column" }}
-      className="mb-3 min-h-screen"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        mb: 3,
+        minHeight: "100vh",
+      }}
     >
       <Typography
         variant="h5"
         component="h5"
-        className="m-5 text-center font-bold"
+        sx={{
+          m: 3,
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: {
+            xs: "1.2rem",
+            sm: "1.5rem",
+            md: "1.7rem",
+          },
+        }}
       >
         Thông tin đặt phòng
       </Typography>
       <Paper
         sx={{
-          width: "80%",
-          ml: "auto",
-          mr: "auto",
+          width: {
+            xs: "95%",
+            sm: "85%",
+            md: "75%",
+          },
+          mx: "auto",
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          p: 5,
+          p: {
+            xs: 3,
+            sm: 5,
+            md: 7,
+          },
           mb: 5,
         }}
       >
@@ -334,12 +355,31 @@ export const BookingHomeForm = () => {
           variant="h6"
           gutterBottom
           component="div"
-          className="text-center font-bold"
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1rem",
+              sm: "1.2rem",
+              md: "1.5rem",
+            },
+          }}
         >
           Thông tin thú cưng
         </Typography>
         <FormControl>
-          <FormLabel className="mb-2 font-bold text-black">
+          <FormLabel
+            sx={{
+              mb: 1,
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
             Tên thú cưng:
           </FormLabel>
           <TextField
@@ -359,7 +399,18 @@ export const BookingHomeForm = () => {
           />
         </FormControl>
         <FormControl>
-          <FormLabel className="mt-2 font-bold text-black">
+          <FormLabel
+            sx={{
+              mt: 1,
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
             Thú cưng là:
           </FormLabel>
           <RadioGroup
@@ -374,13 +425,30 @@ export const BookingHomeForm = () => {
                 value={value}
                 control={<Radio />}
                 label={value}
+                sx={{
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                }}
               />
             ))}
           </RadioGroup>
         </FormControl>
         {bookingInfo.petType && (
           <FormControl>
-            <FormLabel className="font-bold text-black">
+            <FormLabel
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
               Bạn muốn đặt phòng:
             </FormLabel>
             <RadioGroup
@@ -404,7 +472,17 @@ export const BookingHomeForm = () => {
 
         {bookingInfo.categoryCode && (
           <FormControl>
-            <FormLabel className="font-bold text-black">
+            <FormLabel
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
               Chọn loại phòng:
             </FormLabel>
             <RadioGroup
@@ -427,7 +505,18 @@ export const BookingHomeForm = () => {
         )}
         {bookingInfo.homeSize !== "" && (
           <FormControl>
-            <FormLabel className="mb-3 flex font-bold text-black">
+            <FormLabel
+              sx={{
+                mb: 2,
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
               Chọn ngày đặt phòng:
             </FormLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -475,7 +564,19 @@ export const BookingHomeForm = () => {
             <Typography
               variant="body1"
               name="bookingHomePrice"
-              className="mt-3 flex justify-end font-bold"
+              sx={{
+                mt: 2,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "end",
+                fontWeight: "bold",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+                color: "red",
+              }}
             >
               Tổng tiền: {formatCurrency(bookingInfo.bookingHomePrice)}
             </Typography>
@@ -486,7 +587,11 @@ export const BookingHomeForm = () => {
           !openCustomerInfoForm && (
             <BigHoverTransformButton
               onClick={handleOpenCustomerForm}
-              className="m-auto my-3"
+              // className="m-auto my-3"
+              sx={{
+                m: "auto",
+                mt: 2,
+              }}
             >
               Tiếp tục
             </BigHoverTransformButton>
@@ -499,88 +604,234 @@ export const BookingHomeForm = () => {
           totalPrice={bookingInfo.bookingHomePrice}
         />
       )}
-      {
-        validateObject(bookingInfo) && showBtnConfirmBook && (
-          <FormControl>
-          <FormControl    sx={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          ml: 20,
-          mt:5,
-        }}>
-          <FormLabel className="mb-2 font-bold text-black">
-            Phương thức thanh toán:
-          </FormLabel>
-          <RadioGroup
-            name="payMethod"
-            value={bookingInfo.payMethod}
-            sx={{ display: "flex", flexDirection: "row" }}
+      {validateObject(bookingInfo) && showBtnConfirmBook && (
+        <FormControl
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            justifyItems: "center",
+            width: {
+              xs: "95%",
+              sm: "85%",
+              md: "75%",
+            },
+            mx: "auto",
+            px: {
+              xs: 3,
+              sm: 5,
+              md: 7,
+            },
+            mt: 3,
+          }}
+        >
+          <FormControl
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            <FormControlLabel
-              value={CONST.PAYMENT_METHOD.VNPAY}
-              control={<Radio />}
-              label="VNPAY"
-               disabled = {disableRadio.VNPAY}
-            />
-             <FormControlLabel
-              value={CONST.PAYMENT_METHOD.COIN}
-              control={<Radio />}
-              label="Ví xu"
-               disabled = {disableRadio.COIN}
-            />
-          </RadioGroup>
-        </FormControl >
-        <FormControl   sx={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          ml: 15,
-          p:5
-        }}>
-          <FormLabel className="mt-2 font-bold text-black text-[18px]">
-            Thanh toán:
-          </FormLabel>
-          <FormControl  sx={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "cloumn",
-          mr:7
-          
-        }} >
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
-              Tổng tiền phòng: 
-              <Typography variant="body1" className="m-1 text-end">
-               {formatCurrency(bookingInfo.bookingHomePrice)}
-               </Typography>
-            </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
-              Sử dụng điểm:
-              <Typography variant="body1" className="m-1 text-end">
-              - {formatCurrency( bookingInfo.userPoint)}
-               </Typography>
-            </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center justify-between">
-              Sử dụng ví xu:   
-              <Typography variant="body1" className="m-1 text-end">
-              -  {formatCurrency( bookingInfo.useCoin)}
-               </Typography>
-            </Typography>
-            <Typography variant="body1" className="m-1 text-end flex flex-row items-center font-bold text-black text-[17px] justify-between">
-              Thành tiền: 
-              <Typography variant="body1" className="m-1 text-end text-[#800000] font-bold">
-              {formatCurrency(bookingInfo.bookingHomePrice - bookingInfo.userPoint - bookingInfo.useCoin)}
-               </Typography>
-            </Typography>
-            </FormControl>
+            <FormLabel
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
+              Phương thức thanh toán:
+            </FormLabel>
+            <RadioGroup
+              name="payMethod"
+              value={bookingInfo.payMethod}
+              sx={{ display: "flex", flexDirection: "row" }}
+            >
+              <FormControlLabel
+                value={CONST.PAYMENT_METHOD.VNPAY}
+                control={<Radio />}
+                label="VNPAY"
+                disabled={disableRadio.VNPAY}
+              />
+              <FormControlLabel
+                value={CONST.PAYMENT_METHOD.COIN}
+                control={<Radio />}
+                label="Ví xu"
+                disabled={disableRadio.COIN}
+              />
+            </RadioGroup>
+          </FormControl>
+          <FormControl
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <FormLabel
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
+              Thanh toán:
+            </FormLabel>
+            <FormControl
+              sx={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "cloumn",
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "end",
+                  mt: 1,
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                }}
+              >
+                Tổng tiền phòng:
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "0.9rem",
+                      md: "1rem",
+                    },
+                  }}
+                >
+                  {formatCurrency(bookingInfo.bookingHomePrice)}
+                </Typography>
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "end",
+                  mt: 1,
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                }}
+              >
+                Sử dụng điểm:
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "0.9rem",
+                      md: "1rem",
+                    },
+                  }}
+                >
+                  - {formatCurrency(bookingInfo.userPoint)}
+                </Typography>
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "end",
+                  mt: 1,
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                }}
+              >
+                Sử dụng ví xu:
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "0.9rem",
+                      md: "1rem",
+                    },
+                  }}
+                >
+                  - {formatCurrency(bookingInfo.useCoin)}
+                </Typography>
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  textAlign: "end",
+                  mt: 1,
+                  fontSize: {
+                    xs: "0.8rem",
+                    sm: "0.9rem",
+                    md: "1rem",
+                  },
+                  fontWeight: "bold",
+                  color: "red",
+                }}
+              >
+                Thành tiền:
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    fontSize: {
+                      xs: "0.8rem",
+                      sm: "0.9rem",
+                      md: "1rem",
+                    },
+                    fontWeight: "bold",
+                    color: "red",
+                  }}
+                >
+                  {formatCurrency(
+                    bookingInfo.bookingHomePrice -
+                      bookingInfo.userPoint -
+                      bookingInfo.useCoin,
+                  )}
+                </Typography>
+              </Typography>
             </FormControl>
           </FormControl>
-        )
-      }
+        </FormControl>
+      )}
       {validateObject(bookingInfo) && showBtnConfirmBook && (
         <BigHoverTransformButton
           onClick={handleConfirmBooking}
-          className="m-auto my-3"
+          sx={{
+            m: "auto",
+            mt: 2,
+          }}
         >
           Xác nhận đặt lịch
         </BigHoverTransformButton>

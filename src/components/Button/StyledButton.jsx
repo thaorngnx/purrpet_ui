@@ -2,7 +2,11 @@ import { Button } from "@mui/material";
 import { styled } from "@mui/system";
 
 export const BigHoverButton = styled(Button)({
-  fontSize: "16px",
+  fontSize: {
+    xs: "12px",
+    sm: "14px",
+    md: "16px",
+  },
   color: "black",
   display: "block",
   fontWeight: "bold",
@@ -32,7 +36,11 @@ export const MiniHoverButton = styled(Button)({
 });
 
 export const BigHoverFitContentButton = styled(Button)({
-  fontSize: "16px",
+  fontSize: {
+    xs: "12px",
+    sm: "14px",
+    md: "16px",
+  },
   color: "black",
   display: "block",
   fontWeight: "bold",
@@ -47,7 +55,11 @@ export const BigHoverFitContentButton = styled(Button)({
 });
 
 export const BigHoverTransformButton = styled(Button)({
-  fontSize: "15px",
+  fontSize: {
+    xs: "12px",
+    sm: "14px",
+    md: "16px",
+  },
   color: "black",
   display: "block",
   width: "fit-content",

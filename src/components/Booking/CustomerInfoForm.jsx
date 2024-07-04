@@ -17,11 +17,9 @@ import {
   validatePhone,
 } from "../../utils/validationData";
 import { formatCurrency } from "../../utils/formatData";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { FormGroup, FormControlLabel, Switch } from "@mui/material";
 import { el } from "date-fns/locale";
-
-
 
 export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   const customerState = useStore((state) => state.customerState.data);
@@ -73,14 +71,13 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   }, [editInfo]);
   useEffect(() => {
     const total = totalPrice - customerInfo.userPoint;
-    if (customerState?.coin > total ) {
+    if (customerState?.coin > total) {
       setShowCoin({ showCoin: true, coin: total });
-    }else{
+    } else {
       setShowCoin({ showCoin: true, coin: customerState?.coin });
     }
-  }
-  ), [showCoin];
- 
+  }),
+    [showCoin];
 
   const handleChangeCustomerInfo = (event) => {
     if (!event.target.value) {
@@ -221,7 +218,11 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   };
 
   const handleChangePoint = (event) => {
-    if (event.target.value > 0.1 * totalPrice || event.target.value > customerState.point || event.target.value < 0) {
+    if (
+      event.target.value > 0.1 * totalPrice ||
+      event.target.value > customerState.point ||
+      event.target.value < 0
+    ) {
       setError({ ...error, userPoint: true });
       event.target.value = 0;
     } else {
@@ -235,10 +236,9 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
         userPoint: event.target.value,
       });
     }
-   
   };
   const handleChangeCoin = (event) => {
-    if(event.target.checked){
+    if (event.target.checked) {
       setCustomerInfo({
         ...customerInfo,
         useCoin: showCoin.coin,
@@ -247,8 +247,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
         ...customerInfo,
         useCoin: showCoin.coin,
       });
-    }
-    else{
+    } else {
       setCustomerInfo({
         ...customerInfo,
         useCoin: 0,
@@ -263,27 +262,57 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   return (
     <Paper
       sx={{
-        width: "80%",
+        width: {
+          xs: "95%",
+          sm: "85%",
+          md: "75%",
+        },
         ml: "auto",
         mr: "auto",
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        p: 5,
+        p: {
+          xs: 3,
+          sm: 5,
+          md: 7,
+        },
       }}
     >
       <Typography
         variant="h6"
         gutterBottom
         component="div"
-        className="mb-2 text-center font-bold"
+        // className="mb-2 text-center font-bold"
+        sx={{
+          textAlign: "center",
+          fontWeight: "bold",
+          fontSize: {
+            xs: "1rem",
+            sm: "1.2rem",
+            md: "1.5rem",
+          },
+        }}
       >
         Thông tin khách hàng
       </Typography>
       {customerState == null && (
         <>
           <FormControl>
-            <FormLabel className="font-bold text-black">Email:</FormLabel>
+            <FormLabel
+              // className="font-bold text-black"
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+              }}
+            >
+              Email:
+            </FormLabel>
             <TextField
               required
               name="customerEmail"
@@ -347,7 +376,17 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
 
       {otpValid && (
         <FormControl>
-          <FormLabel className="font-bold text-black">
+          <FormLabel
+            sx={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
             Tên khách hàng:
           </FormLabel>
           <TextField
@@ -363,7 +402,19 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
               error.customerName && "Tên khách hàng không được để trống"
             }
           />
-          <FormLabel className="font-bold text-black">Số điện thoại:</FormLabel>
+          <FormLabel
+            sx={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
+            Số điện thoại:
+          </FormLabel>
           <TextField
             required
             name="customerPhone"
@@ -380,6 +431,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "end",
+              mb: 2,
             }}
           >
             {existCustomer && editInfo && (
@@ -395,8 +447,20 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             </BigHoverFitContentButton>
           </Box>
           <FormControl>
-          <FormLabel className="mb-2 font-bold text-black">
-              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point) } điểm tích luỹ)
+            <FormLabel
+              sx={{
+                fontWeight: "bold",
+                color: "black",
+                fontSize: {
+                  xs: "0.8rem",
+                  sm: "0.9rem",
+                  md: "1rem",
+                },
+                mb: 1,
+              }}
+            >
+              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point)}{" "}
+              điểm tích luỹ)
             </FormLabel>
             <TextField
               required
@@ -405,11 +469,26 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
               onChange={handleChangePoint}
               variant="outlined"
               error={error.customerUserPoint}
-              helperText={error.customerUserPoint && "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"}
-              
+              helperText={
+                error.customerUserPoint &&
+                "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
+              }
             />
           </FormControl>
-          <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
+          <FormLabel
+            sx={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+              my: 1,
+            }}
+          >
+            Ghi chú:
+          </FormLabel>
           <TextField
             required
             name="customerNote"
@@ -418,19 +497,39 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             variant="outlined"
           />
         </FormControl>
-
       )}
-      { customerState?.coin > 0 &&
-        showCoin.showCoin &&
-        <FormGroup className="flex flex-row items-center mt-10 justify-end">
-            <Typography className=" text-[18px] font-bold text-black">
-            Sử dụng {(formatCurrency(showCoin.coin))} từ ví:<MonetizationOnIcon className="text-[#f6a700]"/>
+      {customerState?.coin > 0 && showCoin.showCoin && (
+        <FormGroup
+          // className="mt-10 flex flex-row items-center justify-end"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "end",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              color: "black",
+              fontSize: {
+                xs: "0.8rem",
+                sm: "0.9rem",
+                md: "1rem",
+              },
+            }}
+          >
+            Sử dụng {formatCurrency(showCoin.coin)} từ ví:
+            <MonetizationOnIcon className="text-[#f6a700]" />
           </Typography>
-        <FormControlLabel control={<Switch />} label= {showCoin.coin} onChange={handleChangeCoin} />
-        Xu
-      </FormGroup>
-
-      }
+          <FormControlLabel
+            control={<Switch />}
+            label={showCoin.coin + " Xu"}
+            onChange={handleChangeCoin}
+          />
+        </FormGroup>
+      )}
     </Paper>
   );
 };

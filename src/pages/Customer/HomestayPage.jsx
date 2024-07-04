@@ -197,7 +197,6 @@ export const HomestayPage = () => {
 
       <Box
         sx={{
-          display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gap: "20px",
           padding: "0 20px",
@@ -263,7 +262,7 @@ export const HomestayPage = () => {
                 onClick={() => {
                   navigate(`/booking/home`);
                 }}
-                className=" mt-[20px] bg-[#FFFFFF] text-center  text-xl  font-bold  "
+                className=" mt-[20px] bg-[#FFFFFF] text-center text-xl font-bold"
               >
                 Đặt Phòng ngay!
               </Button>
