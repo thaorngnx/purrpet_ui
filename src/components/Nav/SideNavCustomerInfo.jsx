@@ -19,7 +19,8 @@ export const SideNavCustomerInfo = () => {
     navigate("/lookup");
   };
   return (
-    <Box className="flex min-h-screen w-1/6 min-w-[200px] flex-col p-2 pt-5 shadow-md shadow-zinc-400">
+    <Box >
+    <Box className="hidden md:block flex min-h-screen w-1/6 min-w-[200px] flex-col p-2 pt-5 shadow-md shadow-zinc-400">
       <Link
         to={"/customer"}
         underline="none"
@@ -104,5 +105,44 @@ export const SideNavCustomerInfo = () => {
         Đăng xuất
       </BigHoverButton>
     </Box>
+    <Box className=" md:hidden justify-around flex flex-row items-center justify-center p-4 bg-[#eceef0] w-full ">
+        <Link
+          to="/customer"
+          underline="line"
+          className="s-{12px} ml-3  flex  text-black"
+          >
+            Thông tin cá nhân
+        </Link>
+        <Link
+          to="/order"
+          underline="line"
+          className="s-{12px} ml-3 flex  text-black"
+          >
+            Đơn hàng của tôi
+        </Link>
+        <Link
+          to="/notification"
+          underline="line"
+          className="s-{12px} ml-3 flex  text-black"
+          >
+            Thông báo
+        </Link>
+        <Link
+          to="/wallet"
+          underline="line"
+          className="s-{12px} ml-3 flex  text-black"
+          >
+           Ví xu của bạn
+        </Link>
+        <Link
+          to="/spending"
+          underline="line"
+          className="s-{12px} ml-3 flex  text-black"
+          >
+          Thống kê chi tiêu
+        </Link>
+        </Box>
+    </Box>
+    
   );
 };

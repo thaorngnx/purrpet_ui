@@ -7,10 +7,12 @@ import { Box } from "@mui/material";
 export const OrderHistoryPage = () => {
   return (
     <>
-      <HeaderCustomer />
-      <Box className="flex flex-row">
-        <SideNavCustomerInfo />
-        <History />
+       <HeaderCustomer />
+      <Box className="flex flex-col md:flex-row">
+          <SideNavCustomerInfo />
+        <Box className="flex-grow">
+          <History />
+        </Box>
       </Box>
       <FooterCustomer />
     </>

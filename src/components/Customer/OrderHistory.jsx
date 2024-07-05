@@ -88,7 +88,7 @@ export const OrderHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem key="title" className="flex">
+            <ListItem key="title" className="flex justify-around">
               <Typography variant="body1" className="w-1/5 font-bold">
                 Mã ĐH
               </Typography>
@@ -100,7 +100,7 @@ export const OrderHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/5 text-center font-bold"
+                className="  w-1/5 text-center font-bold hidden md:block"
               >
                 SL sản phẩm
               </Typography>
@@ -130,7 +130,7 @@ export const OrderHistory = () => {
                 return (
                   <ListItem
                     key={order.purrPetCode}
-                    className="flex justify-center"
+                    className="flex justify-around"
                   >
                     <Box className="flex w-full flex-col">
                       <Box className="mb-2 flex flex-row items-center">
@@ -145,13 +145,13 @@ export const OrderHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center"
+                          className="w-1/5 px-1 text-center hidden md:block"
                         >
                           {order.orderItems.length}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-right"
+                          className="w-1/5 px-1 text-center"
                         >
                           {formatCurrency(order.orderPrice)}
                         </Typography>
@@ -163,7 +163,7 @@ export const OrderHistory = () => {
                             {order.status}
                           </Typography>
                         )}
-                        <Box className="flex w-1/5 justify-center px-1 text-center">
+                        <Box className="flex w-1/5 px-1 text-center justify-center">
                           <MiniHoverButton
                             component={Link}
                             to={`/order/${order.purrPetCode}`}

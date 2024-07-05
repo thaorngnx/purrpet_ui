@@ -88,7 +88,7 @@ export const HomeHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem key="title" className="flex">
+            <ListItem key="title" className="flex justify-around">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã đặt phòng
               </Typography>
@@ -106,19 +106,19 @@ export const HomeHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 text-center font-bold hidden md:block"
               >
                 Tên thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 text-center font-bold hidden md:block"
               >
                 Mã phòng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 text-center font-bold hidden md:block"
               >
                 Tổng tiền
               </Typography>
@@ -145,7 +145,7 @@ export const HomeHistory = () => {
                     className="flex justify-center"
                   >
                     <Box className="flex w-full flex-col">
-                      <Box className="mb-2 flex flex-row items-center">
+                      <Box className="mb-2 flex flex-row items-center justify-around">
                         <Typography variant="body1" className="w-1/6 px-1">
                           {bookingHome.purrPetCode}
                         </Typography>
@@ -163,19 +163,19 @@ export const HomeHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center"
+                          className="w-1/6 px-1 text-center hidden md:block"
                         >
                           {bookingHome.petName}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center"
+                          className="w-1/6 px-1 text-center hidden md:block"
                         >
                           {bookingHome.homeCode}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-right"
+                          className="w-1/6 px-1 text-center hidden md:block"
                         >
                           {formatCurrency(bookingHome.bookingHomePrice)}
                         </Typography>

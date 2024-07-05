@@ -8,9 +8,11 @@ export const CustomerInfoPage = () => {
   return (
     <>
       <HeaderCustomer />
-      <Box className="flex flex-row">
-        <SideNavCustomerInfo />
+      <Box className="flex flex-col md:flex-row">
+          <SideNavCustomerInfo />
+        <Box className="flex-grow">
         <CustomerInfo />
+        </Box>
       </Box>
       <FooterCustomer />
     </>

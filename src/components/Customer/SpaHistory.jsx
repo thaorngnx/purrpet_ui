@@ -90,7 +90,7 @@ export const SpaHistory = () => {
         </Tabs>
         <Box className="flex max-h-96 flex-col overflow-auto">
           <List>
-            <ListItem key="title" className="flex">
+            <ListItem key="title" className="flex justify-around">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã đặt lịch
               </Typography>
@@ -102,13 +102,13 @@ export const SpaHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 text-center font-bold hidden md:block"
               >
                 Tên thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold"
+                className="w-1/6 text-center font-bold hidden md:block"
               >
                 Mã spa
               </Typography>
@@ -138,10 +138,10 @@ export const SpaHistory = () => {
                 return (
                   <ListItem
                     key={bookingSpa.purrPetCode}
-                    className="flex justify-center"
+                    className="flex justify-around "
                   >
-                    <Box className="flex w-full flex-col">
-                      <Box className="mb-2 flex flex-row items-center">
+                    <Box className="flex w-full flex-col ">
+                      <Box className="mb-2 flex flex-row items-center justify-around">
                         <Typography variant="body1" className="w-1/6 px-1">
                           {bookingSpa.purrPetCode}
                         </Typography>
@@ -154,19 +154,19 @@ export const SpaHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center"
+                          className="w-1/6 px-1 text-center  hidden md:block"
                         >
                           {bookingSpa.petName}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center"
+                          className="w-1/6 px-1 text-center hidden md:block"
                         >
                           {bookingSpa.spaCode}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-right"
+                          className="w-1/6 px-1 text-center"
                         >
                           {formatCurrency(bookingSpa.bookingSpaPrice)}
                         </Typography>
