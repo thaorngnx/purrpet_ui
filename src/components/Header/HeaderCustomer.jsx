@@ -21,12 +21,19 @@ import { useNotificationStore } from "../../zustand/notificationStore";
 import { FormNotification } from "../Notification/FormNotification";
 import { useEffect } from "react";
 import { getAllNotifications } from "../../api/notification";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import { useRef } from "react";
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
-import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
-
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import InboxIcon from "@mui/icons-material/Inbox";
+import MailIcon from "@mui/icons-material/Mail";
 
 export function HeaderCustomer() {
   const cart = useStore((state) => state.cartState.data);
@@ -41,9 +48,9 @@ export function HeaderCustomer() {
   const [notifications, setNotifications] = useState([]);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-const handleDrawerToggle = () => {
-  setMobileOpen(!mobileOpen);
-};
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const notiNotSeen = notifications.filter(
     (noti) => noti.seen === false,
@@ -84,7 +91,6 @@ const handleDrawerToggle = () => {
     }
   }, [customer?.accessToken]);
 
-
   const handleCategorySelect = (categoryCode) => {
     navigate(`/product?category=${categoryCode}`);
   };
@@ -104,7 +110,7 @@ const handleDrawerToggle = () => {
       name: "Sản phẩm",
       link: "/product",
     },
-    
+
     {
       name: "Dịch vụ Spa",
       link: "/service/spa",
@@ -123,38 +129,51 @@ const handleDrawerToggle = () => {
     },
   ];
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={()=> handleDrawerToggle()}>
-      <List>
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={() => handleDrawerToggle()}
+    >
+      <List
+        sx={{
+          padding: 0,
+        }}
+      >
         <img src={img} alt="logo" width="100%" />
         {listNagivation.map((item, index) => (
           <ListItem key={item.name} disablePadding>
             <ListItemButton>
               <Link to={item.link} underline="none">
-              <ListItemText primary={item.name} />
+                <ListItemText primary={item.name} />
               </Link>
             </ListItemButton>
           </ListItem>
         ))}
         <Divider />
-        
-          <ListItemButton>
-            <Link to="/lookup" underline="none">
+
+        <ListItemButton>
+          <Link to="/lookup" underline="none">
             <ListItemText primary="Tra cứu đơn hàng" />
-            </Link>
-          </ListItemButton>
-            
-        
+          </Link>
+        </ListItemButton>
       </List>
-      
     </Box>
   );
   return (
     <AppBar
       position="static"
-      className="sticky top-0 z-[100] flex-none bg-[#d9d9d9]"
+      sx={{
+        backgroundColor: "#d9d9d9",
+        color: "black",
+        boxShadow: "none",
+        pr: {
+          xs: 1,
+          md: 0,
+        },
+      }}
     >
-      <Container className="p-0 " maxWidth="auto">
-        <Toolbar disableGutters >
+      <Container className="p-0" maxWidth="auto">
+        <Toolbar disableGutters>
           <img src={img} alt="logo" width="15%" onClick={() => navigate("/")} />
           <Box
             sx={{
@@ -290,7 +309,7 @@ const handleDrawerToggle = () => {
               )}
             </Box>
           </Box>
-          <Box className="flex w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl items-center justify-end text-center text-black">
+          <Box className="flex w-full max-w-xs items-center justify-end text-center text-black sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
             <Box
               className="mr-2 md:mr-10"
               onMouseLeave={() => setShowNotification(false)}
@@ -320,7 +339,7 @@ const handleDrawerToggle = () => {
             >
               Tra cứu đơn hàng
             </Button>
-            <Box className="flex items-center ml-2 md:ml-4">
+            <Box className="ml-2 flex items-center md:ml-4">
               <TextField
                 variant="outlined"
                 size="small"
@@ -343,20 +362,25 @@ const handleDrawerToggle = () => {
               </Badge>
             </Box>
           </Box>
-          <Box sx={
-          {
-            display: { xs: "block", md: "none", lg: "none", margin: "auto"},
-          }
-          }>
-            <MenuIcon className="text-black"
-            onClick={()=> handleDrawerToggle()} />
+          <Box
+            sx={{
+              display: { xs: "block", md: "none", lg: "none", margin: "auto" },
+            }}
+          >
+            <MenuIcon
+              className="text-black"
+              onClick={() => handleDrawerToggle()}
+            />
           </Box>
         </Toolbar>
       </Container>
-      <Drawer open={mobileOpen} anchor="right" onClose={()=> handleDrawerToggle()}>
+      <Drawer
+        open={mobileOpen}
+        anchor="right"
+        onClose={() => handleDrawerToggle()}
+      >
         {DrawerList}
       </Drawer>
-      
     </AppBar>
   );
 }

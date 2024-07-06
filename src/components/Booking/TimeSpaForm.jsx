@@ -58,13 +58,20 @@ export const TimeSpaForm = ({
   return (
     <Paper
       sx={{
-        width: "80%",
-        ml: "auto",
-        mr: "auto",
+        width: {
+          xs: "95%",
+          sm: "85%",
+          md: "75%",
+        },
+        mx: "auto",
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        p: 5,
+        p: {
+          xs: 3,
+          sm: 5,
+          md: 7,
+        },
         mb: 5,
       }}
     >

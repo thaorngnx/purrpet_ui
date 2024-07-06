@@ -323,11 +323,6 @@ export const BookingHomeForm = () => {
           m: 3,
           textAlign: "center",
           fontWeight: "bold",
-          fontSize: {
-            xs: "1.2rem",
-            sm: "1.5rem",
-            md: "1.7rem",
-          },
         }}
       >
         Thông tin đặt phòng
@@ -358,11 +353,6 @@ export const BookingHomeForm = () => {
           sx={{
             textAlign: "center",
             fontWeight: "bold",
-            fontSize: {
-              xs: "1rem",
-              sm: "1.2rem",
-              md: "1.5rem",
-            },
           }}
         >
           Thông tin thú cưng
@@ -373,11 +363,6 @@ export const BookingHomeForm = () => {
               mb: 1,
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
             }}
           >
             Tên thú cưng:
@@ -404,11 +389,6 @@ export const BookingHomeForm = () => {
               mt: 1,
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
             }}
           >
             Thú cưng là:
@@ -425,13 +405,6 @@ export const BookingHomeForm = () => {
                 value={value}
                 control={<Radio />}
                 label={value}
-                sx={{
-                  fontSize: {
-                    xs: "0.8rem",
-                    sm: "0.9rem",
-                    md: "1rem",
-                  },
-                }}
               />
             ))}
           </RadioGroup>
@@ -442,11 +415,6 @@ export const BookingHomeForm = () => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Bạn muốn đặt phòng:
@@ -476,11 +444,6 @@ export const BookingHomeForm = () => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Chọn loại phòng:
@@ -510,11 +473,6 @@ export const BookingHomeForm = () => {
                 mb: 2,
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Chọn ngày đặt phòng:
@@ -570,11 +528,6 @@ export const BookingHomeForm = () => {
                 flexDirection: "row",
                 justifyContent: "end",
                 fontWeight: "bold",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
                 color: "red",
               }}
             >
@@ -587,7 +540,6 @@ export const BookingHomeForm = () => {
           !openCustomerInfoForm && (
             <BigHoverTransformButton
               onClick={handleOpenCustomerForm}
-              // className="m-auto my-3"
               sx={{
                 m: "auto",
                 mt: 2,
@@ -611,18 +563,18 @@ export const BookingHomeForm = () => {
             flexDirection: "column",
             justifyContent: "center",
             justifyItems: "center",
-            width: {
-              xs: "95%",
-              sm: "85%",
-              md: "75%",
-            },
-            mx: "auto",
             px: {
               xs: 3,
               sm: 5,
               md: 7,
             },
             mt: 3,
+            mx: "auto",
+            width: {
+              xs: "95%",
+              sm: "85%",
+              md: "75%",
+            },
           }}
         >
           <FormControl
@@ -635,11 +587,6 @@ export const BookingHomeForm = () => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Phương thức thanh toán:
@@ -673,11 +620,6 @@ export const BookingHomeForm = () => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Thanh toán:
@@ -698,11 +640,6 @@ export const BookingHomeForm = () => {
                   alignItems: "center",
                   textAlign: "end",
                   mt: 1,
-                  fontSize: {
-                    xs: "0.8rem",
-                    sm: "0.9rem",
-                    md: "1rem",
-                  },
                 }}
               >
                 Tổng tiền phòng:
@@ -710,11 +647,6 @@ export const BookingHomeForm = () => {
                   variant="body1"
                   sx={{
                     mt: 1,
-                    fontSize: {
-                      xs: "0.8rem",
-                      sm: "0.9rem",
-                      md: "1rem",
-                    },
                   }}
                 >
                   {formatCurrency(bookingInfo.bookingHomePrice)}
@@ -729,11 +661,6 @@ export const BookingHomeForm = () => {
                   alignItems: "center",
                   textAlign: "end",
                   mt: 1,
-                  fontSize: {
-                    xs: "0.8rem",
-                    sm: "0.9rem",
-                    md: "1rem",
-                  },
                 }}
               >
                 Sử dụng điểm:
@@ -741,11 +668,6 @@ export const BookingHomeForm = () => {
                   variant="body1"
                   sx={{
                     mt: 1,
-                    fontSize: {
-                      xs: "0.8rem",
-                      sm: "0.9rem",
-                      md: "1rem",
-                    },
                   }}
                 >
                   - {formatCurrency(bookingInfo.userPoint)}
@@ -760,11 +682,6 @@ export const BookingHomeForm = () => {
                   alignItems: "center",
                   textAlign: "end",
                   mt: 1,
-                  fontSize: {
-                    xs: "0.8rem",
-                    sm: "0.9rem",
-                    md: "1rem",
-                  },
                 }}
               >
                 Sử dụng ví xu:
@@ -772,11 +689,6 @@ export const BookingHomeForm = () => {
                   variant="body1"
                   sx={{
                     mt: 1,
-                    fontSize: {
-                      xs: "0.8rem",
-                      sm: "0.9rem",
-                      md: "1rem",
-                    },
                   }}
                 >
                   - {formatCurrency(bookingInfo.useCoin)}
@@ -791,11 +703,6 @@ export const BookingHomeForm = () => {
                   alignItems: "center",
                   textAlign: "end",
                   mt: 1,
-                  fontSize: {
-                    xs: "0.8rem",
-                    sm: "0.9rem",
-                    md: "1rem",
-                  },
                   fontWeight: "bold",
                   color: "red",
                 }}
@@ -805,11 +712,6 @@ export const BookingHomeForm = () => {
                   variant="body1"
                   sx={{
                     mt: 1,
-                    fontSize: {
-                      xs: "0.8rem",
-                      sm: "0.9rem",
-                      md: "1rem",
-                    },
                     fontWeight: "bold",
                     color: "red",
                   }}

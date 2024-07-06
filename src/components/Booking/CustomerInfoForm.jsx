@@ -287,11 +287,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
         sx={{
           textAlign: "center",
           fontWeight: "bold",
-          fontSize: {
-            xs: "1rem",
-            sm: "1.2rem",
-            md: "1.5rem",
-          },
         }}
       >
         Thông tin khách hàng
@@ -304,11 +299,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
               }}
             >
               Email:
@@ -380,11 +370,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             sx={{
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
             }}
           >
             Tên khách hàng:
@@ -406,11 +391,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             sx={{
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
             }}
           >
             Số điện thoại:
@@ -451,11 +431,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
               sx={{
                 fontWeight: "bold",
                 color: "black",
-                fontSize: {
-                  xs: "0.8rem",
-                  sm: "0.9rem",
-                  md: "1rem",
-                },
                 mb: 1,
               }}
             >
@@ -479,11 +454,6 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             sx={{
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
               my: 1,
             }}
           >
@@ -513,21 +483,24 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             sx={{
               fontWeight: "bold",
               color: "black",
-              fontSize: {
-                xs: "0.8rem",
-                sm: "0.9rem",
-                md: "1rem",
-              },
             }}
           >
             Sử dụng {formatCurrency(showCoin.coin)} từ ví:
-            <MonetizationOnIcon className="text-[#f6a700]" />
           </Typography>
-          <FormControlLabel
-            control={<Switch />}
-            label={showCoin.coin + " Xu"}
-            onChange={handleChangeCoin}
-          />
+          <Box>
+            <MonetizationOnIcon
+              // className="text-[#f6a700]"
+              sx={{
+                color: "#f6a700",
+                mx: 1,
+              }}
+            />
+            <FormControlLabel
+              control={<Switch />}
+              label={showCoin.coin + " Xu"}
+              onChange={handleChangeCoin}
+            />
+          </Box>
         </FormGroup>
       )}
     </Paper>
