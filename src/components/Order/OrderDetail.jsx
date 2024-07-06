@@ -25,10 +25,9 @@ import { createPaymentUrl } from "../../api/pay";
 import { MiniHoverButton } from "../Button/StyledButton";
 import { FormControl } from "@mui/material";
 import * as CONST from "../../constants";
-import { UploadImage, UploadImageRefund } from "../Image/UploadImage";
+import { UploadImageRefund } from "../Image/UploadImage";
 import { requestRefund } from "../../api/pay";
 import { createReview, getReviewByCodeAndCustomer } from "../../api/review";
-import { el } from "date-fns/locale";
 
 export const OrderDetail = () => {
   const navigate = useNavigate();
@@ -39,7 +38,6 @@ export const OrderDetail = () => {
   const [request, setRequest] = useState({
     message: "",
     images: [],
-  
   });
   const [error, setError] = useState({});
   const [sendRequest, setSendRequest] = useState(false);
@@ -211,13 +209,11 @@ export const OrderDetail = () => {
   };
 
   const handleRefund = () => {
-   
-   if (request.message === "") {
+    if (request.message === "") {
       setError({ message: "Vui lòng nhập lý do !" });
       console.log("error", error);
       return;
-    }
-    else if (request.images.length === 0) {
+    } else if (request.images.length === 0) {
       setError({ images: "Vui lòng chọn hình ảnh !" });
       return;
     }
@@ -258,20 +254,40 @@ export const OrderDetail = () => {
         Chi tiết đơn hàng
       </Typography>
       <Paper className="mb-10 flex w-[90%] flex-col justify-center p-8">
-        {(order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.payMethod === CONST.PAYMENT_METHOD.VNPAY && order.status === CONST.STATUS_ORDER.NEW) && (
-          <>
-            <Typography
-              variant="body1"
-              className="text-base italic text-red-800"
-            >
-              Vui lòng thanh toán để hoàn tất đơn. Đơn hàng sẽ tự động hủy sau
-              10 phút đặt hàng nếu không thanh toán.
-            </Typography>
-            <Divider className="my-3" />
-          </>
-        )}
-        <Box className="flex flex-row items-start justify-start">
-          <Box className="flex flex-1 flex-col items-start justify-start">
+        {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY &&
+          order.payMethod === CONST.PAYMENT_METHOD.VNPAY &&
+          order.status === CONST.STATUS_ORDER.NEW && (
+            <>
+              <Typography
+                variant="body1"
+                className="text-base italic text-red-800"
+              >
+                Vui lòng thanh toán để hoàn tất đơn. Đơn hàng sẽ tự động hủy sau
+                10 phút đặt hàng nếu không thanh toán.
+              </Typography>
+              <Divider className="my-3" />
+            </>
+          )}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Mã đơn hàng: </span>
               {order.purrPetCode}
@@ -299,7 +315,25 @@ export const OrderDetail = () => {
               </Typography>
             )}
           </Box>
-          <Box className="flex flex-1 flex-col items-start justify-start">
+          <Divider
+            sx={{
+              display: {
+                xs: "block",
+                sm: "block",
+                md: "none",
+              },
+              my: 1,
+            }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Họ tên: </span>
               {order.customerName}
@@ -325,8 +359,21 @@ export const OrderDetail = () => {
           </Box>
         </Box>
         <Divider className="my-3" />
-        <Box className="flex flex-col justify-center">
-          <List>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <List
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          >
             <ListItem key="title" className="p-0">
               <Typography
                 variant="body1"
@@ -406,43 +453,158 @@ export const OrderDetail = () => {
               );
             })}
           </List>
+          <List
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
+          >
+            {productOrder.map((item) => {
+              return (
+                <ListItem
+                  key={item.productCode}
+                  className="my-3 min-h-[100px] p-0"
+                >
+                  <Box className="ml-auto flex flex-col">
+                    <Box className="flex flex-row items-center">
+                      <img
+                        src={item.images[0]?.path}
+                        alt=""
+                        className="h-[100px] w-[100px] object-cover"
+                      />
+                      <Typography className=" ml-2 text-black">
+                        {item.name}
+                      </Typography>
+                    </Box>
+                    <Box className="flex flex-col items-end">
+                      <Typography className="text-black">
+                        {formatCurrency(item.price)}
+                      </Typography>
+                      <Typography className="text-black">
+                        x {item.quantity}
+                      </Typography>
+                      <Typography className="font-bold text-black">
+                        {formatCurrency(item.totalPrice)}
+                      </Typography>
+                    </Box>
+                    <Box className="flex flex-row justify-center">
+                      <MiniHoverButton
+                        onClick={() => {
+                          navigate(`/product/${item.productCode}`);
+                        }}
+                      >
+                        Chi tiết
+                      </MiniHoverButton>
+                      {order.status === CONST.STATUS_ORDER.DONE && (
+                        <MiniHoverButton
+                          className="ml-2"
+                          onClick={() => {
+                            handleClickOpenRating(item);
+                          }}
+                        >
+                          {item.reviewed ? "Đã đánh giá" : "Đánh giá"}
+                        </MiniHoverButton>
+                      )}
+                    </Box>
+                  </Box>
+                </ListItem>
+              );
+            })}
+          </List>
 
-          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
+          <FormControl
+            sx={{
+              display: "flex",
+              width: {
+                xs: "100%",
+                sm: "50%",
+              },
+              ml: "auto",
+              justifyContent: "end",
+            }}
+          >
             <Typography
               variant="body1"
-              className="m-1 flex flex-row items-center justify-between text-end"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
               Tổng tiền hàng:
-              <Typography variant="body1" className="m-1 text-end">
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                }}
+              >
                 {formatCurrency(order.orderPrice)}
               </Typography>
             </Typography>
             <Typography
               variant="body1"
-              className="m-1 flex flex-row items-center justify-between text-end"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
               Sử dụng điểm:
-              <Typography variant="body1" className="m-1 text-end">
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                }}
+              >
                 - {formatCurrency(order.pointUsed)}
               </Typography>
             </Typography>
             <Typography
               variant="body1"
-              className="m-1 flex flex-row items-center justify-between text-end"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
             >
               Sử dụng ví xu:
-              <Typography variant="body1" className="m-1 text-end">
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                }}
+              >
                 - {formatCurrency(order.useCoin)}
               </Typography>
             </Typography>
             <Typography
               variant="body1"
-              className="m-1 flex flex-row items-center justify-between text-end text-[17px] font-bold text-black"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                fontWeight: "bold",
+                color: "black",
+              }}
             >
               Thành tiền:
               <Typography
                 variant="body1"
-                className="m-1 text-end font-bold text-[#800000]"
+                sx={{
+                  textAlign: "end",
+                  color: "#800000",
+                  fontWeight: "bold",
+                }}
               >
                 {formatCurrency(order.totalPayment)}
               </Typography>
@@ -450,29 +612,27 @@ export const OrderDetail = () => {
           </FormControl>
 
           <Box className="mt-3 flex flex-row justify-end">
-            {
-              order.status === CONST.STATUS_ORDER.NEW &&
-              (
-                <>
-                  <Button
-                    variant="contained"
-                    className="mr-3 bg-black"
-                    onClick={handleChangeStatus}
-                  >
-                    Hủy đơn
-                  </Button>
-                {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY && order.payMethod === CONST.PAYMENT_METHOD.VNPAY &&(
-                      <Button
+            {order.status === CONST.STATUS_ORDER.NEW && (
+              <>
+                <Button
+                  variant="contained"
+                  className="mr-3 bg-black"
+                  onClick={handleChangeStatus}
+                >
+                  Hủy đơn
+                </Button>
+                {order.paymentStatus === CONST.STATUS_PAYMENT.WAITING_FOR_PAY &&
+                  order.payMethod === CONST.PAYMENT_METHOD.VNPAY && (
+                    <Button
                       variant="contained"
                       className="ml-3 bg-black"
                       onClick={handlePaymentClick}
                     >
                       Thanh toán
                     </Button>
-                    )
-                }
-                </>
-              )}
+                  )}
+              </>
+            )}
             {/* {order.status === CONST.STATUS_ORDER.NEW  (
               <Button
                 variant="contained"
@@ -565,15 +725,14 @@ export const OrderDetail = () => {
             <DialogTitle id="alert-dialog-title">
               {"Gửi yêu cầu hoàn tiền"}
             </DialogTitle>
-            {
-             
-               error.message && (
-                <DialogContentText id="alert-dialog-description" className="text-[#FF0000] ml-5 w-[md] "> 
-
-                  {error.message}
-                </DialogContentText>
-              )
-            }
+            {error.message && (
+              <DialogContentText
+                id="alert-dialog-description"
+                className="ml-5 w-[md] text-[#FF0000] "
+              >
+                {error.message}
+              </DialogContentText>
+            )}
             <DialogContent id="alert-dialog-description">
               <TextareaAutosize
                 aria-label="minimum height"
@@ -581,8 +740,9 @@ export const OrderDetail = () => {
                 placeholder="Nhập lý do hoàn tiền"
                 style={{ width: "400px" }}
                 onChange={(e) =>
-                  setRequest({ ...request, message: e.target.value }) && setError({ message: "" })
-                 }
+                  setRequest({ ...request, message: e.target.value }) &&
+                  setError({ message: "" })
+                }
               />
               <UploadImageRefund
                 request={request}
