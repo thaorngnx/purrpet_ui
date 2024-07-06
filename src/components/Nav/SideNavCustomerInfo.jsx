@@ -105,43 +105,49 @@ export const SideNavCustomerInfo = () => {
         Đăng xuất
       </BigHoverButton>
     </Box>
-    <Box className=" md:hidden justify-around flex flex-row items-center justify-center p-4 bg-[#eceef0] w-full ">
+      <Box className="md:hidden justify-around flex flex-row items-center justify-center p-4 bg-[#eceef0] w-full">
         <Link
           to="/customer"
           underline="line"
-          className="s-{12px} ml-3  flex  text-black"
-          >
-            Thông tin cá nhân
+          className="s-{12px} ml-3 flex text-black item-center"
+          style={{ textDecoration: 'underline' }}
+        >
+          Thông tin cá nhân
         </Link>
         <Link
           to="/order"
           underline="line"
-          className="s-{12px} ml-3 flex  text-black"
-          >
-            Đơn hàng của tôi
+          className="s-{12px} ml-3 flex text-black justify-center"
+          style={{ textDecoration: 'underline' }}
+        >
+          Đơn hàng của tôi
         </Link>
         <Link
           to="/notification"
           underline="line"
-          className="s-{12px} ml-3 flex  text-black"
-          >
-            Thông báo
+          className="s-{12px} ml-3 flex text-black justify-center"
+          style={{ textDecoration: 'underline' }}
+        >
+          Thông báo
         </Link>
         <Link
           to="/wallet"
           underline="line"
-          className="s-{12px} ml-3 flex  text-black"
-          >
-           Ví xu của bạn
+          className="s-{12px} ml-3 flex text-black justify-center"
+          style={{ textDecoration: 'underline' }}
+        >
+          Ví xu của bạn
         </Link>
         <Link
           to="/spending"
           underline="line"
-          className="s-{12px} ml-3 flex  text-black"
-          >
+          className="s-{12px} ml-3 flex text-black justify-center"
+          style={{ textDecoration: 'underline' }}
+        >
           Thống kê chi tiêu
         </Link>
-        </Box>
+      </Box>
+
     </Box>
     
   );

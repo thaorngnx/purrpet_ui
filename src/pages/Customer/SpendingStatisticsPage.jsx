@@ -77,56 +77,54 @@ export const SpendingStatisticsPage = () => {
        },
      ],
    };
-   console.log('spending', spending)
+   
     return (
-        <>
-        <HeaderCustomer />
-        <Box className="flex flex-row justify-normal bg-[#eee]">
-          <SideNavCustomerInfo />
-          <Box className="w-full p-5">
-           
-            <Box>
-                <Card className="bg-white shadow-md rounded-md">
-                <CardContent className="p-6">
-                    <Typography variant="h5" component="h1" className="font-bold mb-4">
-                    Thông tin khách hàng
+      <>
+      <HeaderCustomer />
+      <Box className="flex flex-col md:flex-row">
+        <SideNavCustomerInfo />
+        <Box className="w-full p-5 flex-grow">
+          <Box>
+            <Card className="bg-white shadow-md rounded-md">
+              <CardContent className="p-6">
+                <Typography variant="h5" component="h1" className="font-bold mb-4">
+                  Thông tin khách hàng
+                </Typography>
+                <Typography variant="body1" className="mb-2">
+                  <strong>Tên:</strong> {customer?.name}
+                </Typography>
+                <Typography variant="body1" className="mb-2">
+                  <strong>Email:</strong> {customer?.email}
+                </Typography>
+                <Typography variant="body1" className="mb-2">
+                  <strong>Điểm tích lũy:</strong> {formatCurrency(customer?.point)}
+                </Typography>
+                <Box className="flex flex-col md:flex-row justify-between">
+                  <FormControl className="w-full md:w-1/2 mb-4 md:mb-0">
+                    <Typography variant="body1" className="mb-2">
+                      <strong>Tổng chi tiêu cho đơn hàng:</strong> {formatCurrency(total?.totalOrder)}/ {total?.countOrder} đơn
+                    </Typography>
+                  </FormControl>
+                  <FormControl className="w-full md:w-1/2">
+                    <Typography variant="body1" className="mb-2">
+                      <strong>Tổng chi tiêu cho đặt lịch Spa:</strong> {formatCurrency(total?.totalBookingSpa)}/ {total?.countBookingSpa} đơn
                     </Typography>
                     <Typography variant="body1" className="mb-2">
-                    <strong>Tên:</strong> {customer?.name}
+                      <strong>Tổng chi tiêu cho đặt phòng Homestay:</strong> {formatCurrency(total?.totalBookingHotel)}/ {total?.countBookingHotel} đơn
                     </Typography>
-                    <Typography variant="body1" className="mb-2">
-                    <strong>Email:</strong> {customer?.email}
-                    </Typography>
-                    <Typography variant="body1" className="mb-2">
-                    <strong>Điểm tích lũy:</strong> {formatCurrency(customer?.point)}
-                    </Typography>
-                  <Box className="flex flex-row justify-between">
-                    <FormControl className="w-1/2">
-                    <Typography variant="body1" className="mb-2">
-                    <strong>Tổng chi tiêu cho đơn hàng đơn hàng:</strong> {formatCurrency(total?.totalOrder)}/ {total?.countOrder} đơn
-                    </Typography>
-                    </FormControl>
-                    <FormControl className="w-1/2">
-                    <Typography variant="body1" className="mb-2">
-                    <strong>Tổng chi tiêu cho đặt lịch Spa:</strong> {formatCurrency(total?.totalBookingSpa)}/ {total?.countBookingSpa} đơn
-                    </Typography>
-                    <Typography variant="body1" className="mb-2">
-                    <strong>Tổng chi tiêu cho đặt phòng Homestay:</strong> {formatCurrency(total?.totalBookingHotel)}/ {total?.countBookingHotel} đơn
-                    </Typography>
-                    </FormControl>
-                  </Box>
-                  <Typography variant="body1" className="mb-2 text-[#fb3b47]">
-                    <strong>Tổng Cộng:</strong> {formatCurrency(total?.total)}
-                    </Typography>
-                </CardContent>
-                </Card>
+                  </FormControl>
+                </Box>
+                <Typography variant="body1" className="mb-2 text-[#fb3b47]">
+                  <strong>Tổng Cộng:</strong> {formatCurrency(total?.total)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+          <VerticalBarChart data={data} />
+        </Box>
+      </Box>
+      <FooterCustomer />
+    </>
 
-            </Box>
-        <VerticalBarChart data={data}/>
-     
-        </Box>
-        </Box>
-        <FooterCustomer />
-        </>
     );
     }

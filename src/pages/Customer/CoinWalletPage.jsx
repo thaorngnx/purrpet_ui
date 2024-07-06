@@ -9,10 +9,11 @@ export const CoinWalletPage = () => {
     return (
         <>
         <HeaderCustomer />
-        <Box className="flex flex-row justify-normal bg-[#eee]">
+        <Box className="flex flex-col md:flex-row">
           <SideNavCustomerInfo />
-          <CoinWallet />
-     
+            <Box className="flex-grow">
+              <CoinWallet />
+            </Box>
         </Box>
         <FooterCustomer />
         </>

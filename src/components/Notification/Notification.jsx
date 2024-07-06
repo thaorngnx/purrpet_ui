@@ -57,7 +57,7 @@ export const Notification = ()=>
     }
     return(
       <>
-      <Box className="flex flex-col w-full m-10">
+      <Box className="flex flex-col w-full">
      
         {notificationState.loading && <h1>Loading...</h1>}
         {notificationState.error && <h1>{notificationState.error}</h1>}

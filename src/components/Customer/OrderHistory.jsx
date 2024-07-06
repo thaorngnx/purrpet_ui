@@ -133,7 +133,7 @@ export const OrderHistory = () => {
                     className="flex justify-around"
                   >
                     <Box className="flex w-full flex-col">
-                      <Box className="mb-2 flex flex-row items-center">
+                      <Box className="mb-2 flex flex-row items-center justify-around">
                         <Typography variant="body1" className="w-1/5 px-1">
                           {order.purrPetCode}
                         </Typography>

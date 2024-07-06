@@ -41,7 +41,7 @@ export const FormNotification = () => {
 
     return (
         <>
-        <Box sx={{ minWidth:300, position: 'absolute', marginBottom:'-270px', paddingTop:'10px'}}>
+        <Box sx={{ minWidth:300, position: 'absolute', marginBottom:'-270px', paddingTop:'10px', zIndex:'1000000'}}>
       <Card variant="outlined">
         
       <React.Fragment>

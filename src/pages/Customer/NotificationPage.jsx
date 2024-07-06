@@ -9,10 +9,12 @@ export const NotificationPage = () => {
     return (
         <>
          <HeaderCustomer />
-        <Box className="flex flex-row justify-normal">
+         <Box className="flex flex-col md:flex-row">
           <SideNavCustomerInfo />
-         <Notification />
+        <Box className="flex-grow">
+        <Notification />
         </Box>
+      </Box>
         <FooterCustomer />
         </>
        
