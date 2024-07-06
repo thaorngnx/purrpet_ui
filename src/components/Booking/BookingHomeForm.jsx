@@ -628,7 +628,7 @@ export const BookingHomeForm = () => {
               sx={{
                 position: "relative",
                 display: "flex",
-                flexDirection: "cloumn",
+                flexDirection: "column",
               }}
             >
               <Typography

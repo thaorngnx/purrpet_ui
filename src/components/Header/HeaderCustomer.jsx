@@ -28,12 +28,9 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Divider,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/Inbox";
-import MailIcon from "@mui/icons-material/Mail";
 
 export function HeaderCustomer() {
   const cart = useStore((state) => state.cartState.data);
@@ -117,7 +114,7 @@ export function HeaderCustomer() {
     },
     {
       name: "Dịch vụ Homestay",
-      link: "/service/homestay`",
+      link: "/service/homestay",
     },
     {
       name: "Đặt lịch khách sạn",
