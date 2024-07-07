@@ -159,8 +159,28 @@ export const BookingHomeDetail = () => {
             <Divider className="my-3" />
           </>
         )}
-        <Box className="flex flex-row items-start justify-start">
-          <Box className="flex flex-1 flex-col items-start justify-start">
+        <Box
+          // className="flex flex-row items-start justify-start"
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
+          <Box
+            // className="flex flex-1 flex-col items-start justify-start"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Mã đơn: </span>
               {bookingHome.purrPetCode}
@@ -179,7 +199,26 @@ export const BookingHomeDetail = () => {
               {bookingHome.status}
             </Typography>
           </Box>
-          <Box className="flex flex-1 flex-col items-start justify-start">
+          <Divider
+            sx={{
+              display: {
+                xs: "block",
+                sm: "block",
+                md: "none",
+              },
+              my: 1,
+            }}
+          />
+          <Box
+            // className="flex flex-1 flex-col items-start justify-start"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Họ tên: </span>
               {bookingHome.customerName}
@@ -199,7 +238,18 @@ export const BookingHomeDetail = () => {
           </Box>
         </Box>
         <Divider className="my-3" />
-        <Box className="flex flex-row items-start justify-start">
+        <Box
+          // className="flex flex-row items-start justify-start"
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
           <Typography variant="body1" className="flex-1">
             <span className="font-bold">Tên thú cưng: </span>
             {bookingHome.petName}
@@ -217,7 +267,14 @@ export const BookingHomeDetail = () => {
         </Box>
         <Divider className="my-3" />
         <Box className="flex flex-col justify-center">
-          <List>
+          <List
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          >
             <ListItem key="title" className="p-0">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã phòng
@@ -286,28 +343,154 @@ export const BookingHomeDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
-          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
-            Điểm sử dụng: 
-            <Typography variant="body1" className="text-md text-end ">
-           - {formatCurrency(bookingHome.pointUsed)}
-          </Typography>
-          </Typography>
-          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
-            Xu sử dụng: 
-            <Typography>
-          -  {formatCurrency(bookingHome.useCoin)}
-              </Typography>
-          </Typography>
-          <Typography
-            variant="body1"
-            className="m-1 flex flex-row items-center justify-between text-end "
+          <Box
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
           >
-            Tổng tiền: 
-            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
-            {formatCurrency(bookingHome.totalPayment)}
+            <Typography variant="body1" className="mb-1 text-center font-bold">
+              Chi tiết dịch vụ
             </Typography>
-          </Typography>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Mã phòng: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingHome.homestay.purrPetCode}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Loại thú cưng: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingHome.homestay.homeType}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Loại phòng: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingHome.homestay.categoryName}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Kích thước: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingHome.homestay.masterDataName}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Số ngày: &nbsp;
+              </Typography>
+              <Typography variant="body1">{bookingHome.numberOfDay}</Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Đơn giá: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {formatCurrency(bookingHome.homestay.price)}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Thành tiền: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {formatCurrency(bookingHome.bookingHomePrice)}
+              </Typography>
+            </Box>
+          </Box>
+          <Divider
+            className="my-3"
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
+          />
+          <FormControl
+            sx={{
+              display: "flex",
+              width: {
+                xs: "100%",
+                sm: "50%",
+              },
+              ml: "auto",
+              justifyContent: "end",
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Điểm sử dụng:
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                }}
+              >
+                - {formatCurrency(bookingHome.pointUsed)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Xu sử dụng:
+              <Typography
+                sx={{
+                  textAlign: "end",
+                }}
+              >
+                - {formatCurrency(bookingHome.useCoin)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                fontWeight: "bold",
+                color: "black",
+              }}
+            >
+              Tổng tiền:
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                  color: "#800000",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatCurrency(bookingHome.totalPayment)}
+              </Typography>
+            </Typography>
           </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingHome.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
