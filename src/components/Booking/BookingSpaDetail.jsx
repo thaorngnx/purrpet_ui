@@ -38,7 +38,7 @@ export const BookingSpaDetail = () => {
     createdAt: "",
     pointUsed: 0,
     useCoin: 0,
-    payMethod:"", 
+    payMethod: "",
     totalPayment: 0,
     spa: {
       purrPetCode: "",
@@ -90,31 +90,35 @@ export const BookingSpaDetail = () => {
     });
   }, [bookingSpaCode]);
   useEffect(() => {
-   const checkedTimeCancel =()=>{
-    const timeNow = dayjs();
-    const bookingTime = dayjs(bookingSpa.bookingTime, 'HH:mm'); // Chuyển đổi chuỗi thời gian thành đối tượng dayjs
-    // Chuyển đổi chuỗi ngày thành đối tượng dayjs
-   
-    const bookingDate = dayjs(bookingSpa.bookingDate);
-    bookingDate.set('hour', bookingTime.hour());
-    bookingDate.set('minute', bookingTime.minute());
-    bookingDate.set('second', 0);
-    bookingDate.set('millisecond', 0);
-    const timeDiff = bookingDate.diff(timeNow); // Tính khoảng thời gian giữa thời gian hiện tại và thời gian check-in
+    const checkedTimeCancel = () => {
+      const timeNow = dayjs();
+      const bookingTime = dayjs(bookingSpa.bookingTime, "HH:mm"); // Chuyển đổi chuỗi thời gian thành đối tượng dayjs
+      // Chuyển đổi chuỗi ngày thành đối tượng dayjs
 
-    
+      const bookingDate = dayjs(bookingSpa.bookingDate);
+      bookingDate.set("hour", bookingTime.hour());
+      bookingDate.set("minute", bookingTime.minute());
+      bookingDate.set("second", 0);
+      bookingDate.set("millisecond", 0);
+      const timeDiff = bookingDate.diff(timeNow); // Tính khoảng thời gian giữa thời gian hiện tại và thời gian check-in
 
-    const fourHours = 4 * 60 * 60 * 1000; // 4 giờ expressed in milliseconds
+      const fourHours = 4 * 60 * 60 * 1000; // 4 giờ expressed in milliseconds
 
-    if (timeDiff > fourHours && bookingSpa.status === CONST.STATUS_BOOKING.PAID) {
-      setCancel(true);
-    }
-  }
-   checkedTimeCancel();
+      if (
+        timeDiff > fourHours &&
+        bookingSpa.status === CONST.STATUS_BOOKING.PAID
+      ) {
+        setCancel(true);
+      }
+    };
+    checkedTimeCancel();
   }, [bookingSpa]);
 
   const handlePaymentClick = () => {
-    createPaymentUrl({ orderCode: bookingSpa.purrPetCode,  returnUrl: 'vnpay-returnForCus' }).then((res) => {
+    createPaymentUrl({
+      orderCode: bookingSpa.purrPetCode,
+      returnUrl: "vnpay-returnForCus",
+    }).then((res) => {
       console.log(res);
       if (res.err === 0) {
         window.location.href = res.data.paymentUrl;
@@ -132,7 +136,6 @@ export const BookingSpaDetail = () => {
       if (res.err === 0) {
         setCancel(false);
         window.location.reload();
-
       }
     });
   };
@@ -156,19 +159,40 @@ export const BookingSpaDetail = () => {
             <Divider className="my-3" />
           </>
         )}
-         {bookingSpa.status === CONST.STATUS_BOOKING.PAID && (
+        {bookingSpa.status === CONST.STATUS_BOOKING.PAID && (
           <>
             <Typography
               variant="body1"
               className="text-base italic text-green-800"
             >
-              Đơn hàng chỉ được hủy trước 4h so với thời gian check-in. Sẽ hoàn lại 90% số tiền đã thanh toán vào ví xu của bạn.
+              Đơn hàng chỉ được hủy trước 4h so với thời gian check-in. Sẽ hoàn
+              lại 90% số tiền đã thanh toán vào ví xu của bạn.
             </Typography>
             <Divider className="my-3" />
           </>
         )}
-        <Box className="flex flex-row items-start justify-start">
-          <Box className="flex flex-1 flex-col items-start justify-start">
+        <Box
+          // className="flex flex-row items-start justify-start"
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
+          <Box
+            // className="flex flex-1 flex-col items-start justify-start"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Mã đơn: </span>
               {bookingSpa.purrPetCode}
@@ -186,7 +210,26 @@ export const BookingSpaDetail = () => {
               {bookingSpa.status}
             </Typography>
           </Box>
-          <Box className="flex flex-1 flex-col items-start justify-start">
+          <Divider
+            sx={{
+              display: {
+                xs: "block",
+                sm: "block",
+                md: "none",
+              },
+              my: 1,
+            }}
+          />
+          <Box
+            // className="flex flex-1 flex-col items-start justify-start"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              flex: 1,
+              alignItems: "start",
+              justifyContent: "start",
+            }}
+          >
             <Typography variant="body1">
               <span className="font-bold">Họ tên: </span>
               {bookingSpa.customerName}
@@ -206,7 +249,18 @@ export const BookingSpaDetail = () => {
           </Box>
         </Box>
         <Divider className="my-3" />
-        <Box className="flex flex-row items-start justify-start">
+        <Box
+          // className="flex flex-row items-start justify-start"
+          sx={{
+            display: "flex",
+            flexDirection: {
+              xs: "column",
+              sm: "row",
+            },
+            alignItems: "start",
+            justifyContent: "start",
+          }}
+        >
           <Typography variant="body1" className="flex-1">
             <span className="font-bold">Tên thú cưng: </span>
             {bookingSpa.petName}
@@ -224,7 +278,14 @@ export const BookingSpaDetail = () => {
         </Box>
         <Divider className="my-3" />
         <Box className="flex flex-col justify-center">
-          <List>
+          <List
+            sx={{
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          >
             <ListItem key="title" className="p-0">
               <Typography variant="body1" className="w-1/6 font-bold">
                 Mã spa
@@ -269,28 +330,136 @@ export const BookingSpaDetail = () => {
               </Typography>
             </ListItem>
           </List>
-          <FormControl className="  ml-[auto] flex w-1/2 justify-end ">
-          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end ">
-            Điểm sử dụng: 
-            <Typography variant="body1" className="text-md text-end ">
-           - {formatCurrency(bookingSpa.pointUsed)}
-          </Typography>
-          </Typography>
-          <Typography variant="body1" className="m-1 flex flex-row items-center justify-between text-end  ">
-            Xu sử dụng: 
-            <Typography>
-          -  {formatCurrency(bookingSpa.useCoin)}
-              </Typography>
-          </Typography>
-          <Typography
-            variant="body1"
-            className="m-1 flex flex-row items-center justify-between text-end "
+          <Box
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
           >
-            Tổng tiền: 
-            <Typography variant="body1" className="text-end text-lg font-bold text-[#ee4d2d] ">
-            {formatCurrency(bookingSpa.totalPayment)}
+            <Typography variant="body1" className="mb-1 text-center font-bold">
+              Chi tiết dịch vụ
             </Typography>
-          </Typography>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Mã spa: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingSpa.spa.purrPetCode}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Spa: &nbsp;
+              </Typography>
+              <Typography variant="body1">{bookingSpa.spa.spaName}</Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Loại thú cưng: &nbsp;
+              </Typography>
+              <Typography variant="body1">{bookingSpa.spa.spaType}</Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Mô tả: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {bookingSpa.spa.description}
+              </Typography>
+            </Box>
+            <Box className="flex flex-row justify-between">
+              <Typography variant="body1" className="font-bold">
+                Đơn giá: &nbsp;
+              </Typography>
+              <Typography variant="body1">
+                {formatCurrency(bookingSpa.bookingSpaPrice)}
+              </Typography>
+            </Box>
+          </Box>
+          <Divider
+            className="my-3"
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
+          />
+          <FormControl
+            sx={{
+              display: "flex",
+              width: {
+                xs: "100%",
+                sm: "50%",
+              },
+              ml: "auto",
+              justifyContent: "end",
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Điểm sử dụng:
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                }}
+              >
+                - {formatCurrency(bookingSpa.pointUsed)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              Xu sử dụng:
+              <Typography
+                sx={{
+                  textAlign: "end",
+                }}
+              >
+                - {formatCurrency(bookingSpa.useCoin)}
+              </Typography>
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                fontWeight: "bold",
+                color: "black",
+              }}
+            >
+              Tổng tiền:
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "end",
+                  color: "#800000",
+                  fontWeight: "bold",
+                }}
+              >
+                {formatCurrency(bookingSpa.totalPayment)}
+              </Typography>
+            </Typography>
           </FormControl>
           <Box className="mt-3 flex flex-row justify-end">
             {bookingSpa.status === CONST.STATUS_BOOKING.WAITING_FOR_PAY && (
@@ -311,14 +480,14 @@ export const BookingSpaDetail = () => {
                 </Button>
               </>
             )}
-               { cancel === true && (
+            {cancel === true && (
               <Button
-              variant="contained"
-              className="mr-3 bg-black"
-              onClick={handleChangeStatus}
-            >
-              Hủy đơn
-            </Button>
+                variant="contained"
+                className="mr-3 bg-black"
+                onClick={handleChangeStatus}
+              >
+                Hủy đơn
+              </Button>
             )}
           </Box>
         </Box>

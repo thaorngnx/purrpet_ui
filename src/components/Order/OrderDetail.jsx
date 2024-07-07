@@ -513,6 +513,15 @@ export const OrderDetail = () => {
               );
             })}
           </List>
+          <Divider
+            className="my-3"
+            sx={{
+              display: {
+                xs: "block",
+                sm: "none",
+              },
+            }}
+          />
 
           <FormControl
             sx={{
@@ -528,7 +537,6 @@ export const OrderDetail = () => {
             <Typography
               variant="body1"
               sx={{
-                marginTop: 1,
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
@@ -548,14 +556,14 @@ export const OrderDetail = () => {
             <Typography
               variant="body1"
               sx={{
-                marginTop: 1,
+                marginTop: 2,
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
               }}
             >
-              Sử dụng điểm:
+              Điểm sử dụng:
               <Typography
                 variant="body1"
                 sx={{
@@ -575,7 +583,7 @@ export const OrderDetail = () => {
                 justifyContent: "space-between",
               }}
             >
-              Sử dụng ví xu:
+              Xu sử dụng:
               <Typography
                 variant="body1"
                 sx={{
