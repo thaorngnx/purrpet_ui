@@ -63,10 +63,12 @@ export const OrderHistory = () => {
           value={tabOrder}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
+          variant="scrollable"
           onChange={(event, newValue) => {
             setTabOrder(newValue);
           }}
+          scrollButtons="auto"
+          allowScrollButtonsMobile
         >
           <Tab
             label="Tất cả"
@@ -100,7 +102,7 @@ export const OrderHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="  w-1/5 text-center font-bold hidden md:block"
+                className="  hidden w-1/5 text-center font-bold md:block"
               >
                 SL sản phẩm
               </Typography>
@@ -145,7 +147,7 @@ export const OrderHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/5 px-1 text-center hidden md:block"
+                          className="hidden w-1/5 px-1 text-center md:block"
                         >
                           {order.orderItems.length}
                         </Typography>
@@ -163,7 +165,7 @@ export const OrderHistory = () => {
                             {order.status}
                           </Typography>
                         )}
-                        <Box className="flex w-1/5 px-1 text-center justify-center">
+                        <Box className="flex w-1/5 justify-center px-1 text-center">
                           <MiniHoverButton
                             component={Link}
                             to={`/order/${order.purrPetCode}`}

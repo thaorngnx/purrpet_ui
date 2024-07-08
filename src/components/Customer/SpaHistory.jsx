@@ -17,7 +17,6 @@ import { formatCurrency, formatDateTime } from "../../utils/formatData";
 import { MiniHoverButton } from "../Button/StyledButton";
 
 export const SpaHistory = () => {
-
   const [resBSpas, setResBSpas] = useState([]);
   const [tabSpa, setTabSpa] = useState(0);
   const [page, setPage] = useState(0);
@@ -27,8 +26,8 @@ export const SpaHistory = () => {
     const params = {
       limit: 10,
       page: page,
-    //   // key: categoryCode || searchKey,
-    //   // order: sort,
+      //   // key: categoryCode || searchKey,
+      //   // order: sort,
     };
     //api get booking spa
     getBookingSpas().then((res) => {
@@ -65,10 +64,12 @@ export const SpaHistory = () => {
           value={tabSpa}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
+          variant="scrollable"
           onChange={(event, newValue) => {
             setTabSpa(newValue);
           }}
+          scrollButtons="auto"
+          allowScrollButtonsMobile
         >
           <Tab
             label="Tất cả"
@@ -102,13 +103,13 @@ export const SpaHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold hidden md:block"
+                className="hidden w-1/6 text-center font-bold md:block"
               >
                 Tên thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold hidden md:block"
+                className="hidden w-1/6 text-center font-bold md:block"
               >
                 Mã spa
               </Typography>
@@ -154,13 +155,13 @@ export const SpaHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center  hidden md:block"
+                          className="hidden w-1/6 px-1  text-center md:block"
                         >
                           {bookingSpa.petName}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center hidden md:block"
+                          className="hidden w-1/6 px-1 text-center md:block"
                         >
                           {bookingSpa.spaCode}
                         </Typography>

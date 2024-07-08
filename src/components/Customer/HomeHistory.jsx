@@ -63,10 +63,11 @@ export const HomeHistory = () => {
           value={tabHome}
           indicatorColor="primary"
           textColor="primary"
-          variant="fullWidth"
+          variant="scrollable"
           onChange={(event, newValue) => {
             setTabHome(newValue);
           }}
+          allowScrollButtonsMobile
         >
           <Tab
             label="Tất cả"
@@ -106,19 +107,19 @@ export const HomeHistory = () => {
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold hidden md:block"
+                className="hidden w-1/6 text-center font-bold md:block"
               >
                 Tên thú cưng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold hidden md:block"
+                className="hidden w-1/6 text-center font-bold md:block"
               >
                 Mã phòng
               </Typography>
               <Typography
                 variant="body1"
-                className="w-1/6 text-center font-bold hidden md:block"
+                className="hidden w-1/6 text-center font-bold md:block"
               >
                 Tổng tiền
               </Typography>
@@ -163,19 +164,19 @@ export const HomeHistory = () => {
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center hidden md:block"
+                          className="hidden w-1/6 px-1 text-center md:block"
                         >
                           {bookingHome.petName}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center hidden md:block"
+                          className="hidden w-1/6 px-1 text-center md:block"
                         >
                           {bookingHome.homeCode}
                         </Typography>
                         <Typography
                           variant="body1"
-                          className="w-1/6 px-1 text-center hidden md:block"
+                          className="hidden w-1/6 px-1 text-center md:block"
                         >
                           {formatCurrency(bookingHome.bookingHomePrice)}
                         </Typography>
