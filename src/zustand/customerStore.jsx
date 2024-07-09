@@ -24,7 +24,7 @@ export const customerStore = (set, get) => ({
       `customer/setCustomerState`,
     );
   },
-  getCustomerById: (customerId) => {
+  getCustomerById: () => {
     set(
       (state) => {
         state.customerState.loading = true;
@@ -32,7 +32,7 @@ export const customerStore = (set, get) => ({
       false,
       `customer/getCustomerById_loading`,
     );
-    getCustomerById(customerId).then((res) => {
+    getCustomerById().then((res) => {
       console.log(res);
       if (res.err === 0) {
         set(

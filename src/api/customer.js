@@ -20,9 +20,9 @@ export async function getCustomerByCode(code) {
   }
 }
 
-export async function getCustomerById(id) {
+export async function getCustomerById() {
   try {
-    const response = await api.post(`customer/find-by-id/${id}`);
+    const response = await api.get(`customer/find-by-id`);
     return response.data;
   } catch (error) {
     console.error(error);
