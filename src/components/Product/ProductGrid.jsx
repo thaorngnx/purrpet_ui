@@ -61,9 +61,9 @@ export const ProductGrid = () => {
 
   return (
     <Box className="min-h-screen w-[100%] flex-col">
-      <Box className="mx-4 mb-2 flex justify-end">
-        <FormControl className="w-[150px]">
-          <InputLabel id="select-label" className="text-sm">
+      <Box className="mx-4 flex justify-end mb-2">
+        <FormControl className="w-[100px] ">
+          <InputLabel id="select-label" className="text-[12px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] ">
             Sắp xếp
           </InputLabel>
           <Select
@@ -95,7 +95,7 @@ export const ProductGrid = () => {
           lg: 4,
           xl: 5,
         }}
-        className="flex justify-start"
+        className="flex justify-around items-center"
       >
         {products.map((product) => (
           <Grid item key={product.purrPetCode} className="">

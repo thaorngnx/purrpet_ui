@@ -23,10 +23,10 @@ export const ProductPage = () => {
       <Box className="mt-4 flex flex-row align-top">
         <SideNavCategoryCustomer />
         <Box className="w-4/5 flex-col">
-          <Typography variant="h6" className="text-center font-sans font-bold">
+          <Typography variant="h6" className="text-center font-sans font-bold text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
             Sản phẩm
           </Typography>
-          <Typography variant="h6" className="text-center font-sans font-bold">
+          <Typography variant="h6" className="text-center font-sans font-bold text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px] xl:text-[26px]">
             {selectedCategory?.categoryName || "Tất cả"}
           </Typography>
           <ProductGrid />
