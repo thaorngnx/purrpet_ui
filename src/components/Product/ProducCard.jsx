@@ -15,6 +15,8 @@ import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Cookie from "js-cookie";
+import { Favorite } from "@mui/icons-material";
+import { favoriteProduct } from "../../api/favorite";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -26,6 +28,15 @@ export const ProductCard = ({ product }) => {
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));
     navigate(`/product/${product.purrPetCode}`);
+  };
+
+  const handleFavoriteClick = () => {
+    favoriteProduct(product.purrPetCode).then((res) => {
+      if (res.err === 0) {
+        console.log(res);
+        console.log("thêm vào yêu thích thành công");
+      }
+    });
   };
 
   const handleAddToCart = () => {
@@ -156,6 +167,12 @@ export const ProductCard = ({ product }) => {
               onClick={handleProductClick}
             >
               <VisibilityIcon />
+            </Fab>
+            <Fab
+              className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
+              onClick={handleFavoriteClick}
+            >
+              <Favorite />
             </Fab>
           </div>
         )}
