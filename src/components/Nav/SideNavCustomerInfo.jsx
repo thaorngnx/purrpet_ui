@@ -8,6 +8,7 @@ import { BigHoverButton } from "../Button/StyledButton";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SavingsIcon from "@mui/icons-material/Savings";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export const SideNavCustomerInfo = () => {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ export const SideNavCustomerInfo = () => {
           color={"inherit"}
           className="m-2 flex flex-row"
         >
-          <SavingsIcon className="mr-1" />
+          <FavoriteIcon className="mr-1" />
           <Typography
             variant="h2"
             gutterBottom

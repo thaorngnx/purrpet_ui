@@ -158,7 +158,7 @@ export function HeaderCustomer() {
   );
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       sx={{
         backgroundColor: "#d9d9d9",
         color: "black",

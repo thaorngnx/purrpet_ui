@@ -30,6 +30,7 @@ export const ProductGrid = () => {
     },
   });
   const [page, setPage] = useState(1);
+ 
 
   useEffect(() => {
     const params = {
@@ -41,6 +42,8 @@ export const ProductGrid = () => {
       setResProducts(res);
     });
   }, [page, categoryCode, sort, searchKey]);
+
+  
 
   const products = resProducts.data || [];
   const totalPage = resProducts.pagination.total || 0;

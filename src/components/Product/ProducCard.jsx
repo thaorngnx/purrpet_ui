@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -16,14 +16,30 @@ import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Cookie from "js-cookie";
 import { Favorite } from "@mui/icons-material";
-import { favoriteProduct } from "../../api/favorite";
+import { favoriteProduct, getAllFavorite } from "../../api/favorite";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const customer = useStore((state) => state.customerState.data);
 
   const { addToCart } = useStore();
 
   const [isHover, setIsHover] = useState(false);
+
+  const [favoriteProducts, setFavoriteProducts] = useState([]);
+  useEffect(() => {
+    const params = {
+      limit: 10000,
+      page: 1,
+    };
+    getAllFavorite(params).then((res) => {
+      if (res.err === 0) {
+        setFavoriteProducts(res.data);
+      }
+    });
+  }, [ product]);
 
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));
@@ -38,6 +54,7 @@ export const ProductCard = ({ product }) => {
       }
     });
   };
+
 
   const handleAddToCart = () => {
     addToCart({
@@ -66,6 +83,11 @@ export const ProductCard = ({ product }) => {
           xs: "0 1px 1px 0",
           sm: "0 2px 2px 0",
           md: "0 4px 4px 0",
+        },
+        height: {
+          xs: "260px",
+          sm: "280px",
+          md: "300px",
         },
       }}
     >
@@ -150,7 +172,9 @@ export const ProductCard = ({ product }) => {
               </Typography>
               <StarRateIcon style={{ color: "#f17359" }} />
             </Box>
+           
           </Box>
+
         </CardContent>
         {isHover && (
           <div className="absolute z-0 flex h-full w-full items-center justify-center bg-white bg-opacity-10">
@@ -168,12 +192,18 @@ export const ProductCard = ({ product }) => {
             >
               <VisibilityIcon />
             </Fab>
-            <Fab
+           {
+            customer && (
+              <Fab
               className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
               onClick={handleFavoriteClick}
             >
-              <Favorite />
+              {
+                favoriteProducts.find((item) => item.purrPetCode === product.purrPetCode) ? <FavoriteIcon style={{color: "#FF0000"}}/> : <FavoriteBorderIcon  />
+              }
             </Fab>
+            )
+           }
           </div>
         )}
       </CardActionArea>
