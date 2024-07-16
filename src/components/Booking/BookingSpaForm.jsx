@@ -226,6 +226,7 @@ export const BookingSpaForm = () => {
         flexDirection: "column",
         mb: 3,
         minHeight: "100vh",
+        backgroundColor: "#F6D2BD",
       }}
     >
       <Typography
@@ -237,15 +238,22 @@ export const BookingSpaForm = () => {
           fontWeight: "bold",
         }}
       >
-        Thông tin đặt lịch spa
+        ĐẶT LỊCH SPA CHO THÚ CƯNG
       </Typography>
-      <Paper
+        <Box
+          sx={{
+            width: {
+              xs: "95%",
+              sm: "85%",
+              md: "75%",
+            },
+            mx: "auto",
+            position: "relative",
+            mb: 5,
+          }}
+        >
+        <Paper
         sx={{
-          width: {
-            xs: "95%",
-            sm: "85%",
-            md: "75%",
-          },
           mx: "auto",
           position: "relative",
           display: "flex",
@@ -255,7 +263,6 @@ export const BookingSpaForm = () => {
             sm: 5,
             md: 7,
           },
-          mb: 5,
         }}
       >
         <Typography
@@ -295,6 +302,17 @@ export const BookingSpaForm = () => {
             }}
           />
         </FormControl>
+        <Box sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+        }}>
+          <Box  
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}>
         <FormControl>
           <FormLabel
             sx={{
@@ -380,7 +398,37 @@ export const BookingSpaForm = () => {
             </RadioGroup>
           </FormControl>
         )}
-
+        </Box>
+        <Box>
+        {
+            bookingInfo.petType === "Chó"   ? (
+              <Box>
+            {
+              bookingInfo.petName !== "" && (
+                <Typography style={{ fontStyle: 'italic', color: '#555', marginTop:"2px", fontSize:"12px" }}>
+                Xin chào! Tên con là <strong>{bookingInfo.petName}</strong>
+              </Typography>
+              )
+            }
+              <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721105561/dogL-removebg-preview_cklzu7.png" alt="dog" style={{width: "150px", height: "180px"}}/>
+              </Box>
+            ) : bookingInfo.petType === "Mèo" ? (
+              <Box>
+              {
+              bookingInfo.petName !== "" && (
+                <Typography style={{ fontStyle: 'italic', color: '#555', marginTop:"2px" , fontSize:"12px" }}>
+                Xin chào! Tên con là <strong>{bookingInfo.petName}</strong>
+              </Typography>
+              )
+            }
+              <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721106128/Cat_big-removebg-preview_lq2fd9.png" alt="cat" style={{width: "150px", height: "180px"}}/>
+              </Box>
+            ) : (
+              <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721105931/image-removebg-preview_2_slnir2.png" alt="other" style={{width: "150px", height: "180px"}}/>
+            )
+          }
+        </Box>
+        </Box>
         {bookingInfo.spaName && (
           <>
             <Typography
@@ -411,6 +459,20 @@ export const BookingSpaForm = () => {
           </>
         )}
       </Paper>
+            <img
+          src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721109838/image-removebg-preview_4_nkczgg.png"
+          alt="spa"
+          style={{
+            position: "absolute",
+            top: "-50px",  // Điều chỉnh giá trị này để đặt ảnh nằm đè lên phần trên của Paper
+            left: "10%",
+            transform: "translateX(-50%)",
+            zIndex: 2,
+            width: "150px", // Điều chỉnh kích thước ảnh tùy ý
+            height: "auto",
+          }}
+        />
+      </Box>
       {openTimeForm && (
         <TimeSpaForm
           bookingInfo={bookingInfo}
@@ -432,6 +494,7 @@ export const BookingSpaForm = () => {
             flexDirection: "column",
             justifyContent: "center",
             justifyItems: "center",
+            backgroundColor: "#ffffff",
             px: {
               xs: 3,
               sm: 5,
@@ -450,6 +513,7 @@ export const BookingSpaForm = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
+              mt: 2,
             }}
           >
             <FormLabel
@@ -597,15 +661,38 @@ export const BookingSpaForm = () => {
         </FormControl>
       )}
       {validateObject(bookingInfo) && showBtnConfirmBook && (
+         <Box 
+         sx={{
+           display: "flex",
+           flexDirection: "column",
+           justifyContent: "center",
+           justifyItems: "center",
+           backgroundColor: "#ffffff",
+           px: {
+             xs: 3,
+             sm: 5,
+             md: 7,
+           },
+           mt: 3,
+           mx: "auto",
+           width: {
+             xs: "95%",
+             sm: "85%",
+             md: "75%",
+           },
+         }}
+         >
         <BigHoverTransformButton
           onClick={handleConfirmBooking}
           sx={{
             m: "auto",
             mt: 2,
+            backgroundColor: "#F6D2BD",
           }}
         >
           Xác nhận đặt lịch
         </BigHoverTransformButton>
+        </Box>
       )}
     </Box>
   );

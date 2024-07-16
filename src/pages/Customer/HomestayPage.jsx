@@ -2,7 +2,6 @@ import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
 import img1 from "../../assets/homestay.jpg";
 import img2 from "../../assets/hotel-img-7.jpg";
-import img3 from "../../assets/Bannerhomestay.png";
 import img4 from "../../assets/homestay5.jpg";
 import img5 from "../../assets/homestay6.jpg";
 import img6 from "../../assets/homestay7.jpg";
@@ -13,13 +12,16 @@ import img10 from "../../assets/homestay11.jpg";
 import img11 from "../../assets/homestay12.jpg";
 import { Button, List, ListItem, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { de } from "date-fns/locale";
+import { WidthFull } from "@mui/icons-material";
+import Slider from "react-slick";
 
 export const HomestayPage = () => {
   const navigate = useNavigate();
   const TimeLine = [
     {
       time: "07:00 - 08:30",
-      content: "Nhân viên chuẩn bị bữa sáng, kiểm tra lau dọn chuồng",
+      content: "Nhân viên chuẩn bị: bữa sáng, kiểm tra lau dọn chuồng",
     },
     {
       time: "08:30 - 09:00",
@@ -50,6 +52,7 @@ export const HomestayPage = () => {
       content: "Các bé nghỉ ngơi trong phòng",
     },
   ];
+  
 
   const images = [
     {
@@ -82,28 +85,65 @@ export const HomestayPage = () => {
     {
       name: "Phòng Size S",
       price: "120.000 VNĐ đến 140.000 VNĐ",
-      img: img1,
-      color: "#7C58D3",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_fill,w_260,h_260/v1721044420/Size_S_ou2fih.jpg",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_fill,w_260,h_260/v1721046337/SizeS_2_apiv3e.jpg",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_crop,w_260,h_260/v1721099342/Screenshot_2024-07-16_100347_fanm5z_c_fill_w_240_h_240_tnaxdd.jpg",
+      description: {
+      size: "- Kích thước: 60cm x 60cm x 60cm",
+        
+      conform: "- Phù hợp với: Mèo và chó nhỏ (dưới 5kg), như Chihuahua, Pomeranian, mèo nhà thông thường",
+      apparatus: "- Phòng được trang bị: giường mềm, khay vệ sinh, đồ chơi và bát ăn uống.",
+      },
+      color: "#cc97f9",
+      image: 'https://res.cloudinary.com/drzp9tafy/image/upload/v1721102015/Chihuahua-removebg-preview_awkdvd.png'
     },
     {
       name: "Phòng Size M",
       price: "140.000 VNĐ đến 160.000 VNĐ",
-      img: img4,
-      color: "#5868d3",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721044420/Size_M_si1qxo.jpg",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046336/SizeM_2_arronh.jpg",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046337/SizeM_1_bskica.jpg",
+    
+      description: {
+      size: "- Kích thước: 60 x 90cm x 80cm",
+      conform: "- Phù hợp với: Chó cỡ trung (5kg - 15kg), như Cocker Spaniel, French Bulldog, mèo lớn hơn.",
+      apparatus: "- Phòng được trang bị: giường mềm, khay vệ sinh, đồ chơi, bát ăn uống, và đệm nằm.",
+      },
+      color: "#97aef9",
+      image: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721102202/image-removebg-preview_qkjdsh.png"
     },
     {
       name: "Phòng Size L",
       price: "160.000 VNĐ đến 180.000 VNĐ",
-      img: img5,
-      color: "#FFDA47",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721044421/Size_L_ephwtr.jpg",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/sizeL_1_t7twj4.jpg",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/SizeL_2_jqqzsh.jpg",
+      description: {
+      size: "- Kích thước: 90cm x 120cm x 90cm",
+      conform: "- Phù hợp với: Chó cỡ lớn (trên 15kg), như Golden Retriever, Husky, Beagle.",
+      apparatus: "- Phòng được trang bị: giường lớn, khay vệ sinh, đồ chơi, bát ăn uống, đệm nằm, và máy lọc không khí.",
+      },
+      image:"https://res.cloudinary.com/drzp9tafy/image/upload/v1721102429/image-removebg-preview_1_gwl7zw.png",
+      color: "#e85ece",
     },
   ];
+
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000, // 3 giây mỗi slide
+    arrows:false,
+  };
 
   return (
     <>
       <HeaderCustomer />
 
-      <img className=" max-h-full w-full" src={img3} alt="img1" />
+      <img className=" max-h-full w-full" src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721096705/PURR_PET_3_dwjlxd.png" alt="img1" />
 
       <Box className="flex justify-center">
         <Typography
@@ -202,26 +242,26 @@ export const HomestayPage = () => {
           padding: "0 20px",
           marginBottom: "50px",
           display: "flex",
-          flexDirection: {
-            xs: "column",
-            sm: "column",
-            md: "row",
-          },
+          flexDirection: "column",
+          alignItems: "center",
+
         }}
       >
+
         {rooms.map((room) => (
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
+             margin: "10px",
               alignItems: "center",
               justifyContent: "center",
               padding: "20px",
               borderRadius: "20px",
               border: "2px solid #FFDA47",
               backgroundColor: room.color,
+              width: "80%",
             }}
           >
+            <Box className="flex flex-col items-center">
             <Typography
               sx={{
                 fontWeight: "bold",
@@ -249,14 +289,54 @@ export const HomestayPage = () => {
             >
               {room.price}
             </Typography>
-            <img
-              src={room.img}
-              alt="img1"
-              style={{
-                height: "300px",
-                borderRadius: "30px",
-              }}
-            />
+            </Box>
+            <Box className="flex justify-between mb-2">
+            <Box className="w-[30%]">
+            <Slider  {...sliderSettings} key={room.name} >
+              <Box style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={room.link1}
+                  alt={`img-${room.name}`}
+                  style={{
+                    height: "auto",
+                    maxWidth: "100%",
+                    
+                  }}
+                />
+              </Box>
+              <Box style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={room.link2}
+                  alt={`img-${room.name}`}
+                  style={{
+                    height: "auto",
+                    maxWidth: "100%",
+                    
+                  }}
+                />
+              </Box>
+              <Box style={{ display: "flex", justifyContent: "center" }}>
+                <img
+                  src={room.link3}
+                  alt={`img-${room.name}`}
+                  style={{
+                    height: "auto",
+                    maxWidth: "100%",
+                    
+                  }}
+                />
+              </Box>
+              </Slider>
+              </Box>
+              <Box className="w-[70%] flex flex-col items-start mt-5 ml-5">
+              <Typography sx={{color: "black", fontSize: "20px",  textAlign: "start" }}>{room.description.size}</Typography>
+              <Typography sx={{color: "black", fontSize: "20px",  textAlign: "start" }}>{room.description.conform}</Typography>
+              <Typography sx={{color: "black", fontSize: "20px",  textAlign: "start"}}>{room.description.apparatus}</Typography>
+              <img src={room.image} alt="img" />
+              </Box>
+              
+            </Box>
+           
             <Typography className="flex justify-center">
               <Button
                 onClick={() => {
@@ -270,6 +350,7 @@ export const HomestayPage = () => {
           </Box>
         ))}
       </Box>
+      
       <Typography
         sx={{
           textAlign: "center",
@@ -292,15 +373,24 @@ export const HomestayPage = () => {
           padding: "0 20px",
         }}
       >
-        {images.map((image) => (
+        {images.map((image, index) => (
           <img
+            key={index}
             src={image.imgPath}
             alt={image.alt}
             className="m-[10px] rounded-lg border-2 border-[#ED952D]"
+            style={{
+              maxWidth: "500px",
+              maxHeight: "500px",
+              objectFit: "cover",
+              transition: "transform 0.3s",
+              '&:hover': {
+                transform: "scale(1.05)",
+              }
+            }}
           />
         ))}
       </Box>
-
       <FooterCustomer />
     </>
   );
