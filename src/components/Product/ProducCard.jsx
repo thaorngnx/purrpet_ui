@@ -15,10 +15,9 @@ import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Cookie from "js-cookie";
-import { Favorite } from "@mui/icons-material";
-import { favoriteProduct, getAllFavorite } from "../../api/favorite";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { favoriteProduct, getFavoriteProductDetail } from "../../api/favorite";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -34,12 +33,12 @@ export const ProductCard = ({ product }) => {
       limit: 10000,
       page: 1,
     };
-    getAllFavorite(params).then((res) => {
+    getFavoriteProductDetail(params).then((res) => {
       if (res.err === 0) {
         setFavoriteProducts(res.data);
       }
     });
-  }, [ product]);
+  }, [product]);
 
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));
@@ -54,7 +53,6 @@ export const ProductCard = ({ product }) => {
       }
     });
   };
-
 
   const handleAddToCart = () => {
     addToCart({
@@ -172,9 +170,7 @@ export const ProductCard = ({ product }) => {
               </Typography>
               <StarRateIcon style={{ color: "#f17359" }} />
             </Box>
-           
           </Box>
-
         </CardContent>
         {isHover && (
           <div className="absolute z-0 flex h-full w-full items-center justify-center bg-white bg-opacity-10">
@@ -192,18 +188,20 @@ export const ProductCard = ({ product }) => {
             >
               <VisibilityIcon />
             </Fab>
-           {
-            customer && (
+            {customer && (
               <Fab
-              className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
-              onClick={handleFavoriteClick}
-            >
-              {
-                favoriteProducts.find((item) => item.purrPetCode === product.purrPetCode) ? <FavoriteIcon style={{color: "#FF0000"}}/> : <FavoriteBorderIcon  />
-              }
-            </Fab>
-            )
-           }
+                className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
+                onClick={handleFavoriteClick}
+              >
+                {favoriteProducts.find(
+                  (item) => item.purrPetCode === product.purrPetCode,
+                ) ? (
+                  <FavoriteIcon style={{ color: "#FF0000" }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )}
+              </Fab>
+            )}
           </div>
         )}
       </CardActionArea>

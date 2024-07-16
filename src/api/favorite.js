@@ -1,9 +1,18 @@
 import api from "./token";
 
-export async function getAllFavorite(params) {
+export async function getFavorite(params) {
+    try {
+        const response = await api.get("favorite", { params });
+        return response.data;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getFavoriteProductDetail(params) {
   try {
-    const response = await api.get("favorite", { params });
-    console.log("response", response.data);
+    const response = await api.get("favorite/detail", { params });
     return response.data;
   } catch (error) {
     console.error(error);
