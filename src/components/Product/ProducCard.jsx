@@ -24,18 +24,10 @@ export const ProductCard = ({ product }) => {
 
   const { favoriteProduct } = useStore();
 
-  const [isFavorite, setIsFavorite] = useState(false);
-
   const { addToCart } = useStore();
 
   const [isHover, setIsHover] = useState(false);
   const favorite = useStore((state) => state.favoriteState.data);
-
-  // useEffect(() => {
-  //   if (favorite) {
-  //     setIsFavorite(favorite.find((item) => item === product.purrPetCode));
-  //   }
-  // }, [favorite]);
 
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));

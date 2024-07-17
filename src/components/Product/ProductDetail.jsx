@@ -294,7 +294,7 @@ export const ProductDetail = () => {
                     >
                       Thêm vào giỏ hàng
                     </BigHoverTransformButton>
-                    {favorite.find((item) => item === productCode) ? (
+                    {favorite?.find((item) => item === productCode) ? (
                       <FavoriteIcon
                         color="error"
                         onClick={handleFavorite}
