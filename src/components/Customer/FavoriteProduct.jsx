@@ -1,5 +1,4 @@
 import { useStore } from "../../zustand/store";
-import { favoriteProduct, getFavoriteProductDetail } from "../../api/favorite";
 import { Box, Pagination, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -13,26 +12,25 @@ import {
 } from "@mui/material";
 import { MiniHoverButton } from "../Button/StyledButton";
 import { useNavigate } from "react-router-dom";
+import { DeleteForever } from "@mui/icons-material";
 
 export const FavoriteProduct = () => {
-  const [favoriteProducts, setFavoriteProducts] = useState([]);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const { addToCart } = useStore();
 
-  const [totalPage, setTotalPage] = useState(1);
+  const { favoriteProduct } = useStore();
+  const favoriteProducts = useStore((state) => state.favoriteDetailState.data);
+  const { pagination } = useStore((state) => state.favoriteDetailState);
+
+  const { getFavoriteProductDetail } = useStore();
 
   useEffect(() => {
     const params = {
       limit: 10,
       page: page,
     };
-    getFavoriteProductDetail(params).then((res) => {
-      if (res.err === 0) {
-        setFavoriteProducts(res.data);
-        setTotalPage(res.pagination.total);
-      }
-    });
+    getFavoriteProductDetail(params);
   }, [page]);
 
   const handleChangePage = (event, newPage) => {
@@ -40,11 +38,8 @@ export const FavoriteProduct = () => {
   };
 
   const handleUnfavorite = (product) => {
-    favoriteProduct(product).then((res) => {
-      if (res.err === 0) {
-        window.location.reload();
-      }
-    });
+    favoriteProduct(product);
+    getFavoriteProductDetail({ limit: 10, page });
   };
   const handleAddtoCart = (product) => {
     addToCart({
@@ -61,16 +56,25 @@ export const FavoriteProduct = () => {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell>Hình ảnh</TableCell>
-              <TableCell align="left">Tên sản phẩm</TableCell>
-              <TableCell align="right">Giá</TableCell>
-              <TableCell align="right">Trạng thái</TableCell>
+              <TableCell align="center" className="font-bold">
+                Hình ảnh
+              </TableCell>
+              <TableCell align="center" className="font-bold">
+                Tên sản phẩm
+              </TableCell>
+              <TableCell align="center" className="font-bold">
+                Giá
+              </TableCell>
+              <TableCell align="center" className="font-bold">
+                Trạng thái
+              </TableCell>
+              <TableCell align="center" className="font-bold"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {favoriteProducts.map((row) => (
+            {favoriteProducts?.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.purrPetCode}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
@@ -130,29 +134,25 @@ export const FavoriteProduct = () => {
                   )}
                 </TableCell>
                 <TableCell align="right">
-                  <MiniHoverButton
-                    onClick={() => {
-                      navigate(`/product/${row.productCode}`);
-                    }}
-                  >
-                    Chi tiết
-                  </MiniHoverButton>
-                </TableCell>
-                <TableCell align="right">
-                  <MiniHoverButton
-                    onClick={() => handleAddtoCart(row.purrPetCode)}
-                  >
-                    Thêm vào giỏ hàng
-                  </MiniHoverButton>
-                </TableCell>
-
-                <TableCell align="right">
-                  <button
-                    className="text-blue-500"
-                    onClick={() => handleUnfavorite(row.purrPetCode)}
-                  >
-                    Xóa
-                  </button>
+                  <Box className="flex flex-row">
+                    <MiniHoverButton
+                      onClick={() => {
+                        navigate(`/product/${row.purrPetCode}`);
+                      }}
+                    >
+                      Chi tiết
+                    </MiniHoverButton>
+                    <MiniHoverButton
+                      onClick={() => handleAddtoCart(row.purrPetCode)}
+                      className="mx-1"
+                    >
+                      Thêm vào giỏ hàng
+                    </MiniHoverButton>
+                    <DeleteForever
+                      color="error"
+                      onClick={() => handleUnfavorite(row.purrPetCode)}
+                    />
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
@@ -170,7 +170,7 @@ export const FavoriteProduct = () => {
           <Pagination
             onChange={handleChangePage}
             page={page}
-            count={totalPage}
+            count={pagination.total ? pagination.total : 1}
             shape="rounded"
             className="mb-2 mt-5 flex justify-end"
           />

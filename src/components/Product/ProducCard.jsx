@@ -15,20 +15,27 @@ import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Cookie from "js-cookie";
-import { favoriteProduct, getFavoriteProductDetail } from "../../api/favorite";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const customer = useStore((state) => state.customerState.data);
-  
+
+  const { favoriteProduct } = useStore();
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const { addToCart } = useStore();
 
   const [isHover, setIsHover] = useState(false);
   const favorite = useStore((state) => state.favoriteState.data);
-  console.log("favorite", favorite);
+
+  // useEffect(() => {
+  //   if (favorite) {
+  //     setIsFavorite(favorite.find((item) => item === product.purrPetCode));
+  //   }
+  // }, [favorite]);
 
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));
@@ -36,12 +43,7 @@ export const ProductCard = ({ product }) => {
   };
 
   const handleFavoriteClick = () => {
-    favoriteProduct(product.purrPetCode).then((res) => {
-      if (res.err === 0) {
-        console.log(res);
-        console.log("thêm vào yêu thích thành công");
-      }
-    });
+    favoriteProduct(product.purrPetCode);
   };
 
   const handleAddToCart = () => {
@@ -183,9 +185,7 @@ export const ProductCard = ({ product }) => {
                 className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
                 onClick={handleFavoriteClick}
               >
-                {favorite.find(
-                  (item) => item === product.purrPetCode,
-                ) ? (
+                {favorite.find((item) => item === product.purrPetCode) ? (
                   <FavoriteIcon style={{ color: "#FF0000" }} />
                 ) : (
                   <FavoriteBorderIcon />
