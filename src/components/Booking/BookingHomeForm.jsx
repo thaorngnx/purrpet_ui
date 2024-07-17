@@ -463,7 +463,9 @@ export const BookingHomeForm = () => {
         )}
  
         {bookingInfo.categoryCode && (
-          <FormControl>
+          <FormControl sx={{
+           
+          }}>
             <FormLabel
               sx={{
                 fontWeight: "bold",
@@ -472,22 +474,46 @@ export const BookingHomeForm = () => {
             >
               Chọn loại phòng:
             </FormLabel>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+              }}
+            >
             <RadioGroup
               name="homeSize"
               value={bookingInfo.homeSize}
               onChange={handleChangeBookingInfo}
-              sx={{ display: "flex", flexDirection: "row" }}
+              sx={{ display: "flex", flexDirection: "col", marginRight: "15px" }}
             >
               {validSizes &&
                 validSizes.map((size) => (
-                  <FormControlLabel
+                
+                    <FormControlLabel
                     key={size}
                     value={size}
                     control={<Radio />}
-                    label={size}
+                    label={
+                      size === "Size S" ? "Size S ( 60cm x 60cm x 60cm)" : size === "Size M" ? "Size M ( 60cm x 80cm x 90cm)" : "Size L (  60cm x 90cm x 120cm)"
+                    }
                   />
+                
                 ))}
             </RadioGroup>
+          {
+               bookingInfo.homeSize === "Size S" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721046337/SizeS_2_apiv3e.jpg" alt="dog" style={{width: "200px", height: "190px"}}/>
+              ) : bookingInfo.homeSize === "Size M" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721190639/Screenshot_2024-07-17_113027_sso47r.jpg" alt="cat" style={{width: "200px", height: "190px"}}/>
+              ) : bookingInfo.homeSize === "Size L" ?  (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721190639/Screenshot_2024-07-17_113009_nbpvpb.jpg" alt="cat" style={{width: "200px", height: "190px"}}/>
+              ): (
+                ""
+              )
+          }
+          </Box>
           </FormControl>
         )}
                 </Box>

@@ -380,11 +380,18 @@ export const BookingSpaForm = () => {
             >
               Chọn gói dịch vụ:
             </FormLabel>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-start",
+              }}
+            >
             <RadioGroup
               name="spaName"
               value={bookingInfo.spaName}
               onChange={handleChangeBookingInfo}
-              sx={{ display: "flex", flexDirection: "row" }}
+              sx={{ display: "flex", flexDirection: "col" }}
             >
               {validSpas &&
                 validSpas.map((spa) => (
@@ -392,10 +399,26 @@ export const BookingSpaForm = () => {
                     key={spa.spaName}
                     value={spa.spaName}
                     control={<Radio />}
-                    label={spa.spaName}
-                  />
+                    label={
+                      spa.spaName === "Silver" ? "Sliver (5 Bước)" : spa.spaName === "Gold" ? "Gold (8 Bước)" : spa.spaName === "Platium" ? "Platium (9 Bước)" : " Diamond (9 Bước)"}
+                />
                 ))}
             </RadioGroup>
+            {
+              bookingInfo.spaName === "Silver" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192375/Sliver_vbs3lc.png" alt="silver" style={{width: "250px", height: "auto"}}/>
+              ) : bookingInfo.spaName === "Gold" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192353/Gold_fhq2cs.png" alt="gold" style={{width: "250px", height: "auto"}}/>
+              ) : bookingInfo.spaName === "Platium" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192374/Platium_bvrmdz.png" alt="platium" style={{width: "250px", height: "auto"}}/>
+              ) : bookingInfo.spaName === "Diamond" ? (
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192323/Diamond_yp039z.png" alt="diamond" style={{width: "250px", height: "auto"}}/> 
+              ):(
+                <></>
+              )
+
+            }
+            </Box>
           </FormControl>
         )}
         </Box>

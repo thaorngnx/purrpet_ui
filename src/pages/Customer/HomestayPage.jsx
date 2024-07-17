@@ -100,12 +100,12 @@ export const HomestayPage = () => {
     {
       name: "Phòng Size M",
       price: "140.000 VNĐ đến 160.000 VNĐ",
-      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721044420/Size_M_si1qxo.jpg",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721190639/Screenshot_2024-07-17_113027_sso47r.jpg",
       link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046336/SizeM_2_arronh.jpg",
       link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046337/SizeM_1_bskica.jpg",
     
       description: {
-      size: "- Kích thước: 60 x 90cm x 80cm",
+      size: "- Kích thước: 60cm x 80cm x 90cm",
       conform: "- Phù hợp với: Chó cỡ trung (5kg - 15kg), như Cocker Spaniel, French Bulldog, mèo lớn hơn.",
       apparatus: "- Phòng được trang bị: giường mềm, khay vệ sinh, đồ chơi, bát ăn uống, và đệm nằm.",
       },
@@ -115,11 +115,11 @@ export const HomestayPage = () => {
     {
       name: "Phòng Size L",
       price: "160.000 VNĐ đến 180.000 VNĐ",
-      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721044421/Size_L_ephwtr.jpg",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721190639/Screenshot_2024-07-17_113009_nbpvpb.jpg",
       link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/sizeL_1_t7twj4.jpg",
       link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/SizeL_2_jqqzsh.jpg",
       description: {
-      size: "- Kích thước: 90cm x 120cm x 90cm",
+      size: "- Kích thước: 60cm x 90cm x 120cm",
       conform: "- Phù hợp với: Chó cỡ lớn (trên 15kg), như Golden Retriever, Husky, Beagle.",
       apparatus: "- Phòng được trang bị: giường lớn, khay vệ sinh, đồ chơi, bát ăn uống, đệm nằm, và máy lọc không khí.",
       },
