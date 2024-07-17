@@ -36,6 +36,7 @@ export const ProductGrid = () => {
       page: page,
       key: categoryCode || searchKey,
       order: sort,
+      limit: 10,
     };
     getActiveProducts(params).then((res) => {
       setResProducts(res);
@@ -47,7 +48,6 @@ export const ProductGrid = () => {
 
   const handleChangeSort = (event) => {
     const value = event.target.value;
-    console.log(value);
     setSelectedSort(value);
     const currentParams = new URLSearchParams(location.search);
     currentParams.set("sort", value);
@@ -61,9 +61,12 @@ export const ProductGrid = () => {
 
   return (
     <Box className="min-h-screen w-[100%] flex-col">
-      <Box className="mx-4 flex justify-end mb-2">
-        <FormControl className="w-[100px] ">
-          <InputLabel id="select-label" className="text-[12px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] ">
+      <Box className="mx-4 mb-2 flex justify-end">
+        <FormControl className="w-[120px] ">
+          <InputLabel
+            id="select-label"
+            className="text-[12px] sm:text-[12px] md:text-[12px] lg:text-[14px] xl:text-[16px] "
+          >
             Sắp xếp
           </InputLabel>
           <Select
@@ -95,7 +98,7 @@ export const ProductGrid = () => {
           lg: 4,
           xl: 5,
         }}
-        className="flex justify-around items-center"
+        className="flex items-center justify-around"
       >
         {products.map((product) => (
           <Grid item key={product.purrPetCode} className="">

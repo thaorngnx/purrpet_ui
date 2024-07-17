@@ -59,12 +59,15 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { SpendingStatisticsPage } from "./pages/Customer/SpendingStatisticsPage";
 import { ScrollToTop } from "./components/Button/ScrollToTop";
+import { FavoriteProductPage } from "./pages/Customer/FavoriteProductPage";
+import { getFavorite } from "./api/favorite";
 
 function App() {
   const {
     getCart,
     getActiveCategories,
     getCustomerById,
+    getFavorite,
     cartState,
     activeProductCategoryState,
     customerState,
@@ -74,6 +77,7 @@ function App() {
   useEffect(() => {
     getCart();
     getActiveCategories();
+    getFavorite();
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
       { path: "/" },
@@ -84,7 +88,7 @@ function App() {
         getCustomerById(decoded.id);
       }
     }
-  }, [getCart, getActiveCategories, getCustomerById]);
+  }, [getCart, getActiveCategories, getCustomerById, getFavorite]);
 
   if (activeProductCategoryState.loading || customerState.loading) {
     return (
@@ -103,7 +107,7 @@ function App() {
 
   return (
     <BrowserRouter>
-  <ScrollToTop />
+      <ScrollToTop />
       <Routes>
         <Route path="/">
           <Route index element={<HomePage />} />
@@ -116,13 +120,12 @@ function App() {
           <Route path="booking/spa" element={<BookingSpaPage />} />
           <Route path="booking/home" element={<BookingHomePage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="notification" element={<NotificationPage />} />
-          <Route path="wallet" element={<CoinWalletPage />} />
+
           <Route path="lookup" element={<LookUpOrderPage />} />
 
           <Route element={<ProtectedCustomerRoutes />}>
             <Route path="customer" element={<CustomerInfoPage />} />
-            <Route path="spending" element = {<SpendingStatisticsPage/>}/>
+            <Route path="spending" element={<SpendingStatisticsPage />} />
             <Route path="order" element={<OrderHistoryPage />} />
             <Route path="order/:orderCode" element={<OrderDetailPage />} />
             <Route
@@ -133,7 +136,9 @@ function App() {
               path="bookingHome/:bookingHomeCode"
               element={<BookingHomeDetailPage />}
             />
-          
+            <Route path="notification" element={<NotificationPage />} />
+            <Route path="wallet" element={<CoinWalletPage />} />
+            <Route path="favorite" element={<FavoriteProductPage />} />
           </Route>
           <Route path="test" element={<HorizontalSlider />} />
         </Route>
@@ -196,7 +201,6 @@ function App() {
           </Route>
         </Route>
       </Routes>
-     
     </BrowserRouter>
   );
 }

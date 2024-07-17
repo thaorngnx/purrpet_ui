@@ -22,6 +22,8 @@ import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import { HorizontalSlider } from "../Slider/HorizontalSlider";
 import { getReviewByProduct } from "../../api/review";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
@@ -41,6 +43,9 @@ export const ProductDetail = () => {
     page: 1,
     total: 0,
   });
+
+  const favorite = useStore((state) => state.favoriteState.data);
+  const { favoriteProduct } = useStore();
 
   useEffect(() => {
     getProductByCode(productCode).then((res) => {
@@ -108,14 +113,15 @@ export const ProductDetail = () => {
     setReviewPagination({ ...reviewPagination, page: value });
   };
 
-  console.log("re", reviews);
+  const handleFavorite = () => {
+    favoriteProduct(productCode);
+  };
 
   return (
     <>
       <Box className="my-5 flex flex-col items-center">
         <Typography
           variant="h3"
-          // className="mb-5 text-3xl font-bold"
           sx={{
             marginBottom: {
               xs: "10px",
@@ -131,7 +137,6 @@ export const ProductDetail = () => {
           Chi tiết sản phẩm
         </Typography>
         <Paper
-          // className="flex w-[97%] flex-col items-center justify-center p-5"
           sx={{
             width: {
               xs: "92%",
@@ -178,7 +183,6 @@ export const ProductDetail = () => {
             >
               <Typography
                 variant="h4"
-                // className="mb-2 text-2xl font-bold"
                 sx={{
                   marginBottom: {
                     xs: "10px",
@@ -283,12 +287,27 @@ export const ProductDetail = () => {
                       </Button>
                     </Box>
                   </FormControl>
-                  <BigHoverTransformButton
-                    onClick={handleAddToCart}
-                    className="mt-3"
-                  >
-                    Thêm vào giỏ hàng
-                  </BigHoverTransformButton>
+                  <Box className="mt-3 flex flex-row items-center">
+                    <BigHoverTransformButton
+                      onClick={handleAddToCart}
+                      className="mr-3"
+                    >
+                      Thêm vào giỏ hàng
+                    </BigHoverTransformButton>
+                    {favorite.find((item) => item === productCode) ? (
+                      <FavoriteIcon
+                        color="error"
+                        onClick={handleFavorite}
+                        fontSize="large"
+                      />
+                    ) : (
+                      <FavoriteBorderIcon
+                        color={"inherit"}
+                        onClick={handleFavorite}
+                        fontSize="large"
+                      />
+                    )}
+                  </Box>
                 </>
               )}
               {product?.inventory <= 0 && (

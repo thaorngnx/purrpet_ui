@@ -20,7 +20,6 @@ export const LookUpOrderForm = () => {
   const customerState = useStore((state) => state.customerState);
 
   const { setCustomerState } = useStore();
-  console.log("cus", customerState);
 
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");

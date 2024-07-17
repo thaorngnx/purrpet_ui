@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -15,17 +15,35 @@ import { formatCurrency } from "../../utils/formatData";
 import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Cookie from "js-cookie";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const customer = useStore((state) => state.customerState.data);
+
+  const { favoriteProduct } = useStore();
+
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { addToCart } = useStore();
 
   const [isHover, setIsHover] = useState(false);
+  const favorite = useStore((state) => state.favoriteState.data);
+
+  // useEffect(() => {
+  //   if (favorite) {
+  //     setIsFavorite(favorite.find((item) => item === product.purrPetCode));
+  //   }
+  // }, [favorite]);
 
   const handleProductClick = () => {
     Cookie.set("producRecently", JSON.stringify(product));
     navigate(`/product/${product.purrPetCode}`);
+  };
+
+  const handleFavoriteClick = () => {
+    favoriteProduct(product.purrPetCode);
   };
 
   const handleAddToCart = () => {
@@ -55,6 +73,11 @@ export const ProductCard = ({ product }) => {
           xs: "0 1px 1px 0",
           sm: "0 2px 2px 0",
           md: "0 4px 4px 0",
+        },
+        height: {
+          xs: "260px",
+          sm: "280px",
+          md: "300px",
         },
       }}
     >
@@ -157,6 +180,18 @@ export const ProductCard = ({ product }) => {
             >
               <VisibilityIcon />
             </Fab>
+            {customer && (
+              <Fab
+                className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
+                onClick={handleFavoriteClick}
+              >
+                {favorite.find((item) => item === product.purrPetCode) ? (
+                  <FavoriteIcon style={{ color: "#FF0000" }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )}
+              </Fab>
+            )}
           </div>
         )}
       </CardActionArea>
