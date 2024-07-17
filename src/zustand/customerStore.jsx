@@ -66,7 +66,6 @@ export const customerStore = (set, get) => ({
       `customer/getCustomerByCode_loading`,
     );
     getCustomerByCode(customerCode).then((res) => {
-      console.log(res);
       if (res.err === 0) {
         set(
           (state) => {

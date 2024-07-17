@@ -22,6 +22,9 @@ import { useStore } from "../../zustand/store";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import { HorizontalSlider } from "../Slider/HorizontalSlider";
 import { getReviewByProduct } from "../../api/review";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { favoriteProduct } from "../../api/favorite";
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
@@ -41,6 +44,8 @@ export const ProductDetail = () => {
     page: 1,
     total: 0,
   });
+  const favorite = useStore((state) => state.favoriteState.data);
+
 
   useEffect(() => {
     getProductByCode(productCode).then((res) => {
@@ -108,7 +113,16 @@ export const ProductDetail = () => {
     setReviewPagination({ ...reviewPagination, page: value });
   };
 
-  console.log("re", reviews);
+  const handleFavorite = () => {
+    favoriteProduct(productCode).then((res) => {
+      if (res.err === 0) {
+        console.log("thêm vào yêu thích thành công");
+        window.location.reload();
+      } else {
+        console.log("thêm vào yêu thích thất bại");
+      }
+  })
+  };
 
   return (
     <>
@@ -283,12 +297,26 @@ export const ProductDetail = () => {
                       </Button>
                     </Box>
                   </FormControl>
+                  <Box className="flex flex-row">
                   <BigHoverTransformButton
                     onClick={handleAddToCart}
                     className="mt-3"
                   >
                     Thêm vào giỏ hàng
                   </BigHoverTransformButton>
+                  <BigHoverTransformButton
+                   onClick={handleFavorite}
+                    className="mt-3 ml-3"
+                  >
+                    {
+                      favorite.find((item) => item === productCode)
+                        ? (
+                          <Typography className="text-green-600"> Đã yêu thích <FavoriteIcon style={{ color: "#FF0000" }} /> </Typography>
+                        )
+                        :   <Typography > Yêu thích  <FavoriteBorderIcon /></Typography>
+                  }
+                  </BigHoverTransformButton>
+                  </Box>
                 </>
               )}
               {product?.inventory <= 0 && (

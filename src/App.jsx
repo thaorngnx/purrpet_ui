@@ -60,12 +60,14 @@ import "slick-carousel/slick/slick-theme.css";
 import { SpendingStatisticsPage } from "./pages/Customer/SpendingStatisticsPage";
 import { ScrollToTop } from "./components/Button/ScrollToTop";
 import { FavoriteProductPage } from "./pages/Customer/FavoriteProductPage";
+import { getFavorite } from "./api/favorite";
 
 function App() {
   const {
     getCart,
     getActiveCategories,
     getCustomerById,
+    getFavorite,
     cartState,
     activeProductCategoryState,
     customerState,
@@ -75,6 +77,7 @@ function App() {
   useEffect(() => {
     getCart();
     getActiveCategories();
+    getFavorite();
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
       { path: "/" },
@@ -85,7 +88,7 @@ function App() {
         getCustomerById(decoded.id);
       }
     }
-  }, [getCart, getActiveCategories, getCustomerById]);
+  }, [getCart, getActiveCategories, getCustomerById, getFavorite]);
 
   if (activeProductCategoryState.loading || customerState.loading) {
     return (

@@ -12,7 +12,8 @@ export const ProductPage = () => {
   const categoryCode = searchParams.get("category");
 
   const categories = useStore((state) => state.activeProductCategoryState.data);
-
+ 
+  
   const selectedCategory = categories.find(
     (category) => category.purrPetCode === categoryCode,
   );

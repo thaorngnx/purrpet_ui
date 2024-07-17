@@ -27,7 +27,6 @@ export const FavoriteProduct = () => {
       limit: 10,
       page: page,
     };
-    console.log(params);
     getFavoriteProductDetail(params).then((res) => {
       if (res.err === 0) {
         setFavoriteProducts(res.data);
