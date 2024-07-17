@@ -95,7 +95,7 @@ function Row(props) {
     fetchData().then((res) => {
       setRowData(res);
     });
-  }, []);
+  }, [discount]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setAlert(false);
@@ -131,6 +131,12 @@ function Row(props) {
     });
   };
   const handleClickDiscount = (productCode) => {
+    if(discount <= 0 || discount >= 100) {
+      setAlert(true);
+      setSeverity(CONST.ALERT_SEVERITY.ERROR);
+      setMessage("% khuyến mãi không hợp lệ");
+      return;
+    }
     const merchandiseCode = productCode + "+" + rowData.code;
     createDiscount({
       merchandiseCode: merchandiseCode,
@@ -140,7 +146,7 @@ function Row(props) {
         setAlert(true);
         setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
         setMessage("Khuyến mãi thành công");
-        window.location.reload();
+       
       } else {
         setAlert(true);
         setSeverity(CONST.ALERT_SEVERITY.ERROR);
@@ -160,7 +166,7 @@ function Row(props) {
         setAlert(true);
         setSeverity(CONST.ALERT_SEVERITY.SUCCESS);
         setMessage("Hủy khuyến mãi thành công");
-        // window.location.reload();
+       
       } else {
         setAlert(true);
         setSeverity(CONST.ALERT_SEVERITY.ERROR);

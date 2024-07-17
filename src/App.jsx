@@ -77,7 +77,7 @@ function App() {
   useEffect(() => {
     getCart();
     getActiveCategories();
-    getFavorite();
+    
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
       { path: "/" },
@@ -86,6 +86,7 @@ function App() {
       const decoded = jwtDecode(accessToken);
       if (decoded.role === CONST.ROLE.CUSTOMER) {
         getCustomerById(decoded.id);
+        getFavorite();
       }
     }
   }, [getCart, getActiveCategories, getCustomerById, getFavorite]);

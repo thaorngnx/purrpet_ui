@@ -46,6 +46,9 @@ export const ProductDetail = () => {
 
   const favorite = useStore((state) => state.favoriteState.data);
   const { favoriteProduct } = useStore();
+  const customer = useStore((state) => state.customerState.data);
+  console.log("favorite", favorite);
+  console.log("customer", customer);
 
   useEffect(() => {
     getProductByCode(productCode).then((res) => {
@@ -294,7 +297,9 @@ export const ProductDetail = () => {
                     >
                       Thêm vào giỏ hàng
                     </BigHoverTransformButton>
-                    {favorite?.find((item) => item === productCode) ? (
+                    {customer && (
+                      <Box>
+                         { favorite?.find((item) => item === productCode) ? (
                       <FavoriteIcon
                         color="error"
                         onClick={handleFavorite}
@@ -307,6 +312,9 @@ export const ProductDetail = () => {
                         fontSize="large"
                       />
                     )}
+                        </Box>
+                      )}
+                   
                   </Box>
                 </>
               )}
