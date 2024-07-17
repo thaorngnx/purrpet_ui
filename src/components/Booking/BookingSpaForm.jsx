@@ -523,7 +523,6 @@ export const BookingSpaForm = () => {
               sm: 5,
               md: 7,
             },
-            mt: 3,
             mx: "auto",
             width: {
               xs: "95%",
@@ -696,7 +695,6 @@ export const BookingSpaForm = () => {
              sm: 5,
              md: 7,
            },
-           mt: 3,
            mx: "auto",
            width: {
              xs: "95%",

@@ -427,28 +427,34 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             </BigHoverFitContentButton>
           </Box>
           <FormControl>
-            <FormLabel
-              sx={{
-                fontWeight: "bold",
-                color: "black",
-                mb: 1,
-              }}
-            >
-              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point)}{" "}
-              điểm tích luỹ)
-            </FormLabel>
-            <TextField
-              required
-              name="customerUserPoint"
-              type="number"
-              onChange={handleChangePoint}
-              variant="outlined"
-              error={error.customerUserPoint}
-              helperText={
-                error.customerUserPoint &&
-                "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
-              }
-            />
+            {
+              customerState?.point > 0 && (
+                <>
+                <FormLabel
+                  sx={{
+                    fontWeight: "bold",
+                    color: "black",
+                    my: 1,
+                  }}
+                >
+                  Sử dụng điểm:
+                </FormLabel>
+                 <TextField
+                 required
+                 name="customerUserPoint"
+                 type="number"
+                 onChange={handleChangePoint}
+                 variant="outlined"
+                 error={error.customerUserPoint}
+                 helperText={
+                   error.customerUserPoint &&
+                   "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
+                 }
+               />
+               </>
+              )
+            }
+           
           </FormControl>
           <FormLabel
             sx={{

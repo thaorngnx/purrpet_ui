@@ -185,7 +185,7 @@ export const ProductCard = ({ product }) => {
                 className="m-1 min-w-min bg-white p-2 text-black hover:bg-orange-200"
                 onClick={handleFavoriteClick}
               >
-                {favorite.find((item) => item === product.purrPetCode) ? (
+                {favorite?.find((item) => item === product.purrPetCode) ? (
                   <FavoriteIcon style={{ color: "#FF0000" }} />
                 ) : (
                   <FavoriteBorderIcon />

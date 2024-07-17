@@ -306,6 +306,7 @@ export const BookingHomeForm = () => {
       setMessage(res.message);
     });
   };
+  console.log("bookingInfo", validateObject(bookingInfo));
 
   return (
     <Box
@@ -495,9 +496,7 @@ export const BookingHomeForm = () => {
                     key={size}
                     value={size}
                     control={<Radio />}
-                    label={
-                      size === "Size S" ? "Size S ( 60cm x 60cm x 60cm)" : size === "Size M" ? "Size M ( 60cm x 80cm x 90cm)" : "Size L (  60cm x 90cm x 120cm)"
-                    }
+                    label={ size }
                   />
                 
                 ))}
@@ -663,7 +662,6 @@ export const BookingHomeForm = () => {
               sm: 5,
               md: 7,
             },
-            mt: 3,
             mx: "auto",
             width: {
               xs: "95%",
@@ -676,7 +674,7 @@ export const BookingHomeForm = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              mt: 2,
+              pt: 2,
             }}
           >
             <FormLabel
@@ -836,7 +834,6 @@ export const BookingHomeForm = () => {
             sm: 5,
             md: 7,
           },
-          mt: 3,
           mx: "auto",
           width: {
             xs: "95%",
