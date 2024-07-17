@@ -406,13 +406,13 @@ export const BookingSpaForm = () => {
             </RadioGroup>
             {
               bookingInfo.spaName === "Silver" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192375/Sliver_vbs3lc.png" alt="silver" style={{width: "250px", height: "auto"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721222647/Add_a_subheading_9_ddr7rt.png" alt="silver" style={{width: "250px", height: "auto"}}/>
               ) : bookingInfo.spaName === "Gold" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192353/Gold_fhq2cs.png" alt="gold" style={{width: "250px", height: "auto"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721222705/Add_a_subheading_10_xrdlwy.png" alt="gold" style={{width: "250px", height: "auto"}}/>
               ) : bookingInfo.spaName === "Platium" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192374/Platium_bvrmdz.png" alt="platium" style={{width: "250px", height: "auto"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721222649/Add_a_subheading_11_hprqoy.png" alt="platium" style={{width: "250px", height: "auto"}}/>
               ) : bookingInfo.spaName === "Diamond" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721192323/Diamond_yp039z.png" alt="diamond" style={{width: "250px", height: "auto"}}/> 
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721222647/Add_a_subheading_12_eiwfeh.png" alt="diamond" style={{width: "250px", height: "auto"}}/> 
               ):(
                 <></>
               )

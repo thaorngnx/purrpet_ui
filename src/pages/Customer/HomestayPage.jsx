@@ -1,9 +1,5 @@
 import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
-import img1 from "../../assets/homestay.jpg";
-import img2 from "../../assets/hotel-img-7.jpg";
-import img4 from "../../assets/homestay5.jpg";
-import img5 from "../../assets/homestay6.jpg";
 import img6 from "../../assets/homestay7.jpg";
 import img7 from "../../assets/homestay8.jpg";
 import img8 from "../../assets/homestay9.jpg";
@@ -12,8 +8,7 @@ import img10 from "../../assets/homestay11.jpg";
 import img11 from "../../assets/homestay12.jpg";
 import { Button, List, ListItem, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { de } from "date-fns/locale";
-import { WidthFull } from "@mui/icons-material";
+
 import Slider from "react-slick";
 
 export const HomestayPage = () => {
@@ -85,46 +80,46 @@ export const HomestayPage = () => {
     {
       name: "Phòng Size S",
       price: "120.000 VNĐ đến 140.000 VNĐ",
-      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_fill,w_260,h_260/v1721044420/Size_S_ou2fih.jpg",
-      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_fill,w_260,h_260/v1721046337/SizeS_2_apiv3e.jpg",
-      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_crop,w_260,h_260/v1721099342/Screenshot_2024-07-16_100347_fanm5z_c_fill_w_240_h_240_tnaxdd.jpg",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221081/Add_a_subheading_8_qqz1ps.png",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221081/Add_a_subheading_y98lau.png",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221822/Add_a_subheading_1_wl092z.png",
       description: {
       size: "- Kích thước: 60cm x 60cm x 60cm",
         
       conform: "- Phù hợp với: Mèo và chó nhỏ (dưới 5kg), như Chihuahua, Pomeranian, mèo nhà thông thường",
       apparatus: "- Phòng được trang bị: giường mềm, khay vệ sinh, đồ chơi và bát ăn uống.",
       },
-      color: "#cc97f9",
+      color: "#a2f997",
       image: 'https://res.cloudinary.com/drzp9tafy/image/upload/v1721102015/Chihuahua-removebg-preview_awkdvd.png'
     },
     {
       name: "Phòng Size M",
       price: "140.000 VNĐ đến 160.000 VNĐ",
-      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721190639/Screenshot_2024-07-17_113027_sso47r.jpg",
-      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046336/SizeM_2_arronh.jpg",
-      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_240,h_320/v1721046337/SizeM_1_bskica.jpg",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221076/Add_a_subheading_4_glsjiu.png",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221076/Add_a_subheading_3_icwg9u.png",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221073/Add_a_subheading_2_csrndp.png",
     
       description: {
       size: "- Kích thước: 60cm x 80cm x 90cm",
       conform: "- Phù hợp với: Chó cỡ trung (5kg - 15kg), như Cocker Spaniel, French Bulldog, mèo lớn hơn.",
       apparatus: "- Phòng được trang bị: giường mềm, khay vệ sinh, đồ chơi, bát ăn uống, và đệm nằm.",
       },
-      color: "#97aef9",
+      color: "#f5b658",
       image: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721102202/image-removebg-preview_qkjdsh.png"
     },
     {
       name: "Phòng Size L",
       price: "160.000 VNĐ đến 180.000 VNĐ",
-      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721190639/Screenshot_2024-07-17_113009_nbpvpb.jpg",
-      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/sizeL_1_t7twj4.jpg",
-      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_260,h_320/v1721046337/SizeL_2_jqqzsh.jpg",
+      link1: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221079/Add_a_subheading_5_bnz84b.png",
+      link2: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221079/Add_a_subheading_6_xfertx.png",
+      link3: "https://res.cloudinary.com/drzp9tafy/image/upload/v1721221081/Add_a_subheading_7_gypuk7.png",
       description: {
       size: "- Kích thước: 60cm x 90cm x 120cm",
       conform: "- Phù hợp với: Chó cỡ lớn (trên 15kg), như Golden Retriever, Husky, Beagle.",
       apparatus: "- Phòng được trang bị: giường lớn, khay vệ sinh, đồ chơi, bát ăn uống, đệm nằm, và máy lọc không khí.",
       },
       image:"https://res.cloudinary.com/drzp9tafy/image/upload/v1721102429/image-removebg-preview_1_gwl7zw.png",
-      color: "#e85ece",
+      color: "#5ebee8",
     },
   ];
 
@@ -185,7 +180,7 @@ export const HomestayPage = () => {
             maxWidth: "40%",
             margin: "20px",
           }}
-          src={img2}
+          src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721222980/hotel-img-7_dcr7s8.webp"
           alt="img1"
         />
         <List>
@@ -265,7 +260,7 @@ export const HomestayPage = () => {
             <Typography
               sx={{
                 fontWeight: "bold",
-                color: "white",
+                color: "#c51111",
                 fontSize: {
                   xs: "1.5rem",
                   sm: "1.5rem",
@@ -278,7 +273,7 @@ export const HomestayPage = () => {
             <Typography
               sx={{
                 fontWeight: "bold",
-                color: "white",
+                color: "#c51111",
                 fontSize: {
                   xs: "1rem",
                   sm: "1rem",

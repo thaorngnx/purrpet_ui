@@ -504,11 +504,11 @@ export const BookingHomeForm = () => {
             </RadioGroup>
           {
                bookingInfo.homeSize === "Size S" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721046337/SizeS_2_apiv3e.jpg" alt="dog" style={{width: "200px", height: "190px"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721221081/Add_a_subheading_8_qqz1ps.png" alt="dog" style={{width: "200px", height: "230px"}}/>
               ) : bookingInfo.homeSize === "Size M" ? (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721190639/Screenshot_2024-07-17_113027_sso47r.jpg" alt="cat" style={{width: "200px", height: "190px"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721221073/Add_a_subheading_2_csrndp.png" alt="cat" style={{width: "200px", height: "230px"}}/>
               ) : bookingInfo.homeSize === "Size L" ?  (
-                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/c_pad,w_200,h_190/v1721190639/Screenshot_2024-07-17_113009_nbpvpb.jpg" alt="cat" style={{width: "200px", height: "190px"}}/>
+                <img src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721221079/Add_a_subheading_6_xfertx.png" alt="cat" style={{width: "200px", height: "230px"}}/>
               ): (
                 ""
               )

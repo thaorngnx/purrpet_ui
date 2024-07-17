@@ -1,6 +1,5 @@
 import { HeaderCustomer } from "../../components/Header/HeaderCustomer";
 import SliderComponent from "../../components/Slider/SliderComponent";
-import img1 from "../../assets/Pricespa.png";
 import { Button, Typography, Box } from "@mui/material";
 import { FooterCustomer } from "../../components/Footer/FooterCustomer";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +82,7 @@ export const SpaPage = () => {
       </Typography>
 
       <img
-        src={img1}
+        src="https://res.cloudinary.com/drzp9tafy/image/upload/v1721221012/Pricespa_ssyhrh.png"
         alt="img1"
         style={{
           height: "auto",
