@@ -19,13 +19,12 @@ import {
 import { formatCurrency } from "../../utils/formatData";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { FormGroup, FormControlLabel, Switch } from "@mui/material";
-import { el } from "date-fns/locale";
 
 export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
   const customerState = useStore((state) => state.customerState.data);
 
   const { setCustomerState } = useStore();
-
+  const { getFavorite } = useStore();
   const [error, setError] = useState({});
   const [otpClick, setOtpClick] = useState(false);
   const [otpValid, setOtpValid] = useState(false);
@@ -138,6 +137,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             error: null,
             data: res.data,
           });
+          getFavorite();
         }
       } else {
         customerInfo.otp = "";
@@ -199,6 +199,7 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             error: null,
             data: res.data,
           });
+          getFavorite();
         }
       });
 
@@ -427,9 +428,8 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
             </BigHoverFitContentButton>
           </Box>
           <FormControl>
-            {
-              customerState?.point > 0 && (
-                <>
+            {customerState?.point > 0 && (
+              <>
                 <FormLabel
                   sx={{
                     fontWeight: "bold",
@@ -439,22 +439,20 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
                 >
                   Sử dụng điểm:
                 </FormLabel>
-                 <TextField
-                 required
-                 name="customerUserPoint"
-                 type="number"
-                 onChange={handleChangePoint}
-                 variant="outlined"
-                 error={error.customerUserPoint}
-                 helperText={
-                   error.customerUserPoint &&
-                   "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
-                 }
-               />
-               </>
-              )
-            }
-           
+                <TextField
+                  required
+                  name="customerUserPoint"
+                  type="number"
+                  onChange={handleChangePoint}
+                  variant="outlined"
+                  error={error.customerUserPoint}
+                  helperText={
+                    error.customerUserPoint &&
+                    "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
+                  }
+                />
+              </>
+            )}
           </FormControl>
           <FormLabel
             sx={{

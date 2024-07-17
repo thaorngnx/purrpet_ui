@@ -10,7 +10,9 @@ import {
   MenuItem,
   FormHelperText,
   Box,
-  FormControlLabel, FormGroup, Switch ,
+  FormControlLabel,
+  FormGroup,
+  Switch,
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "../../api/customer";
 import { sendOtp, verifyOtp } from "../../api/otp";
@@ -22,14 +24,18 @@ import {
   validatePhone,
 } from "../../utils/validationData";
 import { formatCurrency } from "../../utils/formatData";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { set } from "date-fns";
 
-export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) => {
+export const CustomerInfoFormForOrder = ({
+  customer,
+  confirmInfo,
+  totalPrice,
+}) => {
   const customerState = useStore((state) => state.customerState.data);
 
   const { setCustomerState } = useStore();
-
+  const { getFavorite } = useStore();
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -57,12 +63,10 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
     userPoint: 0,
     useCoin: 0,
   });
-  const [showCoin, setShowCoin] = useState(
-    {
-      coin: 0,
-      showCoin: false,
-    }
-  );
+  const [showCoin, setShowCoin] = useState({
+    coin: 0,
+    showCoin: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +177,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
       if (res.err === 0) {
         setOtpValid(true);
         setCustomerState({ data: res.data, error: null, loading: false });
+        getFavorite();
         // if (res.data === null) {
         //   setExistCustomer(false);
         //   setEditInfo(true);
@@ -293,6 +298,7 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
           // });
           // customer({ ...customerInfo, customerCode: res.data.purrPetCode });
           setCustomerState({ data: res.data, error: null, loading: false });
+          getFavorite();
         }
       });
       //oke
@@ -431,7 +437,11 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
     }
   };
   const handleChangePoint = (e) => {
-    if (e.target.value > customerState.point || e.target.value < 0 || e.target.value > totalPrice * 0.1) {
+    if (
+      e.target.value > customerState.point ||
+      e.target.value < 0 ||
+      e.target.value > totalPrice * 0.1
+    ) {
       setError({ ...error, userPoint: true });
       e.target.value = 0;
     } else {
@@ -440,31 +450,27 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
         ...customerInfo,
         userPoint: e.target.value,
       });
-      
+
       customer({
         ...customerInfo,
         userPoint: e.target.value,
       });
     }
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       const total = totalPrice - customerInfo.userPoint;
-      if (customerState.coin > total)
-        {
-          setShowCoin({
-            coin: total,
-            showCoin: true,
-          });
-          
-        }
-      else {
+      if (customerState.coin > total) {
+        setShowCoin({
+          coin: total,
+          showCoin: true,
+        });
+      } else {
         setShowCoin({
           coin: customerState.coin,
           showCoin: true,
         });
-       
       }
     };
     fetchData();
@@ -489,9 +495,8 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
         useCoin: 0,
       });
     }
-  }
- 
- 
+  };
+
   return (
     <Paper
       sx={{
@@ -782,28 +787,35 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
               {!editInfo ? "Sửa" : "Xác nhận thông tin"}
             </BigHoverFitContentButton>
           </FormControl>
-          {
-            customerState &&
-          <FormControl>
-          <FormLabel className="mb-2 font-bold text-black">
-              Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point ) } điểm tích luỹ)
-            </FormLabel>
-            <TextField
-              required
-              name="customerUserPoint"
-              type="number"
-              onChange={handleChangePoint}
-              variant="outlined"
-              error={error.customerUserPoint}
-              helperText={error.customerUserPoint && "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"}
-              onBlur={() => {
-                if (customerInfo.customerUserPoint > customerState.point || customerInfo.customerUserPoint < 0 || customerInfo.customerUserPoint > totalPrice * 0.1) {
-                  setError({ ...error, customerUserPoint: true });
+          {customerState && (
+            <FormControl>
+              <FormLabel className="mb-2 font-bold text-black">
+                Điểm sử dụng: (Bạn đang có {formatCurrency(customerState.point)}{" "}
+                điểm tích luỹ)
+              </FormLabel>
+              <TextField
+                required
+                name="customerUserPoint"
+                type="number"
+                onChange={handleChangePoint}
+                variant="outlined"
+                error={error.customerUserPoint}
+                helperText={
+                  error.customerUserPoint &&
+                  "Điểm sử dụng dưới 10% tổng đơn hàng và không vượt quá số điểm hiện có"
+                }
+                onBlur={() => {
+                  if (
+                    customerInfo.customerUserPoint > customerState.point ||
+                    customerInfo.customerUserPoint < 0 ||
+                    customerInfo.customerUserPoint > totalPrice * 0.1
+                  ) {
+                    setError({ ...error, customerUserPoint: true });
+                  }
                 }}
-              }
-            />
-          </FormControl>
-        }
+              />
+            </FormControl>
+          )}
           <FormControl>
             <FormLabel className="font-bold text-black">Ghi chú:</FormLabel>
             <TextField
@@ -816,17 +828,20 @@ export const CustomerInfoFormForOrder = ({ customer, confirmInfo, totalPrice }) 
           </FormControl>
         </>
       )}
-      {
-        showCoin.showCoin &&
-        <FormGroup className="flex flex-row items-center mt-10 justify-end">
-            <Typography className=" text-[18px] font-bold text-black">
-            Sử dụng {(formatCurrency(showCoin.coin))} từ ví:<MonetizationOnIcon className="text-[#f6a700]"/>
+      {showCoin.showCoin && (
+        <FormGroup className="mt-10 flex flex-row items-center justify-end">
+          <Typography className=" text-[18px] font-bold text-black">
+            Sử dụng {formatCurrency(showCoin.coin)} từ ví:
+            <MonetizationOnIcon className="text-[#f6a700]" />
           </Typography>
-        <FormControlLabel control={<Switch />} label= {showCoin.coin} onChange={handleChangeCoin} />
-        Xu
-      </FormGroup>
-
-      }
+          <FormControlLabel
+            control={<Switch />}
+            label={showCoin.coin}
+            onChange={handleChangeCoin}
+          />
+          Xu
+        </FormGroup>
+      )}
     </Paper>
   );
 };
