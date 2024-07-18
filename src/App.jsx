@@ -71,12 +71,14 @@ function App() {
     cartState,
     activeProductCategoryState,
     customerState,
+    getAllNotifications,
   } = useStore();
 
   //get cart
   useEffect(() => {
     getCart();
     getActiveCategories();
+    getAllNotifications();
     
     const accessToken = Cookie.get(
       import.meta.env.VITE_APP_COOKIE_ACCESS_TOKEN,
@@ -89,7 +91,7 @@ function App() {
         getFavorite();
       }
     }
-  }, [getCart, getActiveCategories, getCustomerById, getFavorite]);
+  }, [getCart, getActiveCategories, getCustomerById, getFavorite, getAllNotifications]);
 
   if (activeProductCategoryState.loading || customerState.loading) {
     return (

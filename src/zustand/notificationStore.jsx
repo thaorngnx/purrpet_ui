@@ -1,44 +1,56 @@
 import { create } from "zustand";
 import { getAllNotifications } from '../api/notification';
 
-const NotificationState = {
+const notificationState = {
     loading: false,
     error: null,
     data: null,
-    };
-
-const NotificationStore = {
-    notificationState: NotificationState,
-    getAllNotifications: async () => {},
 };
- export const useNotificationStore = create((set, get) => ({
-    ...NotificationStore,
-   
-    getAllNotifications: async () => {
-        set({
-        notificationState: {
-            ...get().notificationState,
-            loading: true,
-        },
-        });
-        try {
-        const res = await getAllNotifications();
-        set({
-            notificationState: {
-            loading: false,
-            error: '',
-            data: res.data,
-            },
-        });
-        } catch (error) {
-        set({
-            notificationState: {
-            loading: false,
-            error: error,
-            data: {},
-            },
-        });
-        }
+
+// const NotificationStore = {
+//     notificationState: NotificationState,
+//     getAllNotifications: async () => {},
+// };
+export const notificationStore = (set, get) => ({
+    notificationState,
+    setNotificationState: (newState) => {
+        set( (state) => {
+            state.notificationState = newState;
+        }, false, `notification/setNotificationState`);
     },
-    }));
+    getAllNotifications: (params) => {
+        set(
+            (state) => {
+            state.notificationState.loading = true;
+            },
+            false,
+            `notification/getAllNotifications_loading`,
+        );
+        getAllNotifications(params).then((res) => {
+           if (res.err === 0) {
+            set(
+                (state) => {
+                state.notificationState.loading = false;
+                state.notificationState.data = res.data;
+                state.notificationState.error = null;
+                },
+                false,
+                `notification/getAllNotifications_success`,
+            );
+            }
+            else {
+                set(
+                    (state) => {
+                    state.notificationState.loading = false;
+                    state.notificationState.error = res.message;
+                    state.notificationState.data = null;
+                    },
+                    false,
+                    `notification/getAllNotifications_error`,
+                );
+            }
+        });
+        
+    }
+    });
 

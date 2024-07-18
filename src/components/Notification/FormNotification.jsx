@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardActions, CardContent, Button, Typography, Box } from '@mui/material';
 import { useStore } from '../../zustand/store';
-import { useNotificationStore } from '../../zustand/notificationStore';
+import { notificationStore } from '../../zustand/notificationStore';
 import { useNavigate } from 'react-router-dom';
 import img from '../../assets/noti.jpg';
 import { Padding } from '@mui/icons-material';
@@ -11,7 +11,8 @@ import { viewNotification } from '../../api/notification';
 
 export const FormNotification = () => {
     const customer = useStore((state) => state.customerState.data);
-    const { notificationState, getAllNotifications } = useNotificationStore();
+    const notificationState = useStore((state) => state.notificationState);
+    const { getAllNotifications } = useStore();
     useEffect(() => {
         if(customer && customer.accessToken)
         {

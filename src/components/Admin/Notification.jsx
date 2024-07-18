@@ -1,20 +1,21 @@
 import React from 'react';
 import { useState } from 'react';
-import { useNotificationStore } from '../../zustand/notificationStore';
 import { useEffect, useCallback } from 'react';
 import { Box, Button, Pagination } from '@mui/material';
 import { NOTIFICATION_TYPE } from '../../constants';
-import { markAllAsRead, viewNotification, getAllNotifications } from '../../api/notification';
+import { markAllAsRead, viewNotification } from '../../api/notification';
 import { useNavigate } from 'react-router-dom';
 import { formatTimeToNow } from '../../utils/formatData';
 import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 import * as CONST from "../../constants";
 import { el } from 'date-fns/locale';
+import { useStore } from '../../zustand/store';
 
 export const Notification = ()=>
 {
-  const [notificationState, setNotificationState] = useState({loading: false, error: null, data: null});
+ const notificationState = useStore((state) => state.notificationState);
+ const { getAllNotifications } = useStore();
   const [pagination, setPagination] = useState('');
   const [page, setPage] = useState(1);
   const [link, setLink] = useState('');
@@ -25,13 +26,8 @@ export const Notification = ()=>
         page: page,
         limit: 10,
       };
-          getAllNotifications(params).then((res) => {
-            console.log(res);
-            setNotificationState({loading: false, error: null, data: res.data});
-            setPagination(res.pagination);
-          }).catch((error) => {
-            setNotificationState({loading: false, error: error, data: null});
-          });
+      getAllNotifications(params);
+      
           if (accessToken) {
             const decoded = jwtDecode(accessToken);
     
@@ -48,7 +44,7 @@ export const Notification = ()=>
           }
        
     }, [ accessToken, page ]);
-    
+   
     
     const handleViewNotification = (notification) => {
       viewNotification(notification._id);
@@ -81,7 +77,7 @@ export const Notification = ()=>
       <>
       <Box className="flex flex-col m-10">
      
-        {notificationState.loading && <h1>Loading...</h1>}
+        {notificationState.loading  && <h1>Loading...</h1>}
         {notificationState.error && <h1>{notificationState.error}</h1>}
             <Box className="text-end font-bold text-[#000000]  p-3" >
             <Button onClick={()=>handleViewAll()}>

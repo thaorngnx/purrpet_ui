@@ -17,10 +17,8 @@ import { useNavigate, Link } from "react-router-dom";
 import img from "../../assets/logo.jpg";
 import { useStore } from "../../zustand/store";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useNotificationStore } from "../../zustand/notificationStore";
 import { FormNotification } from "../Notification/FormNotification";
 import { useEffect } from "react";
-import { getAllNotifications } from "../../api/notification";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useRef } from "react";
 import {
@@ -42,14 +40,15 @@ export function HeaderCustomer() {
   const [searchKey, setSearchKey] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState([]);
+  const notifications = useStore((state) => state.notificationState.data);
+  const { getAllNotifications } = useStore();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const notiNotSeen = notifications.filter(
+  const notiNotSeen = notifications?.filter(
     (noti) => noti.seen === false,
   ).length;
 
@@ -57,9 +56,7 @@ export function HeaderCustomer() {
 
   useEffect(() => {
     if (customer && customer.accessToken) {
-      getAllNotifications().then((res) => {
-        setNotifications(res.data);
-      });
+     getAllNotifications();
     }
   }, []);
 
@@ -72,11 +69,7 @@ export function HeaderCustomer() {
 
       function onTradeEvent(value) {
         const socketData = JSON.parse(value);
-        getAllNotifications().then((res) => {
-          if (res.err === 0) {
-            setNotifications(res.data);
-          }
-        });
+        getAllNotifications();
       }
       socketClient.on("connect", () => {
         console.log("socket connected");

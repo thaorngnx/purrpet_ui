@@ -30,11 +30,11 @@ import { useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { socket } from "../../../socket";
 import { Socket } from "socket.io-client";
-import { getAllNotifications } from "../../api/notification";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import { useStore } from "../../zustand/store";
 
 const drawerWidth = 240;
 
@@ -137,21 +137,21 @@ export const SideNavAdmin = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [notifications, setNotifications] = useState([]);
+  // const [notifications, setNotifications] = useState([]);
+  const {getAllNotifications} = useStore();
   const accessToken = Cookies.get('access_token');
-
-  const notiNotSeen = notifications.filter(
+  const notifications = useStore((state) => state.notificationState.data);
+  const notiNotSeen = notifications?.filter(
     (noti) => noti.seen === false,
   ).length;
 
   const socketRef = useRef(Socket);
 
   useEffect(() => {
-  
+
     if(accessToken){
-      getAllNotifications().then((res) => {
-        setNotifications(res.data);
-      });
+      getAllNotifications();
+     
     }
   },[]);
 
@@ -164,11 +164,7 @@ export const SideNavAdmin = () => {
 
       function onTradeEvent(value) {
         const socketData = JSON.parse(value);
-        getAllNotifications().then((res) => {
-          if (res.err === 0) {
-            setNotifications(res.data);
-          }
-        });
+        getAllNotifications();
       }
       socketClient.on('connect', () => {
         console.log('socket connected');
