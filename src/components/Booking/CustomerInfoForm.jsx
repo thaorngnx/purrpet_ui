@@ -437,7 +437,8 @@ export const CustomerInfoForm = ({ customer, confirmInfo, totalPrice }) => {
                     my: 1,
                   }}
                 >
-                  Sử dụng điểm:
+                  Sử dụng điểm: (Bạn đang có {formatCurrency(customerState.point)}{" "}
+                  điểm tích luỹ)
                 </FormLabel>
                 <TextField
                   required
