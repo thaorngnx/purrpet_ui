@@ -7,11 +7,14 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { ProductCard } from "./ProducCard";
 import { getActiveProducts } from "../../api/product";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 
 export const ProductGrid = () => {
   const navigate = useNavigate();
@@ -30,18 +33,41 @@ export const ProductGrid = () => {
     },
   });
   const [page, setPage] = useState(1);
+  const theme = useTheme();
+   // Define media queries for different screen sizes
+   const isXs = useMediaQuery(theme.breakpoints.only('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.only('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.only('md'));
+  const isLg = useMediaQuery(theme.breakpoints.only('lg'));
+  const isXl = useMediaQuery(theme.breakpoints.only('xl'));
+ 
+   // Determine limit based on screen size
+   let limit;
+   if (isXs) {
+     limit = 5;
+   } else if (isSm) {
+     limit = 8;
+   } else if (isMd) {
+     limit = 15;
+   } else if (isLg) {
+     limit = 12;
+   } else if (isXl) {
+     limit = 12;
+   } else {
+     limit = 19; // Default limit
+   }
 
   useEffect(() => {
     const params = {
       page: page,
       key: categoryCode || searchKey,
       order: sort,
-      limit: 10,
+      limit: limit,
     };
     getActiveProducts(params).then((res) => {
       setResProducts(res);
     });
-  }, [page, categoryCode, sort, searchKey]);
+  }, [page, categoryCode, sort, searchKey, limit]);
 
   const products = resProducts.data || [];
   const totalPage = resProducts.pagination.total || 0;

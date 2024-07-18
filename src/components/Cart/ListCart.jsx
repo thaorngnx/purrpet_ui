@@ -132,7 +132,7 @@ export const ListCart = () => {
         });
       }else{
         console.log(product.discountQuantity);
-  if (product.quantity < product.inventory && product.discountQuantity === undefined) {
+  if (product.quantity < product.inventory && product.discountQuantity === null || product.quantity < product.inventory && product.discountQuantity === undefined) {
   
       const newProductCart = productCart.map((item) => {
         if (item.purrPetCode === product.purrPetCode) {
